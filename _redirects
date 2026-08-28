@@ -1,0 +1,4 @@
+# Redirect WWW → non-WWW (canonical domain)
+# Force HTTPS
+# Handle trailing slashes
+# Custom 404 page

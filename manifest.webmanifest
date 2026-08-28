@@ -1,0 +1,114 @@
+{
+  "id": "/",
+  "name": "Axiom Construction - firma budowlano-remontowa",
+  "short_name": "Axiom Construction",
+  "description": "Axiom Construction: oferta, realizacje, opinie i formularz kontaktowy. Projekt i kod: KP_Code.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0ea5e9",
+  "background_color": "#ffffff",
+  "categories": ["business", "productivity"],
+  "prefer_related_applications": false,
+  "lang": "pl-PL",
+  "dir": "ltr",
+
+  "icons": [
+    {
+      "src": "/assets/img/favicon/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/assets/img/favicon/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/img/favicon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/img/favicon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/img/favicon/web-app-manifest-1024x1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/img/favicon/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Oferta",
+      "short_name": "Oferta",
+      "description": "Przejdź do sekcji Oferta na stronie głównej",
+      "url": "/#uslugi",
+      "icons": [
+        {
+          "src": "/assets/img/shortcuts/offer.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Dokumenty",
+      "short_name": "Legal",
+      "description": "Zobacz regulamin i politykę prywatności",
+      "url": "/legal/regulamin.html",
+      "icons": [
+        {
+          "src": "/assets/img/shortcuts/legal.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Kontakt",
+      "short_name": "Kontakt",
+      "description": "Otwórz sekcję kontaktową z formularzem wyceny",
+      "url": "/#kontakt",
+      "icons": [
+        {
+          "src": "/assets/img/shortcuts/contact.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/assets/img/screenshots/mobile.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Strona główna — widok mobilny"
+    },
+    {
+      "src": "/assets/img/screenshots/desktop.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Strona główna — widok desktopowy"
+    }
+  ]
+}

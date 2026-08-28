@@ -1,0 +1,17 @@
+
+# robots.txt dla Netlify projektu budowlanego
+
+User-agent: *
+Disallow:
+
+User-agent: Googlebot
+Allow: /
+
+# Dopuszczamy Facebook i Twitter
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+Sitemap: https://construction-project-02.netlify.app/sitemap.xml

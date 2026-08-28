@@ -1,0 +1,20 @@
+
+@supports not (backdrop-filter: blur(1px)) {
+  header {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--bg-light) 92%, var(--primary) 8%) 0%, color-mix(in srgb, var(--bg-light) 96%, var(--bg-dark) 4%) 100%);
+    border-bottom-color: color-mix(in srgb, var(--text-dark) 14%, transparent);
+  }
+  :root[data-theme="dark"] body header {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--bg-dark) 92%, transparent) 0%, color-mix(in srgb, var(--bg-dark) 98%, transparent) 100%);
+    border-bottom-color: color-mix(in srgb, var(--text-light) 18%, transparent);
+  }
+  .hero__content h1 {
+    background: color-mix(in srgb, var(--bg-dark) 45%, transparent);
+  }
+}
+
+@supports not (overflow: clip) {
+  .hero {
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,39 @@
+/* 404 & offline & success */
+.error__not-found {
+  min-height: calc(100svh - var(--header-height, 80px));
+  min-height: calc(100dvh - var(--header-height, 80px));
+  display: grid;
+  place-items: center;
+  padding: var(--section-py-lg) var(--section-px-sm);
+  text-align: center;
+}
+.error-page__section {
+  padding: var(--space-6);
+  text-align: center;
+  background: var(--surface-1);
+  border-radius: var(--radius-2);
+  margin-inline: var(--space-2);
+}
+.error-page__title {
+  margin-inline: auto;
+  font-size: var(--fs-4);
+  color: var(--text-title);
+}
+.error-page__text {
+  color: var(--text-muted);
+  margin-block: var(--space-6);
+  font-size: var(--fs-7);
+}
+.error-page__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.error-page__actions .btn {
+  color: #fff;
+  width: 240px;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: var(--fs-9-micro);
+}

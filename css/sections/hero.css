@@ -1,0 +1,84 @@
+.hero {
+  position: relative;
+  height: 65vh;
+  min-height: 320px;
+  max-height: 600px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow: clip;
+}
+.hero__media,
+.hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero__img {
+  object-fit: cover;
+  object-position: center 35%;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-dark) 55%, transparent), color-mix(in srgb, var(--bg-dark) 55%, transparent));
+}
+:root[data-theme="dark"] .hero::before {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-dark) 65%, transparent), color-mix(in srgb, var(--bg-dark) 65%, transparent));
+}
+.hero__content {
+  position: relative;
+  z-index: 1;
+  color: var(--text-inverse);
+  max-width: 760px;
+  margin: var(--space-2);
+}
+.hero__content h1 {
+  font-size: var(--fs-4);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+  text-wrap: balance;
+  text-transform: uppercase;
+  text-shadow:
+    0 2px 6px color-mix(in srgb, var(--bg-dark) 45%, transparent),
+    0 1px 1px color-mix(in srgb, var(--bg-dark) 35%, transparent);
+  animation: fadeInUp 1s ease-out;
+  display: inline-block;
+  padding: var(--space-3) var(--space-4);
+  margin: 0 auto;
+  border-radius: var(--radius-2);
+  background: color-mix(in srgb, var(--bg-dark) 28%, transparent);
+  backdrop-filter: blur(6px) saturate(115%);
+  -webkit-backdrop-filter: blur(6px) saturate(115%);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--bg-dark) 18%, transparent);
+}
+.hero__content .accent {
+  color: var(--accent-400);
+}
+
+@media (min-width: 480px) {
+  .hero {
+    height: 56vh;
+    max-height: 900px;
+  }
+}
+@media (min-width: 760px) {
+  .hero {
+    height: 85vh;
+    min-height: 500px;
+  }
+  .hero__img {
+    object-position: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__content h1 {
+    animation: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: color-mix(in srgb, var(--bg-dark) 55%, transparent);
+  }
+}
