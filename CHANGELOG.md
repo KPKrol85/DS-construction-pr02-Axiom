@@ -38,4 +38,4 @@ Recorded history begins with the initial standalone repository import; the entri
 
 - Added a bilingual (PL/EN) `README.md` documenting the technology stack, project structure, build pipeline, and deployment contract.
 - Added `settings.md` documenting every `package.json` script with its command, purpose, and intended usage moment.
-- Added the MIT `LICENSE` file for the project.
+- Added the KP_Code proprietary project license (`LICENSE`, version 1.0) as the project-level license, with third-party materials documented as excluded from the proprietary grant.

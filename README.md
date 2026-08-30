@@ -120,7 +120,7 @@ W repozytorium widoczne są konkretne mechanizmy wydajnościowe:
 - Dodanie automatycznej walidacji linków wewnętrznych dla całej struktury wielostronicowej.
 
 ### Licencja
-Projekt jest udostępniony na licencji MIT. Szczegóły w pliku `LICENSE`.
+Projekt jest objęty własnościową licencją KP_Code (Własnościowa Licencja Projektu KP_CODE, wersja 1.0). Materiały podmiotów trzecich podlegają własnym licencjom. Szczegóły w pliku `LICENSE`.
 
 ## EN
 
@@ -242,4 +242,4 @@ The repository contains explicit performance mechanisms:
 - Add automated internal link validation across the multi-page structure.
 
 ### License
-This project is licensed under the MIT License. See `LICENSE` for details.
+This project is covered by the KP_Code proprietary project license (KP_CODE Proprietary Project License, version 1.0). Third-party materials remain subject to their own licenses. See `LICENSE` for details.
