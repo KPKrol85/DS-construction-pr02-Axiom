@@ -34,6 +34,7 @@ Recorded history begins with the initial standalone repository import; the entri
 ### Testing
 
 - Added Lighthouse and pa11y QA runners (`npm run qa`) covering the home page, one service subpage, and one legal subpage, writing reports to `reports/`.
+- Added `npm run qa:references`, a static reference-integrity check (`tools/qa/check-references.mjs`) that resolves the local references declared by the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the canonical production precache inputs owned by `tools/sw/build-sw.mjs`, reading only the tracked sources so it needs no local server and no browser; external, `mailto:`, `tel:`, `data:`, and same-document fragment references are ignored, unresolved references are reported with the source file that declares them and exit the run non-zero, and the precached generated bundle URLs (`/style.min.css`, `/script.min.js`) are validated against the build scripts that declare those outputs rather than against build output that exists only after `npm run build`.
 
 ### Security
 

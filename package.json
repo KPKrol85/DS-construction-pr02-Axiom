@@ -42,6 +42,7 @@
     "serve:dist": "http-server dist -c-1 -p 8080",
     "qa:lighthouse": "node tools/qa/run-lighthouse.mjs",
     "qa:a11y": "node tools/qa/run-pa11y.mjs",
+    "qa:references": "node tools/qa/check-references.mjs",
     "qa": "npm run qa:lighthouse && npm run qa:a11y",
     "build:head": "node tools/html/build-head.mjs",
     "lint": "eslint js tools sw.template.js"

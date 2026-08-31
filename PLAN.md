@@ -13,9 +13,8 @@
 
 ## Current priorities
 
-1. `PH2-01` — Add an automated reference-integrity check.
-2. `PH2-02` — Reduce the shipped image set to referenced files.
-3. `PH1-03` — Give the root service worker a declared owner.
+1. `PH2-02` — Reduce the shipped image set to referenced files.
+2. `PH1-03` — Give the root service worker a declared owner.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -50,10 +49,10 @@
 
 **Goal:** Ship only the files the pages use, and detect broken references automatically.
 
-- [ ] **PH2-01 — Add an automated reference-integrity check**
-  - [ ] add a validation script (new file, e.g. `tools/qa/check-references.mjs`) that resolves local references from the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the service worker precache list
-  - [ ] report unresolved references with their source file
-  - [ ] expose it as an npm script alongside the existing `qa:*` entries
+- [x] **PH2-01 — Add an automated reference-integrity check**
+  - [x] add a validation script (new file, e.g. `tools/qa/check-references.mjs`) that resolves local references from the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the service worker precache list
+  - [x] report unresolved references with their source file
+  - [x] expose it as an npm script alongside the existing `qa:*` entries
   - **Priority:** Medium
   - **Completion condition:** the check runs without a server, exits non-zero on a broken reference, and passes on the current repository
   - **Source:** `README.md` roadmap; `daily-AUDIT.md` — optional improvement
