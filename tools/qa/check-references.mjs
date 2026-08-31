@@ -174,9 +174,12 @@ const extractManifestReferences = (manifest) => {
   return references;
 };
 
-// Reads the canonical precache list straight out of tools/sw/build-sw.mjs so
-// the production definition stays the single source of truth. The root sw.js
-// carries a stale hand-written list (PH1-03) and is deliberately not read here.
+// Reads the canonical production precache list straight out of
+// tools/sw/build-sw.mjs so the production definition stays the single source of
+// truth. Both generated service workers come from that builder's profiles -
+// dist/sw.js from this list, the root sw.js from the local profile, whose
+// entries every maintained page already references - so reading an output here
+// would only check the generator against itself.
 const readBasePrecache = async () => {
   const source = await fs.readFile(buildSwPath, "utf8");
   const match = source.match(/const BASE_PRECACHE\s*=\s*(\[[\s\S]*?\])\s*;/);

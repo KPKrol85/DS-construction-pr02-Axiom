@@ -13,7 +13,7 @@
 
 ## Current priorities
 
-1. `PH1-03` — Give the root service worker a declared owner.
+- No item is currently prioritized; Phase 1 and Phase 2 are complete.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -35,11 +35,11 @@
   - **Completion condition:** every asset the production pages request is matched by an intentional cache rule, and no unversioned file is served as `immutable`
   - **Source:** `daily-AUDIT.md` — P1-01
 
-- [ ] **PH1-03 — Give the root service worker a declared owner**
-  - [ ] decide whether the repository keeps a root `sw.js` or serves only the generated `dist/sw.js`
-  - [ ] if it is kept, generate it from `sw.template.js` as part of the build so its revision and precache list follow the sources
-  - [ ] if it is dropped, confirm local development still registers a service worker or accept the change explicitly
-  - [ ] keep `sw.template.js` as the only hand-edited service worker source
+- [x] **PH1-03 — Give the root service worker a declared owner**
+  - [x] decide whether the repository keeps a root `sw.js` or serves only the generated `dist/sw.js`
+  - [x] if it is kept, generate it from `sw.template.js` as part of the build so its revision and precache list follow the sources
+  - [x] if it is dropped, confirm local development still registers a service worker or accept the change explicitly
+  - [x] keep `sw.template.js` as the only hand-edited service worker source
   - **Priority:** Medium
   - **Completion condition:** no service worker file in the repository can drift from `sw.template.js` without the build producing it
   - **Source:** `daily-AUDIT.md` — P2-01
