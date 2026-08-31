@@ -28,6 +28,7 @@ Recorded history begins with the initial standalone repository import; the entri
 - Added ESLint flat configuration (`eslint.config.mjs`) covering the browser ES Modules in `js/`, the Node `.mjs` tooling in `tools/`, and the `sw.template.js` service worker source, each linted in its own execution environment.
 - Added `npm run lint` for the canonical JavaScript sources, with generated and minified output (`dist/`, the generated `sw.js`, `*.min.js`) excluded from linting.
 - Removed redundant escape characters from template literals in `tools/js/build-js.mjs`, the only source correction required by the lint baseline.
+- Added `/reports/` to the root `.gitignore`, completing the ignore contract that keeps the dependency directory, the generated `dist/` output, and the QA report output outside the committable working tree.
 
 ### Testing
 

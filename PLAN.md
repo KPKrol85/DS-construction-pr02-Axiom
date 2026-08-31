@@ -13,19 +13,18 @@
 
 ## Current priorities
 
-1. `PH1-01` — Add ignore rules for dependency and build directories.
-2. `PH1-02` — Align the cache policy with the built output paths.
-3. `PH2-01` — Add an automated reference-integrity check.
-4. `PH2-02` — Reduce the shipped image set to referenced files.
-5. `PH1-03` — Give the root service worker a declared owner.
+1. `PH1-02` — Align the cache policy with the built output paths.
+2. `PH2-01` — Add an automated reference-integrity check.
+3. `PH2-02` — Reduce the shipped image set to referenced files.
+4. `PH1-03` — Give the root service worker a declared owner.
 
 ## Phase 1 — Delivery and repository contracts
 
 **Goal:** Make the repository and the delivered artifacts describe what the build actually produces.
 
-- [ ] **PH1-01 — Add ignore rules for dependency and build directories**
-  - [ ] create a root `.gitignore` (new file) covering the dependency directory, `dist/`, and `reports/`
-  - [ ] confirm no already-tracked file is unintentionally excluded by the new rules
+- [x] **PH1-01 — Add ignore rules for dependency and build directories**
+  - [x] ensure the root `.gitignore` covers the dependency directory, `dist/`, and `reports/`
+  - [x] confirm no already-tracked file is unintentionally excluded by the new rules
   - **Priority:** High
   - **Completion condition:** `npm install`, `npm run build`, and `npm run qa` leave no untracked-but-committable artifacts in the working tree
   - **Source:** `daily-AUDIT.md` — P1-03

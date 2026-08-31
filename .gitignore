@@ -17,6 +17,7 @@ node_modules/
 
 # Test and report output
 
+/reports/
 /test-results/
 /playwright-report/
 /.lighthouse-reports/
