@@ -13,10 +13,9 @@
 
 ## Current priorities
 
-1. `PH1-02` — Align the cache policy with the built output paths.
-2. `PH2-01` — Add an automated reference-integrity check.
-3. `PH2-02` — Reduce the shipped image set to referenced files.
-4. `PH1-03` — Give the root service worker a declared owner.
+1. `PH2-01` — Add an automated reference-integrity check.
+2. `PH2-02` — Reduce the shipped image set to referenced files.
+3. `PH1-03` — Give the root service worker a declared owner.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -29,11 +28,11 @@
   - **Completion condition:** `npm install`, `npm run build`, and `npm run qa` leave no untracked-but-committable artifacts in the working tree
   - **Source:** `daily-AUDIT.md` — P1-03
 
-- [ ] **PH1-02 — Align the cache policy with the built output paths**
-  - [ ] map every asset path present in `dist/` after `npm run build` to the rule that matches it in `_headers`
-  - [ ] give the production bundles (`style.min.css`, `script.min.js`) a caching rule instead of inheriting `no-cache` from `/*`
-  - [ ] remove or narrow the one-year `immutable` rules that currently cover unversioned copied sources, including `js/theme-init.js`
-  - [ ] verify the resulting rule set against the built output, not against the working tree
+- [x] **PH1-02 — Align the cache policy with the built output paths**
+  - [x] map every asset path present in `dist/` after `npm run build` to the rule that matches it in `_headers`
+  - [x] give the production bundles (`style.min.css`, `script.min.js`) a caching rule instead of inheriting `no-cache` from `/*`
+  - [x] remove or narrow the one-year `immutable` rules that currently cover unversioned copied sources, including `js/theme-init.js`
+  - [x] verify the resulting rule set against the built output, not against the working tree
   - **Priority:** High
   - **Completion condition:** every asset the production pages request is matched by an intentional cache rule, and no unversioned file is served as `immutable`
   - **Source:** `daily-AUDIT.md` — P1-01

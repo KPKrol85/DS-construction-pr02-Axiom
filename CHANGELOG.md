@@ -29,6 +29,7 @@ Recorded history begins with the initial standalone repository import; the entri
 - Added `npm run lint` for the canonical JavaScript sources, with generated and minified output (`dist/`, the generated `sw.js`, `*.min.js`) excluded from linting.
 - Removed redundant escape characters from template literals in `tools/js/build-js.mjs`, the only source correction required by the lint baseline.
 - Added `/reports/` to the root `.gitignore`, completing the ignore contract that keeps the dependency directory, the generated `dist/` output, and the QA report output outside the committable working tree.
+- Aligned the `_headers` cache policy with the paths the build actually produces: the production bundles `style.min.css` and `script.min.js` now carry explicit finite, revalidated cache rules instead of inheriting the global fallback; the unversioned CSS and JavaScript sources copied into `dist/` no longer receive one-year `immutable` caching, including `js/theme-init.js`, which production pages load directly; fixed-name images and `manifest.webmanifest` keep finite browser caching without `immutable`; the version-segmented self-hosted font paths retain long-lived `immutable` caching; and the stale `/assets/icons/*` rule, which matches no directory in the built output, was removed.
 
 ### Testing
 
