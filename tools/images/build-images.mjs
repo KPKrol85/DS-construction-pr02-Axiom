@@ -11,9 +11,42 @@ const outputRoot = path.join(sourceRoot, "_optimized");
 const args = new Set(process.argv.slice(2));
 const skipDirs = new Set(["favicon", "icon", "logo", "shortcuts", "screenshots", "og", "_optimized"]);
 const rasterExts = new Set([".jpg", ".jpeg", ".png"]);
-const responsiveWidths = [480, 768, 1024, 1440, 1920];
 const minProcessDimension = 420;
-const sizeSuffixPattern = /-\d{3,4}x\d{3,4}$/;
+
+// Widths declared by the two `<picture>` shapes the pages use: the full-bleed
+// sets (hero, about, and the gallery spreads opened by the lightbox) and the
+// 600x400 service cards, whose srcset only names one smaller candidate.
+const fullBleedWidths = [480, 768, 1024, 1440];
+const serviceCardWidths = [480];
+
+// The optimized set is declared by the pages, not by this script. Every entry
+// is a source whose `<picture>` requests `_optimized/` candidates, and its
+// widths are exactly the `w` descriptors that srcset carries. A source that is
+// absent from this map has no production consumer for a generated variant, so
+// nothing is written for it. Each entry also emits a full-size webp and avif,
+// which the largest candidate of each srcset points at.
+const responsiveSources = new Map([
+  ["hero/hero-1920x1080.jpg", fullBleedWidths],
+  ["o-nas/o-nas-1600x1200.jpg", fullBleedWidths],
+  ["realizacje/budowa-domu-02-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/budowa-domu-05-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/instalacje-elektryczne-06-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/instalacje-sanitarne-02-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/instalacje-sanitarne-06-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/poddasze-02-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/poddasze-03-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/poddasze-06-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/remont-02-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/remont-04-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/wykonczenia-wnetrza-01-1600x1067.jpg", fullBleedWidths],
+  ["realizacje/wykonczenia-wnetrza-05-1600x1067.jpg", fullBleedWidths],
+  ["uslugi/adaptacja-poddaszy-600x400.jpg", serviceCardWidths],
+  ["uslugi/budowa-domow-600x400.jpg", serviceCardWidths],
+  ["uslugi/instalacje-elektryczne-600x400.jpg", serviceCardWidths],
+  ["uslugi/instalacje-sanitarne-600x400.jpg", serviceCardWidths],
+  ["uslugi/remonty-600x400.jpg", serviceCardWidths],
+  ["uslugi/wykonczenia-wnetrz-600x400.jpg", serviceCardWidths],
+]);
 
 const webpOptions = { quality: 80, effort: 5 };
 const avifOptions = { quality: 45, effort: 4 };
@@ -60,10 +93,11 @@ if (args.has("--clean")) {
 const run = async () => {
   const files = await walk(sourceRoot);
   const skipped = [];
+  const processedSources = new Set();
   let processedCount = 0;
   let inputBytes = 0;
   let outputBytes = 0;
-  let responsiveSkipped = 0;
+  let notRequested = 0;
 
   for (const filePath of files) {
     const relPath = safeRel(filePath);
@@ -71,6 +105,12 @@ const run = async () => {
 
     if (!rasterExts.has(ext)) {
       skipped.push({ file: relPath, reason: `format:${ext || "unknown"}` });
+      continue;
+    }
+
+    const requestedWidths = responsiveSources.get(relPath);
+    if (!requestedWidths) {
+      notRequested += 1;
       continue;
     }
 
@@ -101,7 +141,6 @@ const run = async () => {
     await ensureDir(outputDir);
 
     const baseName = path.parse(filePath).name;
-    const isSizeTagged = sizeSuffixPattern.test(baseName);
 
     const outputs = [
       {
@@ -119,11 +158,7 @@ const run = async () => {
       await sharp(filePath).rotate().toFormat(format, options).toFile(baseOutput);
       outputBytes += (await fs.stat(baseOutput)).size;
 
-      if (isSizeTagged) {
-        responsiveSkipped += 1;
-        continue;
-      }
-      for (const width of responsiveWidths) {
+      for (const width of requestedWidths) {
         if (width >= metadata.width) {
           continue;
         }
@@ -137,19 +172,34 @@ const run = async () => {
       }
     }
 
+    processedSources.add(relPath);
     processedCount += 1;
   }
 
   console.log(`[img:build] Processed files: ${processedCount}`);
   console.log(`[img:build] Input size: ${formatBytes(inputBytes)}`);
   console.log(`[img:build] Output size: ${formatBytes(outputBytes)}`);
-  console.log(`[img:build] Responsive variants skipped (size-tagged sources): ${responsiveSkipped}`);
+  console.log(`[img:build] Sources no page requests an optimized variant of: ${notRequested}`);
 
   if (skipped.length) {
     console.log(`[img:build] Skipped files (${skipped.length}):`);
     skipped.forEach((entry) => {
       console.log(`- ${entry.file} (${entry.reason})`);
     });
+  }
+
+  // A declared source that never produced output means a page still asks for
+  // variants this run did not write, so fail instead of shipping a gap.
+  const missingSources = [...responsiveSources.keys()].filter(
+    (source) => !processedSources.has(source),
+  );
+
+  if (missingSources.length) {
+    console.error(`[img:build] Declared sources that produced no output (${missingSources.length}):`);
+    missingSources.forEach((source) => {
+      console.error(`- ${source}`);
+    });
+    process.exitCode = 1;
   }
 };
 

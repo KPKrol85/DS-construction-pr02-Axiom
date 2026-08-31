@@ -13,8 +13,7 @@
 
 ## Current priorities
 
-1. `PH2-02` — Reduce the shipped image set to referenced files.
-2. `PH1-03` — Give the root service worker a declared owner.
+1. `PH1-03` — Give the root service worker a declared owner.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -57,11 +56,11 @@
   - **Completion condition:** the check runs without a server, exits non-zero on a broken reference, and passes on the current repository
   - **Source:** `README.md` roadmap; `daily-AUDIT.md` — optional improvement
 
-- [ ] **PH2-02 — Reduce the shipped image set to referenced files**
-  - [ ] determine which widths and formats the `srcset` declarations actually consume
-  - [ ] narrow `tools/images/build-images.mjs` so it stops generating variants no page requests
-  - [ ] remove unreferenced originals, including the `-dup` files and the unused `instalacja-elektryczna-01-*` set
-  - [ ] confirm `tools/release/build-dist.mjs` copies only what the pages need
+- [x] **PH2-02 — Reduce the shipped image set to referenced files**
+  - [x] determine which widths and formats the `srcset` declarations actually consume
+  - [x] narrow `tools/images/build-images.mjs` so it stops generating variants no page requests
+  - [x] remove unreferenced originals, including the `-dup` files and the unused `instalacja-elektryczna-01-*` set
+  - [x] confirm `tools/release/build-dist.mjs` copies only what the pages need
   - **Priority:** High
   - **Depends on:** `PH2-01`
   - **Completion condition:** the reference check passes and every file under `assets/img/` reaching `dist/` is requested by a page, the manifest, or the precache list
