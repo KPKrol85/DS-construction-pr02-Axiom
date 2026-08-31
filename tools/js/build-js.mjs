@@ -47,7 +47,7 @@ const transformModule = async (filePath) => {
     const depPath = resolveImport(imp.path, resolvedPath);
     const depId = normalizeId(depPath);
     const importRegex = new RegExp(
-      `import\\s+\\{\\s*${escapeRegExp(imp.names)}\\s*\\}\\s+from\\s+[\"']${escapeRegExp(imp.path)}[\"']\\s*;?`,
+      `import\\s+\\{\\s*${escapeRegExp(imp.names)}\\s*\\}\\s+from\\s+["']${escapeRegExp(imp.path)}["']\\s*;?`,
       "g"
     );
     const replacement = `const { ${imp.names} } = __require("${depId}");`;
@@ -95,7 +95,7 @@ const build = async () => {
     })
     .join("\n");
 
-  const bundle = `(() => {\nconst __modules = {};\nconst __require = (id) => {\n  const mod = __modules[id];\n  if (!mod) throw new Error(\"Module not found: \" + id);\n  if (mod.executed) return mod.exports;\n  mod.executed = true;\n  mod.fn(mod.exports);\n  return mod.exports;\n};\n${moduleEntries}\n__require(\"${normalizeId(entryFile)}\");\n})();`;
+  const bundle = `(() => {\nconst __modules = {};\nconst __require = (id) => {\n  const mod = __modules[id];\n  if (!mod) throw new Error("Module not found: " + id);\n  if (mod.executed) return mod.exports;\n  mod.executed = true;\n  mod.fn(mod.exports);\n  return mod.exports;\n};\n${moduleEntries}\n__require("${normalizeId(entryFile)}");\n})();`;
 
   const result = await minify(bundle);
   if (!result.code) throw new Error("Minification failed");

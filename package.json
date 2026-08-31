@@ -15,9 +15,12 @@
     "kp_code"
   ],
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
     "cssnano": "^7.1.1",
     "cssnano-cli": "^1.0.5",
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
     "http-server": "^14.1.1",
     "lighthouse": "^12.2.1",
     "pa11y": "^8.0.0",
@@ -40,6 +43,7 @@
     "qa:lighthouse": "node tools/qa/run-lighthouse.mjs",
     "qa:a11y": "node tools/qa/run-pa11y.mjs",
     "qa": "npm run qa:lighthouse && npm run qa:a11y",
-    "build:head": "node tools/html/build-head.mjs"
+    "build:head": "node tools/html/build-head.mjs",
+    "lint": "eslint js tools sw.template.js"
   }
 }

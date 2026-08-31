@@ -25,6 +25,9 @@ Recorded history begins with the initial standalone repository import; the entri
 - Added a `sharp`-based responsive image pipeline generating WebP and AVIF variants at fixed widths (`npm run img:build`, `npm run img:clean`).
 - Added `tools/html/build-head.mjs` with `tools/templates/head.partial.html` and `tools/templates/pages.meta.json` as the single source for per-page `<head>` metadata.
 - Added local preview servers for the working tree and for production output (`npm run serve`, `npm run serve:dist`).
+- Added ESLint flat configuration (`eslint.config.mjs`) covering the browser ES Modules in `js/`, the Node `.mjs` tooling in `tools/`, and the `sw.template.js` service worker source, each linted in its own execution environment.
+- Added `npm run lint` for the canonical JavaScript sources, with generated and minified output (`dist/`, the generated `sw.js`, `*.min.js`) excluded from linting.
+- Removed redundant escape characters from template literals in `tools/js/build-js.mjs`, the only source correction required by the lint baseline.
 
 ### Testing
 
