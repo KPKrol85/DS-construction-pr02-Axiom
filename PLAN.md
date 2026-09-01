@@ -97,10 +97,10 @@
 
 **Goal:** Make the existing audits runnable in one step and protect the two most complex interactive modules.
 
-- [ ] **PH4-01 — Make the QA audits runnable without a manual server step**
-  - [ ] start and stop the local server from within `tools/qa/run-lighthouse.mjs` and `tools/qa/run-pa11y.mjs`, or from a shared helper
-  - [ ] fail with a clear message when the port is already in use
-  - [ ] keep the current audited URLs and report paths unchanged
+- [x] **PH4-01 — Make the QA audits runnable without a manual server step**
+  - [x] start and stop the local server from within `tools/qa/run-lighthouse.mjs` and `tools/qa/run-pa11y.mjs`, or from a shared helper
+  - [x] fail with a clear message when the port is already in use
+  - [x] keep the current audited URLs and report paths unchanged
   - **Priority:** Medium
   - **Completion condition:** `npm run qa` completes from a clean shell without a separately started `npm run serve`
   - **Source:** `README.md` roadmap

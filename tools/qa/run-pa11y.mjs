@@ -2,17 +2,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { spawn } from "node:child_process";
 
+import { startLocalQaServer } from "./local-server.mjs";
+
 const rootDir = process.cwd();
 const reportsDir = path.join(rootDir, "reports", "pa11y");
 
-await fs.mkdir(reportsDir, { recursive: true });
-
-const pa11yBin = path.join(
-  rootDir,
-  "node_modules",
-  ".bin",
-  process.platform === "win32" ? "pa11y.cmd" : "pa11y",
-);
+// Resolved the same repository-local way the server helper resolves
+// http-server: the package entry point, run with the current Node binary.
+const pa11yEntry = path.join(rootDir, "node_modules", "pa11y", "bin", "pa11y.js");
 
 const checks = [
   { url: "http://localhost:8080/", report: "index.json" },
@@ -24,13 +21,13 @@ const checks = [
 ];
 
 const runPa11y = async (url) => {
-  const args = [url, "--reporter", "json"];
+  const args = [pa11yEntry, url, "--reporter", "json"];
 
   return new Promise((resolve, reject) => {
     const stdoutChunks = [];
     const stderrChunks = [];
 
-    const child = spawn(pa11yBin, args, {
+    const child = spawn(process.execPath, args, {
       cwd: rootDir,
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -54,10 +51,27 @@ const runPa11y = async (url) => {
   });
 };
 
-for (const check of checks) {
-  const output = await runPa11y(check.url);
-  const reportPath = path.join(reportsDir, check.report);
+const run = async () => {
+  await fs.mkdir(reportsDir, { recursive: true });
 
-  await fs.writeFile(reportPath, output, "utf8");
-  console.log(`Saved ${path.relative(rootDir, reportPath)}`);
+  const server = await startLocalQaServer({ rootDir });
+
+  try {
+    for (const check of checks) {
+      const output = await runPa11y(check.url);
+      const reportPath = path.join(reportsDir, check.report);
+
+      await fs.writeFile(reportPath, output, "utf8");
+      console.log(`Saved ${path.relative(rootDir, reportPath)}`);
+    }
+  } finally {
+    await server.stop();
+  }
+};
+
+try {
+  await run();
+} catch (error) {
+  console.error(`Accessibility audit failed: ${error.message}`);
+  process.exitCode = 1;
 }
