@@ -100,10 +100,7 @@ const extractHtmlReferences = (html) => {
   const references = [];
   const markup = html.replace(/<!--[\s\S]*?-->/g, "");
   const attributeNames = [...singleUrlAttributes, ...srcsetAttributes];
-  const attributePattern = new RegExp(
-    `\\s(${attributeNames.join("|")})\\s*=\\s*(?:"([^"]*)"|'([^']*)')`,
-    "gi",
-  );
+  const attributePattern = new RegExp(`\\s(${attributeNames.join("|")})\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, "gi");
 
   for (const match of markup.matchAll(attributePattern)) {
     const attribute = match[1].toLowerCase();
@@ -192,9 +189,7 @@ const readBasePrecache = async () => {
   try {
     entries = JSON.parse(match[1].replace(/,(\s*])$/, "$1"));
   } catch (error) {
-    throw new Error(
-      `Could not parse BASE_PRECACHE in ${relativeToRoot(buildSwPath)}: ${error.message}`,
-    );
+    throw new Error(`Could not parse BASE_PRECACHE in ${relativeToRoot(buildSwPath)}: ${error.message}`, { cause: error });
   }
 
   if (!Array.isArray(entries) || entries.some((entry) => typeof entry !== "string")) {
@@ -228,9 +223,7 @@ const collectPrecacheReferences = async (manifest) => {
 // Every string literal in a builder, with comments removed, so an output path
 // that survives only in prose cannot satisfy the contract.
 const collectStringLiterals = (source) => {
-  const code = source
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/(^|[^:])\/\/.*$/gm, "$1");
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
   const literals = new Set();
 
   for (const match of code.matchAll(/"([^"\\\n]*)"|'([^'\\\n]*)'|`([^`\\\n]*)`/g)) {
@@ -263,9 +256,7 @@ const checkBuildOutput = async (sourceLabel, reference) => {
   }
 
   const literals = collectStringLiterals(builderSource);
-  const declared =
-    literals.has(outputPath) ||
-    (literals.has(path.posix.dirname(outputPath)) && literals.has(path.posix.basename(outputPath)));
+  const declared = literals.has(outputPath) || (literals.has(path.posix.dirname(outputPath)) && literals.has(path.posix.basename(outputPath)));
 
   if (declared) return null;
 
@@ -406,7 +397,9 @@ const run = async () => {
   try {
     manifest = JSON.parse(manifestRaw);
   } catch (error) {
-    throw new Error(`Could not parse ${manifestLabel}: ${error.message}`);
+    throw new Error(`Could not parse ${manifestLabel}: ${error.message}`, {
+      cause: error,
+    });
   }
 
   await checkReferences(manifestLabel, ".", extractManifestReferences(manifest), state);
@@ -414,28 +407,16 @@ const run = async () => {
   const precacheReferences = await collectPrecacheReferences(manifest);
   await checkReferences(relativeToRoot(buildSwPath), ".", precacheReferences, state);
 
-  const scope = [
-    `${htmlFiles.length} HTML pages`,
-    `${cssFiles.length} CSS files`,
-    manifestLabel,
-    `${precacheReferences.length} precache entries`,
-  ].join(", ");
+  const scope = [`${htmlFiles.length} HTML pages`, `${cssFiles.length} CSS files`, manifestLabel, `${precacheReferences.length} precache entries`].join(", ");
   const summary = `Checked ${state.checked} local references across ${scope} (${state.skipped} external or in-page references ignored).`;
 
   if (state.findings.length > 0) {
-    state.findings.sort(
-      (a, b) =>
-        a.source.localeCompare(b.source) ||
-        a.value.localeCompare(b.value) ||
-        a.kind.localeCompare(b.kind),
-    );
+    state.findings.sort((a, b) => a.source.localeCompare(b.source) || a.value.localeCompare(b.value) || a.kind.localeCompare(b.kind));
 
     console.error(`Unresolved local references (${state.findings.length}):`);
 
     for (const finding of state.findings) {
-      console.error(
-        `  ${finding.source} [${finding.kind}] ${finding.value} -> ${finding.target} (${finding.reason})`,
-      );
+      console.error(`  ${finding.source} [${finding.kind}] ${finding.value} -> ${finding.target} (${finding.reason})`);
     }
 
     console.error(summary);
