@@ -43,6 +43,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - `http-server` 14.1.1 — lokalny serwer HTTP
 - `lighthouse` 12.8.2 i `@lhci/cli` 0.15.1 — audyty Lighthouse
 - `pa11y` 8.0.0 — automatyczne audyty dostępności
+- `eslint` 10.9.1 — statyczna analiza JavaScriptu (`npm run lint`)
 
 ### Architektura
 
@@ -50,15 +51,16 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - **JavaScript** — `js/main.js` wywołuje `initApp()` z `js/core/init.js`, które inicjalizuje komponenty w ustalonej kolejności. Wspólne selektory i progi są scentralizowane w `js/core/config.js`, a dostęp do `localStorage` przechodzi przez bezpieczne wrappery w `js/utils/storage.js`.
 - **Motyw** — `js/theme-init.js` jest ładowany synchronicznie przed treścią i ustawia `data-theme` na podstawie zapisanego wyboru albo `prefers-color-scheme`.
 - **Metadane stron** — sekcje `<head>` są generowane z `tools/templates/head.partial.html` oraz `tools/templates/pages.meta.json`.
-- **Źródła kanoniczne a pliki generowane** — źródłami są `css/`, `js/`, pliki HTML, `sw.template.js` i `tools/templates/`. Katalog `dist/`, `assets/img/_optimized/` oraz `sw.js` są wynikiem generowania i nie powinny być edytowane ręcznie.
+- **Dane strukturalne** — kanonicznym źródłem są bloki `application/ld+json` osadzone inline w plikach HTML; repozytorium nie utrzymuje równoległych plików JSON-LD.
+- **Źródła kanoniczne a pliki generowane** — źródłami są `css/`, `js/`, pliki HTML, `sw.template.js` i `tools/templates/`. Katalog `dist/`, `assets/img/_optimized/` oraz oba pliki `sw.js` (w katalogu głównym i w `dist/`) są wynikiem generowania i nie powinny być edytowane ręcznie.
 
 ### Struktura projektu
 
 ```text
 .
 ├── index.html                  # strona główna
-├── 404.html                    # strona błędu 404
-├── offline.html                # fallback offline dla Service Workera
+├── 404.html                    # strona błędu 404 (noindex)
+├── offline.html                # fallback offline dla Service Workera (noindex)
 ├── success.html                # potwierdzenie wysłania formularza (noindex)
 ├── services/                   # 6 podstron usług
 ├── legal/                      # 5 podstron prawnych i certyfikaty
@@ -69,8 +71,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── core/                   # init, config, rejestracja Service Workera
 │   ├── components/             # nawigacja, motyw, lightbox, formularz, cookies
 │   ├── sections/               # logika sekcji strony
-│   ├── utils/                  # dom, a11y, storage
-│   └── structured-data/        # pliki JSON-LD (nieładowane w runtime)
+│   └── utils/                  # dom, a11y, storage
 ├── assets/                     # fonty, obrazy, favicony, ikony certyfikatów
 ├── tools/
 │   ├── css/                    # build CSS
@@ -78,11 +79,11 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── sw/                     # generowanie Service Workera
 │   ├── html/                   # generowanie sekcji <head>
 │   ├── images/                 # pipeline obrazów
-│   ├── qa/                     # Lighthouse + pa11y
+│   ├── qa/                     # Lighthouse, pa11y, kontrola odwołań
 │   ├── release/                # czyszczenie i składanie dist/
 │   └── templates/              # head.partial.html + pages.meta.json
-├── sw.template.js              # kanoniczne źródło Service Workera
-├── sw.js                       # Service Worker odpowiadający szablonowi
+├── sw.template.js              # jedyne ręcznie edytowane źródło Service Workera
+├── sw.js                       # Service Worker generowany z szablonu (profil lokalny)
 ├── manifest.webmanifest
 ├── robots.txt
 ├── sitemap.xml
@@ -121,11 +122,13 @@ Serwer `http-server` startuje na `http://localhost:8080` z wyłączonym cache (`
 - `npm run build:clean` — usuwa i tworzy na nowo katalog `dist/`.
 - `npm run build:css` — scala `@import` z `css/main.css` i minifikuje wynik do `dist/style.min.css`.
 - `npm run build:js` — rozwiązuje importy modułów od `js/main.js` i minifikuje wynik do `dist/script.min.js`.
-- `npm run build:sw` — generuje `dist/sw.js` z `sw.template.js`; rewizja cache jest liczona z zawartości `dist/style.min.css`, `dist/script.min.js` i `manifest.webmanifest`.
+- `npm run build:sw` — generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny) i `dist/sw.js` (profil produkcyjny); każdy profil ma własną listę precache i własną rewizję cache liczoną z zasobów, które precache’uje.
 - `npm run build:dist` — kopiuje pliki statyczne do `dist/` i przepisuje odwołania w HTML na `style.min.css` oraz `script.min.js`.
 - `npm run build:head` — generuje sekcje `<head>` na podstawie `tools/templates/head.partial.html` i `tools/templates/pages.meta.json`.
-- `npm run img:build` — generuje warianty WebP i AVIF w `assets/img/_optimized/`; `npm run img:clean` usuwa ten katalog.
-- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y.
+- `npm run img:build` — generuje w `assets/img/_optimized/` warianty WebP i AVIF wyłącznie dla źródeł i szerokości zadeklarowanych w `tools/images/build-images.mjs` na podstawie `srcset` utrzymywanych stron; `npm run img:clean` usuwa ten katalog.
+- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y na działającym serwerze lokalnym.
+- `npm run qa:references` — statyczna kontrola spójności odwołań lokalnych; nie wymaga serwera ani przeglądarki.
+- `npm run lint` — ESLint dla `js/`, `tools/` i `sw.template.js`.
 
 ### Build produkcyjny
 
@@ -140,7 +143,17 @@ Build nie był uruchamiany w ramach przygotowania tej dokumentacji — powyższy
 
 ### Testy i walidacja
 
-Repozytorium nie zawiera testów jednostkowych ani testów e2e. Dostępne są dwa audyty uruchamiane na działającym serwerze lokalnym:
+Repozytorium nie zawiera testów jednostkowych ani testów e2e. Dostępne są dwie kontrole statyczne, które nie wymagają serwera ani przeglądarki:
+
+```bash
+npm run lint
+npm run qa:references
+```
+
+- `lint` uruchamia ESLint dla `js/`, `tools/` i `sw.template.js`.
+- `qa:references` rozwiązuje odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i kanoniczną listę precache z `tools/sw/build-sw.mjs`; nierozwiązane odwołanie kończy przebieg kodem różnym od zera.
+
+Dodatkowo dostępne są dwa audyty uruchamiane na działającym serwerze lokalnym:
 
 ```bash
 npm run serve   # w osobnym terminalu
@@ -156,7 +169,7 @@ Skrypty QA nie uruchamiają serwera samodzielnie. Audyty nie były wykonywane w 
 
 Repozytorium jest przygotowane pod hosting statyczny (konfiguracja w formacie Netlify):
 
-- `_headers` — nagłówki bezpieczeństwa (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) oraz polityka cache: `immutable` dla `css/`, `js/`, fontów i obrazów, `no-cache` dla `sw.js` i plików HTML.
+- `_headers` — nagłówki bezpieczeństwa (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) oraz polityka cache: bundle produkcyjne o stałych nazwach (`style.min.css`, `script.min.js`) oraz niewersjonowane pliki z `css/` i `js/` mają skończony czas świeżości z rewalidacją, wersjonowane ścieżki fontów zachowują długotrwałe `immutable`, obrazy i pliki metadanych mają skończony czas świeżości, a `sw.js` i strony HTML pozostają poza długotrwałym cache (`no-cache`).
 - `_redirects` — plik zawiera obecnie wyłącznie komentarze i nie definiuje aktywnych reguł przekierowań.
 - Formularz kontaktowy korzysta z Netlify Forms i reCAPTCHA; CSP w `_headers` dopuszcza domeny reCAPTCHA.
 - Katalogiem wyjściowym wdrożenia jest `dist/`.
@@ -180,13 +193,11 @@ Repozytorium nie zawiera wyników audytu potwierdzających zgodność z konkretn
 
 ### SEO
 
-- `title`, `meta description`, `canonical` i `meta robots` na każdej stronie; `success.html` ma `noindex, follow`, pozostałe strony `index, follow`.
+- `title`, `meta description`, `canonical` i `meta robots` na każdej stronie; strony pomocnicze `404.html`, `offline.html` i `success.html` mają `noindex, follow`, pozostałe strony `index, follow`.
 - Metadane Open Graph i Twitter wraz z obrazami w `assets/img/og/`.
-- Dane strukturalne JSON-LD osadzone inline w HTML: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, `WebSite` na stronie głównej oraz `WebPage` i `BreadcrumbList` na podstronach.
+- Dane strukturalne JSON-LD osadzone inline w HTML — jedyne źródło danych strukturalnych w repozytorium: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, `WebSite` na stronie głównej oraz `WebPage` i `BreadcrumbList` na podstronach.
 - `robots.txt` ze wskazaniem sitemapy oraz `sitemap.xml` z 12 adresami.
 - Sekcje `<head>` utrzymywane skryptem `npm run build:head`.
-
-Pliki JSON w `js/structured-data/` nie są ładowane w runtime — obowiązującym źródłem danych strukturalnych są bloki inline w HTML.
 
 ### PWA i obsługa offline
 
@@ -194,7 +205,7 @@ Pliki JSON w `js/structured-data/` nie są ładowane w runtime — obowiązując
 - Service Worker jest rejestrowany w `js/core/service-worker.js` dla `/sw.js` z zakresem `/`.
 - Strategie: dokumenty — network-first z fallbackiem na cache i `offline.html`; style i skrypty — stale-while-revalidate; obrazy — cache-first.
 - Podczas `activate` usuwane są cache o nieaktualnej rewizji; Service Worker używa `skipWaiting()` i `clients.claim()`.
-- `sw.js` w katalogu głównym odpowiada strukturze `sw.template.js` z podstawioną rewizją i listą precache; `npm run build:sw` zapisuje swój wynik do `dist/sw.js`.
+- `sw.template.js` jest jedynym ręcznie edytowanym źródłem Service Workera; `npm run build:sw` generuje z niego zarówno `sw.js` w katalogu głównym (profil lokalny, precache źródeł serwowanych przez `npm run serve`), jak i `dist/sw.js` (profil produkcyjny, precache bundli z `dist/`).
 
 Repozytorium nie zawiera weryfikacji instalowalności ani testów działania offline.
 
@@ -227,7 +238,7 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 - Style zmieniaj w `css/` (wejście: `css/main.css`), skrypty w `js/` (wejście: `js/main.js`); pliki w `dist/` są generowane.
 - Zmiany w Service Workerze wprowadzaj w `sw.template.js`, a następnie uruchom `npm run build:sw`; nie edytuj wygenerowanych plików `sw.js` ręcznie.
 - Metadane stron aktualizuj w `tools/templates/pages.meta.json` i regeneruj przez `npm run build:head`.
-- Warianty obrazów w `assets/img/_optimized/` pochodzą z `npm run img:build`.
+- Warianty obrazów w `assets/img/_optimized/` pochodzą z `npm run img:build`; listę źródeł i szerokości deklaruje `tools/images/build-images.mjs` zgodnie z `srcset` na stronach — po zmianie `srcset` zaktualizuj tę deklarację i uruchom skrypt ponownie.
 - Opis wszystkich skryptów npm znajduje się w `settings.md`, historia istotnych zmian w `CHANGELOG.md`.
 - `postcss.config.json` jest obecny w repozytorium, ale wtyczki `postcss-import`, `postcss-nested` i `postcss-preset-env` nie są zainstalowane, a build CSS scala `@import` własnym skryptem i minifikuje przez `cssnano-cli`.
 
@@ -235,8 +246,6 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 
 - Rozszerzenie skryptów QA o automatyczne uruchamianie serwera testowego przed audytami.
 - Dodanie testów jednostkowych dla modułów JS o najwyższej złożoności (formularz, lightbox).
-- Ujednolicenie źródeł JSON-LD (obecnie bloki inline w HTML i pliki w `js/structured-data/`).
-- Dodanie automatycznej walidacji linków wewnętrznych dla całej struktury wielostronicowej.
 
 ### Licencja
 
@@ -290,6 +299,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - `http-server` 14.1.1 — local HTTP server
 - `lighthouse` 12.8.2 and `@lhci/cli` 0.15.1 — Lighthouse audits
 - `pa11y` 8.0.0 — automated accessibility audits
+- `eslint` 10.9.1 — JavaScript static analysis (`npm run lint`)
 
 ### Architecture
 
@@ -297,15 +307,16 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - **JavaScript** — `js/main.js` calls `initApp()` from `js/core/init.js`, which initializes the components in a fixed order. Shared selectors and thresholds are centralized in `js/core/config.js`, and `localStorage` access goes through safe wrappers in `js/utils/storage.js`.
 - **Theme** — `js/theme-init.js` is loaded synchronously before the content and sets `data-theme` from the stored choice or from `prefers-color-scheme`.
 - **Page metadata** — `<head>` sections are generated from `tools/templates/head.partial.html` and `tools/templates/pages.meta.json`.
-- **Canonical sources vs generated files** — the sources are `css/`, `js/`, the HTML files, `sw.template.js`, and `tools/templates/`. The `dist/` directory, `assets/img/_optimized/`, and `sw.js` are generated output and should not be edited by hand.
+- **Structured data** — the canonical source is the inline `application/ld+json` blocks in the HTML files; the repository keeps no parallel JSON-LD files.
+- **Canonical sources vs generated files** — the sources are `css/`, `js/`, the HTML files, `sw.template.js`, and `tools/templates/`. The `dist/` directory, `assets/img/_optimized/`, and both `sw.js` files (the repository root one and `dist/sw.js`) are generated output and should not be edited by hand.
 
 ### Project Structure
 
 ```text
 .
 ├── index.html                  # homepage
-├── 404.html                    # 404 error page
-├── offline.html                # service worker offline fallback
+├── 404.html                    # 404 error page (noindex)
+├── offline.html                # service worker offline fallback (noindex)
 ├── success.html                # form submission confirmation (noindex)
 ├── services/                   # 6 service pages
 ├── legal/                      # 5 legal pages and certificates
@@ -316,8 +327,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── core/                   # init, config, service worker registration
 │   ├── components/             # navigation, theme, lightbox, form, cookies
 │   ├── sections/               # page section logic
-│   ├── utils/                  # dom, a11y, storage
-│   └── structured-data/        # JSON-LD files (not loaded at runtime)
+│   └── utils/                  # dom, a11y, storage
 ├── assets/                     # fonts, images, favicons, certificate icons
 ├── tools/
 │   ├── css/                    # CSS build
@@ -325,11 +335,11 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── sw/                     # service worker generation
 │   ├── html/                   # <head> generation
 │   ├── images/                 # image pipeline
-│   ├── qa/                     # Lighthouse + pa11y
+│   ├── qa/                     # Lighthouse, pa11y, reference check
 │   ├── release/                # dist cleanup and assembly
 │   └── templates/              # head.partial.html + pages.meta.json
-├── sw.template.js              # canonical service worker source
-├── sw.js                       # service worker matching the template
+├── sw.template.js              # the only hand-edited service worker source
+├── sw.js                       # service worker generated from the template (local profile)
 ├── manifest.webmanifest
 ├── robots.txt
 ├── sitemap.xml
@@ -368,11 +378,13 @@ npm run serve
 - `npm run build:clean` — removes and recreates the `dist/` directory.
 - `npm run build:css` — inlines the `@import` chain from `css/main.css` and minifies the result to `dist/style.min.css`.
 - `npm run build:js` — resolves module imports from `js/main.js` and minifies the result to `dist/script.min.js`.
-- `npm run build:sw` — generates `dist/sw.js` from `sw.template.js`; the cache revision is hashed from `dist/style.min.css`, `dist/script.min.js`, and `manifest.webmanifest`.
+- `npm run build:sw` — generates both service workers from `sw.template.js`: the root `sw.js` (local profile) and `dist/sw.js` (production profile); each profile carries its own precache list and its own cache revision hashed from the assets that profile precaches.
 - `npm run build:dist` — copies static files into `dist/` and rewrites HTML references to `style.min.css` and `script.min.js`.
 - `npm run build:head` — generates `<head>` sections from `tools/templates/head.partial.html` and `tools/templates/pages.meta.json`.
-- `npm run img:build` — generates WebP and AVIF variants in `assets/img/_optimized/`; `npm run img:clean` removes that directory.
-- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits.
+- `npm run img:build` — generates WebP and AVIF variants in `assets/img/_optimized/` only for the sources and widths declared in `tools/images/build-images.mjs` from the `srcset` declarations of the maintained pages; `npm run img:clean` removes that directory.
+- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits against a running local server.
+- `npm run qa:references` — static local reference-integrity check; needs no server and no browser.
+- `npm run lint` — ESLint for `js/`, `tools/`, and `sw.template.js`.
 
 ### Production Build
 
@@ -387,7 +399,17 @@ The build was not executed while preparing this documentation — the descriptio
 
 ### Testing and Validation
 
-The repository contains no unit tests and no end-to-end tests. Two audits are available and run against a live local server:
+The repository contains no unit tests and no end-to-end tests. Two static checks are available that need no server and no browser:
+
+```bash
+npm run lint
+npm run qa:references
+```
+
+- `lint` runs ESLint for `js/`, `tools/`, and `sw.template.js`.
+- `qa:references` resolves the local references declared by the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the canonical precache list owned by `tools/sw/build-sw.mjs`; an unresolved reference exits the run non-zero.
+
+In addition, two audits run against a live local server:
 
 ```bash
 npm run serve   # in a separate terminal
@@ -403,7 +425,7 @@ The QA scripts do not start the server themselves. The audits were not executed 
 
 The repository is prepared for static hosting (Netlify-format configuration):
 
-- `_headers` — security headers (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) and the cache policy: `immutable` for `css/`, `js/`, fonts, and images, `no-cache` for `sw.js` and HTML files.
+- `_headers` — security headers (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) and the cache policy: the fixed-name production bundles (`style.min.css`, `script.min.js`) and the unversioned files under `css/` and `js/` use a finite freshness window with revalidation, the versioned font paths keep long-lived `immutable` caching, images and metadata files use finite caching, and `sw.js` and the HTML pages stay outside long-lived caching (`no-cache`).
 - `_redirects` — the file currently contains comments only and defines no active redirect rules.
 - The contact form uses Netlify Forms and reCAPTCHA; the CSP in `_headers` allows the reCAPTCHA domains.
 - The deployment output directory is `dist/`.
@@ -427,13 +449,11 @@ The repository contains no audit results confirming conformance with a specific 
 
 ### SEO
 
-- `title`, `meta description`, `canonical`, and `meta robots` on every page; `success.html` uses `noindex, follow`, the remaining pages use `index, follow`.
+- `title`, `meta description`, `canonical`, and `meta robots` on every page; the utility pages `404.html`, `offline.html`, and `success.html` use `noindex, follow`, the remaining pages use `index, follow`.
 - Open Graph and Twitter metadata with images in `assets/img/og/`.
-- JSON-LD structured data embedded inline in the HTML: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, and `WebSite` on the homepage, plus `WebPage` and `BreadcrumbList` on subpages.
+- JSON-LD structured data embedded inline in the HTML — the only structured-data source in the repository: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, and `WebSite` on the homepage, plus `WebPage` and `BreadcrumbList` on subpages.
 - `robots.txt` pointing to the sitemap and a `sitemap.xml` with 12 URLs.
 - `<head>` sections maintained through `npm run build:head`.
-
-The JSON files in `js/structured-data/` are not loaded at runtime — the inline blocks in the HTML are the effective source of structured data.
 
 ### PWA and Offline Support
 
@@ -441,7 +461,7 @@ The JSON files in `js/structured-data/` are not loaded at runtime — the inline
 - The service worker is registered in `js/core/service-worker.js` for `/sw.js` with scope `/`.
 - Strategies: documents — network-first with a cache and `offline.html` fallback; styles and scripts — stale-while-revalidate; images — cache-first.
 - On `activate`, caches with an outdated revision are removed; the service worker uses `skipWaiting()` and `clients.claim()`.
-- The root `sw.js` matches the structure of `sw.template.js` with the revision and precache list filled in; `npm run build:sw` writes its own output to `dist/sw.js`.
+- `sw.template.js` is the only hand-edited service worker source; `npm run build:sw` generates both the root `sw.js` (local profile, precaching the sources served by `npm run serve`) and `dist/sw.js` (production profile, precaching the built bundles from `dist/`) from it.
 
 The repository contains no installability verification and no offline behavior tests.
 
@@ -474,7 +494,7 @@ State kept in the browser:
 - Change styles in `css/` (entry point: `css/main.css`) and scripts in `js/` (entry point: `js/main.js`); files in `dist/` are generated.
 - Make service worker changes in `sw.template.js` and then run `npm run build:sw`; do not edit generated `sw.js` files by hand.
 - Update page metadata in `tools/templates/pages.meta.json` and regenerate it through `npm run build:head`.
-- Image variants in `assets/img/_optimized/` come from `npm run img:build`.
+- Image variants in `assets/img/_optimized/` come from `npm run img:build`; `tools/images/build-images.mjs` declares the sources and widths to match the `srcset` declarations on the pages — after changing a `srcset`, update that declaration and run the script again.
 - All npm scripts are described in `settings.md`, and significant changes are recorded in `CHANGELOG.md`.
 - `postcss.config.json` is present in the repository, but the `postcss-import`, `postcss-nested`, and `postcss-preset-env` plugins are not installed, and the CSS build inlines `@import` with its own script and minifies through `cssnano-cli`.
 
@@ -482,8 +502,6 @@ State kept in the browser:
 
 - Extend the QA scripts to start the test server automatically before the audits.
 - Add unit tests for the higher-complexity JS modules (contact form, lightbox).
-- Consolidate the JSON-LD sources (currently inline blocks in the HTML and files in `js/structured-data/`).
-- Add automated internal link validation across the multi-page structure.
 
 ### License
 

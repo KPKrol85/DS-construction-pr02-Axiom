@@ -4,7 +4,7 @@
 
 ### img:build
 - **Command:** `node tools/images/build-images.mjs`
-- **What it does:** Przetwarza i generuje zoptymalizowane warianty obrazów na podstawie pipeline w `tools/images`.
+- **What it does:** Generuje warianty WebP i AVIF w `assets/img/_optimized/` wyłącznie dla źródeł i szerokości zadeklarowanych w `tools/images/build-images.mjs` na podstawie `srcset` utrzymywanych stron.
 - **When to use:** Po zmianach w źródłach obrazów przed buildem release.
 
 ### img:clean
@@ -34,7 +34,7 @@
 
 ### build:sw
 - **Command:** `node tools/sw/build-sw.mjs`
-- **What it does:** Generuje/odświeża `sw.js` (wersjonowanie i lista pre-cache).
+- **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny) i `dist/sw.js` (profil produkcyjny), każdy z własną listą pre-cache i własną rewizją.
 - **When to use:** Po zmianach wpływających na service workera lub cache’owane assety.
 
 ### build:dist
@@ -67,6 +67,11 @@
 - **What it does:** Uruchamia pa11y dla wskazanych URL i zapisuje raporty JSON do `reports/pa11y`.
 - **When to use:** Kontrola dostępności przed publikacją.
 
+### qa:references
+- **Command:** `node tools/qa/check-references.mjs`
+- **What it does:** Statycznie sprawdza odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i kanoniczną listę precache z `tools/sw/build-sw.mjs`; nie wymaga serwera ani przeglądarki.
+- **When to use:** Po zmianach ścieżek, nazw plików lub zawartości `assets/`, przed buildem i przed publikacją.
+
 ### qa
 - **Command:** `npm run qa:lighthouse && npm run qa:a11y`
 - **What it does:** Odpala komplet QA (Lighthouse + pa11y).
@@ -76,3 +81,8 @@
 - **Command:** `node tools/html/build-head.mjs`
 - **What it does:** Aktualizuje sekcje `<head>` stron HTML na podstawie szablonu i metadanych.
 - **When to use:** Po zmianach globalnych SEO/meta/head.
+
+### lint
+- **Command:** `eslint js tools sw.template.js`
+- **What it does:** Uruchamia ESLint dla przeglądarkowych modułów w `js/`, narzędzi Node w `tools/` i źródła Service Workera `sw.template.js`.
+- **When to use:** Po zmianach w JavaScripcie, przed commitem i przed release.

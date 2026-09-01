@@ -1,6 +1,6 @@
 # Axiom — Development Plan
 
-**Last reviewed:** 2026-08-30
+**Last reviewed:** 2026-09-01
 **Project type:** Static multi-page front-end website (vanilla HTML/CSS/JS) with a Node build pipeline and static-hosting configuration
 **Plan status:** Active
 
@@ -13,7 +13,7 @@
 
 ## Current priorities
 
-- No item is currently prioritized; Phase 1 and Phase 2 are complete.
+- No item is currently prioritized; Phases 1, 2, 3, and 6 are complete. Phase 4 and Phase 5 remain open.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -129,10 +129,10 @@
 
 **Goal:** Keep the canonical documentation accurate once the phases above land.
 
-- [ ] **PH6-01 — Update documentation for the delivered changes**
-  - [ ] update the `README.md` sections describing deployment headers, `_redirects`, the image pipeline, structured-data ownership, and the service worker once those contracts change
-  - [ ] add `CHANGELOG.md` entries for the changes that meet the changelog significance standard
-  - [ ] remove the roadmap entries in `README.md` that the completed work resolves
+- [x] **PH6-01 — Update documentation for the delivered changes**
+  - [x] update the `README.md` sections describing deployment headers, `_redirects`, the image pipeline, structured-data ownership, and the service worker once those contracts change
+  - [x] add `CHANGELOG.md` entries for the changes that meet the changelog significance standard
+  - [x] remove the roadmap entries in `README.md` that the completed work resolves
   - **Priority:** Medium
   - **Depends on:** `PH1-02`, `PH2-02`, `PH3-02`
   - **Completion condition:** no section of `README.md` or `CHANGELOG.md` contradicts the implementation after the phases above are complete
