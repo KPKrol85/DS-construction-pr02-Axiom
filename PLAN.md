@@ -77,10 +77,10 @@
   - **Completion condition:** regenerating the `<head>` sections keeps the utility pages out of the indexable set, and `sitemap.xml` remains limited to the 12 public URLs
   - **Source:** `daily-AUDIT.md` — P2-04
 
-- [ ] **PH3-02 — Establish a single source for structured data**
-  - [ ] decide whether the inline JSON-LD blocks or the files in `js/structured-data/` are canonical
-  - [ ] if the files become canonical, generate the inline blocks from them during the build; if the inline blocks stay canonical, remove the unused directory
-  - [ ] confirm business data (address, contact, opening hours, services) exists in one place only
+- [x] **PH3-02 — Establish a single source for structured data**
+  - [x] decide whether the inline JSON-LD blocks or the files in `js/structured-data/` are canonical
+  - [x] if the files become canonical, generate the inline blocks from them during the build; if the inline blocks stay canonical, remove the unused directory
+  - [x] confirm business data (address, contact, opening hours, services) exists in one place only
   - **Priority:** Medium
   - **Completion condition:** structured data can be changed in one location and no unused parallel copy remains
   - **Source:** `daily-AUDIT.md` — P2-03; `README.md` roadmap
