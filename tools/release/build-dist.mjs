@@ -13,7 +13,6 @@ const rootFilesToCopy = [
   "robots.txt",
   "sitemap.xml",
   "_headers",
-  "_redirects",
   "LICENSE",
 ];
 

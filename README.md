@@ -88,7 +88,6 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 ├── robots.txt
 ├── sitemap.xml
 ├── _headers
-├── _redirects
 ├── package.json
 ├── settings.md                 # opis skryptów npm
 ├── CHANGELOG.md
@@ -137,7 +136,7 @@ npm run build
 npm run serve:dist
 ```
 
-Build zapisuje wynik do `dist/`: zminifikowane `style.min.css` i `script.min.js`, wygenerowany `sw.js`, skopiowane `assets/`, `services/`, `legal/`, `js/`, `css/` oraz pliki z katalogu głównego (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `_redirects`, `LICENSE`). Katalog `dist/` powstaje lokalnie i nie jest przechowywany w repozytorium.
+Build zapisuje wynik do `dist/`: zminifikowane `style.min.css` i `script.min.js`, wygenerowany `sw.js`, skopiowane `assets/`, `services/`, `legal/`, `js/`, `css/` oraz pliki z katalogu głównego (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `LICENSE`). Katalog `dist/` powstaje lokalnie i nie jest przechowywany w repozytorium.
 
 Build nie był uruchamiany w ramach przygotowania tej dokumentacji — powyższy opis pochodzi z konfiguracji skryptów.
 
@@ -170,7 +169,6 @@ Skrypty QA nie uruchamiają serwera samodzielnie. Audyty nie były wykonywane w 
 Repozytorium jest przygotowane pod hosting statyczny (konfiguracja w formacie Netlify):
 
 - `_headers` — nagłówki bezpieczeństwa (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) oraz polityka cache: bundle produkcyjne o stałych nazwach (`style.min.css`, `script.min.js`) oraz niewersjonowane pliki z `css/` i `js/` mają skończony czas świeżości z rewalidacją, wersjonowane ścieżki fontów zachowują długotrwałe `immutable`, obrazy i pliki metadanych mają skończony czas świeżości, a `sw.js` i strony HTML pozostają poza długotrwałym cache (`no-cache`).
-- `_redirects` — plik zawiera obecnie wyłącznie komentarze i nie definiuje aktywnych reguł przekierowań.
 - Formularz kontaktowy korzysta z Netlify Forms i reCAPTCHA; CSP w `_headers` dopuszcza domeny reCAPTCHA.
 - Katalogiem wyjściowym wdrożenia jest `dist/`.
 
@@ -240,7 +238,6 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 - Metadane stron aktualizuj w `tools/templates/pages.meta.json` i regeneruj przez `npm run build:head`.
 - Warianty obrazów w `assets/img/_optimized/` pochodzą z `npm run img:build`; listę źródeł i szerokości deklaruje `tools/images/build-images.mjs` zgodnie z `srcset` na stronach — po zmianie `srcset` zaktualizuj tę deklarację i uruchom skrypt ponownie.
 - Opis wszystkich skryptów npm znajduje się w `settings.md`, historia istotnych zmian w `CHANGELOG.md`.
-- `postcss.config.json` jest obecny w repozytorium, ale wtyczki `postcss-import`, `postcss-nested` i `postcss-preset-env` nie są zainstalowane, a build CSS scala `@import` własnym skryptem i minifikuje przez `cssnano-cli`.
 
 ### Roadmap
 
@@ -344,7 +341,6 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 ├── robots.txt
 ├── sitemap.xml
 ├── _headers
-├── _redirects
 ├── package.json
 ├── settings.md                 # npm script reference
 ├── CHANGELOG.md
@@ -393,7 +389,7 @@ npm run build
 npm run serve:dist
 ```
 
-The build writes its output to `dist/`: minified `style.min.css` and `script.min.js`, a generated `sw.js`, copies of `assets/`, `services/`, `legal/`, `js/`, `css/`, and the root files (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `_redirects`, `LICENSE`). The `dist/` directory is produced locally and is not stored in the repository.
+The build writes its output to `dist/`: minified `style.min.css` and `script.min.js`, a generated `sw.js`, copies of `assets/`, `services/`, `legal/`, `js/`, `css/`, and the root files (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `LICENSE`). The `dist/` directory is produced locally and is not stored in the repository.
 
 The build was not executed while preparing this documentation — the description above comes from the script configuration.
 
@@ -426,7 +422,6 @@ The QA scripts do not start the server themselves. The audits were not executed 
 The repository is prepared for static hosting (Netlify-format configuration):
 
 - `_headers` — security headers (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) and the cache policy: the fixed-name production bundles (`style.min.css`, `script.min.js`) and the unversioned files under `css/` and `js/` use a finite freshness window with revalidation, the versioned font paths keep long-lived `immutable` caching, images and metadata files use finite caching, and `sw.js` and the HTML pages stay outside long-lived caching (`no-cache`).
-- `_redirects` — the file currently contains comments only and defines no active redirect rules.
 - The contact form uses Netlify Forms and reCAPTCHA; the CSP in `_headers` allows the reCAPTCHA domains.
 - The deployment output directory is `dist/`.
 
@@ -496,7 +491,6 @@ State kept in the browser:
 - Update page metadata in `tools/templates/pages.meta.json` and regenerate it through `npm run build:head`.
 - Image variants in `assets/img/_optimized/` come from `npm run img:build`; `tools/images/build-images.mjs` declares the sources and widths to match the `srcset` declarations on the pages — after changing a `srcset`, update that declaration and run the script again.
 - All npm scripts are described in `settings.md`, and significant changes are recorded in `CHANGELOG.md`.
-- `postcss.config.json` is present in the repository, but the `postcss-import`, `postcss-nested`, and `postcss-preset-env` plugins are not installed, and the CSS build inlines `@import` with its own script and minifies through `cssnano-cli`.
 
 ### Roadmap
 

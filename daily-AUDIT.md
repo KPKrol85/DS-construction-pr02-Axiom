@@ -13,9 +13,9 @@ Everything below this section is the original audit as written on 2026-08-30. Th
 
 **Current status of the 2026-08-30 findings:**
 
-- RESOLVED: 7
+- RESOLVED: 8
 - PARTIALLY RESOLVED: 0
-- OPEN: 1
+- OPEN: 0
 
 ## Overall assessment
 
@@ -114,7 +114,8 @@ None detected.
 
 ### [P2-05] Inert configuration and dead code
 
-- **Status:** OPEN
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The inert `_redirects` file, the unused `postcss.config.json`, and the unused `js/sections/faq.js` stub were removed, and `_redirects` was dropped from the `rootFilesToCopy` contract in `tools/release/build-dist.mjs`, so the production copy step no longer expects it (PLAN task `PH5-01`).
 - **Classification:** Maintenance risk
 - **Evidence:** `_redirects`, `postcss.config.json`, `js/sections/faq.js`
 - **Current behavior:** `_redirects` contains only comments describing intended rules (www-to-apex, HTTPS, trailing slashes, custom 404) and defines none of them. `postcss.config.json` configures `postcss-import`, `postcss-nested`, and `postcss-preset-env`, none of which is declared in `package.json`, and `build:css` inlines `@import` with its own script before running `cssnano-cli`. `js/sections/faq.js` exports an empty function that nothing imports; the FAQ is native `<details>` markup.

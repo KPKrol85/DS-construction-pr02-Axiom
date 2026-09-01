@@ -13,7 +13,7 @@
 
 ## Current priorities
 
-- No item is currently prioritized; Phases 1, 2, 3, and 6 are complete. Phase 4 and Phase 5 remain open.
+- No item is currently prioritized; Phases 1, 2, 3, 5, and 6 are complete. Phase 4 remains open.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -117,10 +117,10 @@
 
 **Goal:** Remove files that advertise behavior the project does not have.
 
-- [ ] **PH5-01 — Resolve inert configuration and dead code**
-  - [ ] implement the redirect rules described in the `_redirects` comments or remove the file and the comments
-  - [ ] remove `postcss.config.json` or install and wire the plugins it declares into `tools/css/build-css.mjs`
-  - [ ] remove the unused `js/sections/faq.js` stub, which nothing imports
+- [x] **PH5-01 — Resolve inert configuration and dead code**
+  - [x] implement the redirect rules described in the `_redirects` comments or remove the file and the comments
+  - [x] remove `postcss.config.json` or install and wire the plugins it declares into `tools/css/build-css.mjs`
+  - [x] remove the unused `js/sections/faq.js` stub, which nothing imports
   - **Priority:** Low
   - **Completion condition:** no configuration file or module in the repository describes behavior that is not implemented
   - **Source:** `daily-AUDIT.md` — P2-05
