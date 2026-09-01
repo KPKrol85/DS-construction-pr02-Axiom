@@ -70,9 +70,9 @@
 
 **Goal:** Remove contradictions between what the pages declare publicly and what the project implements.
 
-- [ ] **PH3-01 — Correct the indexing policy on utility pages**
-  - [ ] set `noindex` on `offline.html` and `404.html`, matching the treatment already used on `success.html`
-  - [ ] update the corresponding entries in `tools/templates/pages.meta.json` so `npm run build:head` reproduces the change
+- [x] **PH3-01 — Correct the indexing policy on utility pages**
+  - [x] set `noindex` on `offline.html` and `404.html`, matching the treatment already used on `success.html`
+  - [x] update the corresponding entries in `tools/templates/pages.meta.json` so `npm run build:head` reproduces the change
   - **Priority:** Medium
   - **Completion condition:** regenerating the `<head>` sections keeps the utility pages out of the indexable set, and `sitemap.xml` remains limited to the 12 public URLs
   - **Source:** `daily-AUDIT.md` — P2-04
