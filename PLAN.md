@@ -85,10 +85,10 @@
   - **Completion condition:** structured data can be changed in one location and no unused parallel copy remains
   - **Source:** `daily-AUDIT.md` — P2-03; `README.md` roadmap
 
-- [ ] **PH3-03 — Align consent behavior with the cookie policy**
-  - [ ] decide between adding a decline and withdrawal path or narrowing the wording in `legal/polityka-cookies.html` to the mechanism the project provides
-  - [ ] if a withdrawal path is added, expose a control that clears `cookie-consent-v1` and the `cookie_consent` cookie and re-opens the dialog
-  - [ ] keep the existing focus trap, focus return, and scroll-lock behavior intact for whichever path is chosen
+- [x] **PH3-03 — Align consent behavior with the cookie policy**
+  - [x] decide between adding a decline and withdrawal path or narrowing the wording in `legal/polityka-cookies.html` to the mechanism the project provides
+  - [x] if a withdrawal path is added, expose a control that clears `cookie-consent-v1` and the `cookie_consent` cookie and re-opens the dialog
+  - [x] keep the existing focus trap, focus return, and scroll-lock behavior intact for whichever path is chosen
   - **Priority:** Medium
   - **Completion condition:** the consent controls the site offers and the consent mechanism the policy describes state the same thing
   - **Source:** `daily-AUDIT.md` — P2-02
