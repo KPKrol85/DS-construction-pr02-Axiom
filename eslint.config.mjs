@@ -54,12 +54,30 @@ export default defineConfig([
   },
 
   {
-    // Node build/QA tooling (ES Modules, no CommonJS globals).
-    files: ["tools/**/*.mjs"],
+    // Node build/QA tooling and the Vitest runner configuration (ES Modules,
+    // no CommonJS globals).
+    files: ["tools/**/*.mjs", "vitest.config.mjs"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       globals: globals.nodeBuiltin,
+    },
+  },
+
+  {
+    // Focused Vitest suites. The Vitest APIs are imported explicitly, so only
+    // the jsdom globals the fixtures actually touch are declared here.
+    files: ["tests/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        localStorage: "readonly",
+        Event: "readonly",
+        KeyboardEvent: "readonly",
+        HTMLElement: "readonly",
+      },
     },
   },
 ]);

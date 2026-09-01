@@ -44,6 +44,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - `lighthouse` 12.8.2 i `@lhci/cli` 0.15.1 — audyty Lighthouse
 - `pa11y` 8.0.0 — automatyczne audyty dostępności
 - `eslint` 10.9.1 — statyczna analiza JavaScriptu (`npm run lint`)
+- `vitest` 4.1.11 i `jsdom` 30.0.1 — skupione testy DOM formularza kontaktowego i lightboxa (`npm test`)
 
 ### Architektura
 
@@ -82,6 +83,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── qa/                     # Lighthouse, pa11y, kontrola odwołań
 │   ├── release/                # czyszczenie i składanie dist/
 │   └── templates/              # head.partial.html + pages.meta.json
+├── tests/                      # skupione testy Vitest (formularz, lightbox)
 ├── sw.template.js              # jedyne ręcznie edytowane źródło Service Workera
 ├── sw.js                       # Service Worker generowany z szablonu (profil lokalny)
 ├── manifest.webmanifest
@@ -89,6 +91,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 ├── sitemap.xml
 ├── _headers
 ├── package.json
+├── vitest.config.mjs           # konfiguracja Vitest (środowisko jsdom)
 ├── settings.md                 # opis skryptów npm
 ├── CHANGELOG.md
 ├── LICENSE
@@ -125,9 +128,10 @@ Serwer `http-server` startuje na `http://localhost:8080` z wyłączonym cache (`
 - `npm run build:dist` — kopiuje pliki statyczne do `dist/` i przepisuje odwołania w HTML na `style.min.css` oraz `script.min.js`.
 - `npm run build:head` — generuje sekcje `<head>` na podstawie `tools/templates/head.partial.html` i `tools/templates/pages.meta.json`.
 - `npm run img:build` — generuje w `assets/img/_optimized/` warianty WebP i AVIF wyłącznie dla źródeł i szerokości zadeklarowanych w `tools/images/build-images.mjs` na podstawie `srcset` utrzymywanych stron; `npm run img:clean` usuwa ten katalog.
-- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y na działającym serwerze lokalnym.
+- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y; każdy skrypt sam startuje i zatrzymuje lokalny serwer QA.
 - `npm run qa:references` — statyczna kontrola spójności odwołań lokalnych; nie wymaga serwera ani przeglądarki.
-- `npm run lint` — ESLint dla `js/`, `tools/` i `sw.template.js`.
+- `npm run lint` — ESLint dla `js/`, `tools/`, `tests/`, `sw.template.js` i `vitest.config.mjs`.
+- `npm test` — skupiony zestaw testów Vitest w środowisku jsdom dla formularza kontaktowego i lightboxa; nie wymaga serwera ani przeglądarki.
 
 ### Build produkcyjny
 
@@ -142,27 +146,37 @@ Build nie był uruchamiany w ramach przygotowania tej dokumentacji — powyższy
 
 ### Testy i walidacja
 
-Repozytorium nie zawiera testów jednostkowych ani testów e2e. Dostępne są dwie kontrole statyczne, które nie wymagają serwera ani przeglądarki:
+Skupiony zestaw testów jednostkowych i komponentowych uruchamia jedna komenda; testy nie wymagają serwera ani przeglądarki:
+
+```bash
+npm test
+```
+
+- `test` uruchamia Vitest w środowisku jsdom dla `tests/contact-form.test.js` i `tests/lightbox.test.js` — łącznie 20 testów; konfigurację zawiera `vitest.config.mjs`.
+- Formularz kontaktowy: walidacja pól wymaganych, dostępne podsumowanie błędów, limit 500 znaków wiadomości oraz zapis, odtworzenie i usunięcie po udanym wysłaniu wersji roboczej przechowywanej pod kluczem `contactFormMessage`.
+- Lightbox: otwarcie i przeniesienie fokusu, pułapka fokusu obejmująca dynamicznie tworzone przyciski nawigacji, powrót fokusu do elementu otwierającego oraz nawigacja klawiszami `ArrowRight` i `ArrowLeft`.
+- Testy nie wykonują zapytań sieciowych. Repozytorium nie zawiera testów e2e.
+
+Dostępne są też dwie kontrole statyczne, które nie wymagają serwera ani przeglądarki:
 
 ```bash
 npm run lint
 npm run qa:references
 ```
 
-- `lint` uruchamia ESLint dla `js/`, `tools/` i `sw.template.js`.
+- `lint` uruchamia ESLint dla `js/`, `tools/`, `tests/`, `sw.template.js` i `vitest.config.mjs`.
 - `qa:references` rozwiązuje odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i kanoniczną listę precache z `tools/sw/build-sw.mjs`; nierozwiązane odwołanie kończy przebieg kodem różnym od zera.
 
-Dodatkowo dostępne są dwa audyty uruchamiane na działającym serwerze lokalnym:
+Dodatkowo dostępne są dwa audyty, które samodzielnie startują i zatrzymują lokalny serwer QA:
 
 ```bash
-npm run serve   # w osobnym terminalu
 npm run qa
 ```
 
 - `qa:lighthouse` uruchamia `lhci collect` dla `http://localhost:8080/`, `/services/budowa-domow.html` i `/legal/regulamin.html`, zapisując wyniki do `reports/lighthouse/`.
 - `qa:a11y` uruchamia `pa11y` dla tych samych trzech adresów i zapisuje raporty JSON do `reports/pa11y/`.
 
-Skrypty QA nie uruchamiają serwera samodzielnie. Audyty nie były wykonywane w ramach przygotowania tej dokumentacji, więc dokumentacja nie zawiera ich wyników.
+Każdy z tych skryptów startuje i zatrzymuje własny serwer lokalny, więc `npm run qa` działa z czystej powłoki bez osobno uruchomionego `npm run serve`. Gdy port 8080 jest już zajęty, przebieg kończy się czytelnym komunikatem zamiast ponownego użycia lub zatrzymania cudzego procesu. Audyty nie były wykonywane w ramach przygotowania tej dokumentacji, więc dokumentacja nie zawiera ich wyników.
 
 ### Wdrożenie
 
@@ -241,8 +255,7 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 
 ### Roadmap
 
-- Rozszerzenie skryptów QA o automatyczne uruchamianie serwera testowego przed audytami.
-- Dodanie testów jednostkowych dla modułów JS o najwyższej złożoności (formularz, lightbox).
+- Brak otwartych pozycji roadmapy; opcjonalne usprawnienia są prowadzone w `PLAN.md`.
 
 ### Licencja
 
@@ -297,6 +310,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - `lighthouse` 12.8.2 and `@lhci/cli` 0.15.1 — Lighthouse audits
 - `pa11y` 8.0.0 — automated accessibility audits
 - `eslint` 10.9.1 — JavaScript static analysis (`npm run lint`)
+- `vitest` 4.1.11 and `jsdom` 30.0.1 — focused DOM tests for the contact form and the lightbox (`npm test`)
 
 ### Architecture
 
@@ -335,6 +349,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── qa/                     # Lighthouse, pa11y, reference check
 │   ├── release/                # dist cleanup and assembly
 │   └── templates/              # head.partial.html + pages.meta.json
+├── tests/                      # focused Vitest suites (contact form, lightbox)
 ├── sw.template.js              # the only hand-edited service worker source
 ├── sw.js                       # service worker generated from the template (local profile)
 ├── manifest.webmanifest
@@ -342,6 +357,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 ├── sitemap.xml
 ├── _headers
 ├── package.json
+├── vitest.config.mjs           # Vitest configuration (jsdom environment)
 ├── settings.md                 # npm script reference
 ├── CHANGELOG.md
 ├── LICENSE
@@ -378,9 +394,10 @@ npm run serve
 - `npm run build:dist` — copies static files into `dist/` and rewrites HTML references to `style.min.css` and `script.min.js`.
 - `npm run build:head` — generates `<head>` sections from `tools/templates/head.partial.html` and `tools/templates/pages.meta.json`.
 - `npm run img:build` — generates WebP and AVIF variants in `assets/img/_optimized/` only for the sources and widths declared in `tools/images/build-images.mjs` from the `srcset` declarations of the maintained pages; `npm run img:clean` removes that directory.
-- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits against a running local server.
+- `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits; each script starts and stops its own local QA server.
 - `npm run qa:references` — static local reference-integrity check; needs no server and no browser.
-- `npm run lint` — ESLint for `js/`, `tools/`, and `sw.template.js`.
+- `npm run lint` — ESLint for `js/`, `tools/`, `tests/`, `sw.template.js`, and `vitest.config.mjs`.
+- `npm test` — the focused Vitest suite in a jsdom environment for the contact form and the lightbox; needs no server and no browser.
 
 ### Production Build
 
@@ -395,27 +412,37 @@ The build was not executed while preparing this documentation — the descriptio
 
 ### Testing and Validation
 
-The repository contains no unit tests and no end-to-end tests. Two static checks are available that need no server and no browser:
+The focused unit and component suite runs from a single command; the tests need no server and no browser:
+
+```bash
+npm test
+```
+
+- `test` runs Vitest in a jsdom environment over `tests/contact-form.test.js` and `tests/lightbox.test.js` — 20 tests in total; the configuration lives in `vitest.config.mjs`.
+- Contact form: required-field validation, the accessible error summary, the 500-character message limit, and the draft stored under `contactFormMessage` being saved, restored, and removed after a successful submission.
+- Lightbox: opening and initial focus, the focus trap including the dynamically created navigation controls, focus return to the triggering element, and `ArrowRight` / `ArrowLeft` navigation.
+- The tests make no network requests. The repository contains no end-to-end tests.
+
+Two static checks are also available that need no server and no browser:
 
 ```bash
 npm run lint
 npm run qa:references
 ```
 
-- `lint` runs ESLint for `js/`, `tools/`, and `sw.template.js`.
+- `lint` runs ESLint for `js/`, `tools/`, `tests/`, `sw.template.js`, and `vitest.config.mjs`.
 - `qa:references` resolves the local references declared by the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the canonical precache list owned by `tools/sw/build-sw.mjs`; an unresolved reference exits the run non-zero.
 
-In addition, two audits run against a live local server:
+In addition, two audits start and stop their own local QA server:
 
 ```bash
-npm run serve   # in a separate terminal
 npm run qa
 ```
 
 - `qa:lighthouse` runs `lhci collect` against `http://localhost:8080/`, `/services/budowa-domow.html`, and `/legal/regulamin.html`, writing results to `reports/lighthouse/`.
 - `qa:a11y` runs `pa11y` against the same three URLs and writes JSON reports to `reports/pa11y/`.
 
-The QA scripts do not start the server themselves. The audits were not executed while preparing this documentation, so no audit results are reported here.
+Each of those scripts starts and stops its own local server, so `npm run qa` runs from a clean shell without a separately started `npm run serve`. When port 8080 is already occupied, the run fails with a clear message instead of reusing or terminating a process it does not own. The audits were not executed while preparing this documentation, so no audit results are reported here.
 
 ### Deployment
 
@@ -494,8 +521,7 @@ State kept in the browser:
 
 ### Roadmap
 
-- Extend the QA scripts to start the test server automatically before the audits.
-- Add unit tests for the higher-complexity JS modules (contact form, lightbox).
+- No open roadmap items; optional improvements are tracked in `PLAN.md`.
 
 ### License
 

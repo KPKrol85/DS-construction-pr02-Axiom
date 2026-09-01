@@ -67,9 +67,9 @@ export const initLightbox = () => {
     lb.removeAttribute("hidden");
     lb.setAttribute("aria-hidden", "false");
     document.body.classList.add("lb-open");
+    ensureControls();
     trapInit();
     if (closeBtn) closeBtn.focus();
-    ensureControls();
     announceSlide();
   };
   const close = () => {

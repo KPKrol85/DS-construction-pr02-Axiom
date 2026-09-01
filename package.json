@@ -22,11 +22,13 @@
     "eslint": "^10.9.1",
     "globals": "^17.11.0",
     "http-server": "^14.1.1",
+    "jsdom": "^30.0.1",
     "lighthouse": "^12.2.1",
     "pa11y": "^8.0.0",
     "sharp": "^0.33.5",
     "terser": "^5.44.0",
-    "ttf2woff2": "^8.0.0"
+    "ttf2woff2": "^8.0.0",
+    "vitest": "^4.1.11"
   },
   "scripts": {
     "img:build": "node tools/images/build-images.mjs",
@@ -45,6 +47,7 @@
     "qa:references": "node tools/qa/check-references.mjs",
     "qa": "npm run qa:lighthouse && npm run qa:a11y",
     "build:head": "node tools/html/build-head.mjs",
-    "lint": "eslint js tools sw.template.js"
+    "lint": "eslint js tools tests sw.template.js vitest.config.mjs",
+    "test": "vitest run"
   }
 }

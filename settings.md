@@ -83,6 +83,11 @@
 - **When to use:** Po zmianach globalnych SEO/meta/head.
 
 ### lint
-- **Command:** `eslint js tools sw.template.js`
-- **What it does:** Uruchamia ESLint dla przeglądarkowych modułów w `js/`, narzędzi Node w `tools/` i źródła Service Workera `sw.template.js`.
+- **Command:** `eslint js tools tests sw.template.js vitest.config.mjs`
+- **What it does:** Uruchamia ESLint dla przeglądarkowych modułów w `js/`, narzędzi Node w `tools/`, skupionych testów w `tests/`, źródła Service Workera `sw.template.js` i konfiguracji `vitest.config.mjs`.
 - **When to use:** Po zmianach w JavaScripcie, przed commitem i przed release.
+
+### test
+- **Command:** `vitest run`
+- **What it does:** Uruchamia skupiony zestaw testów Vitest w środowisku jsdom (`tests/contact-form.test.js`, `tests/lightbox.test.js`) pokrywający zachowanie formularza kontaktowego i lightboxa; nie wymaga serwera ani przeglądarki.
+- **When to use:** Po zmianach w `js/components/forms.js`, `js/components/lightbox.js` lub `js/utils/a11y.js`, przed commitem i przed release.

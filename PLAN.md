@@ -2,7 +2,7 @@
 
 **Last reviewed:** 2026-09-01
 **Project type:** Static multi-page front-end website (vanilla HTML/CSS/JS) with a Node build pipeline and static-hosting configuration
-**Plan status:** Active
+**Plan status:** All planned phases are complete; only the optional items remain open.
 
 ## Planning principles
 
@@ -13,7 +13,7 @@
 
 ## Current priorities
 
-- No item is currently prioritized; Phases 1, 2, 3, 5, and 6 are complete. Phase 4 remains open.
+- No item is currently prioritized; Phases 1 through 6 are complete. Only the optional items `O-01` and `O-02` remain open.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -105,10 +105,10 @@
   - **Completion condition:** `npm run qa` completes from a clean shell without a separately started `npm run serve`
   - **Source:** `README.md` roadmap
 
-- [ ] **PH4-02 — Add focused tests for the contact form and the lightbox**
-  - [ ] select and configure a test runner (a new dev dependency and configuration are required)
-  - [ ] cover contact-form behavior: required-field validation, the 500-character limit, error-summary population, and draft persistence in `contactFormMessage` including its removal after submission
-  - [ ] cover lightbox behavior: focus trap, focus return to the triggering element, and keyboard navigation between items
+- [x] **PH4-02 — Add focused tests for the contact form and the lightbox**
+  - [x] select and configure a test runner (a new dev dependency and configuration are required)
+  - [x] cover contact-form behavior: required-field validation, the 500-character limit, error-summary population, and draft persistence in `contactFormMessage` including its removal after submission
+  - [x] cover lightbox behavior: focus trap, focus return to the triggering element, and keyboard navigation between items
   - **Priority:** Low
   - **Completion condition:** the listed behaviors are covered by tests that run from one npm script
   - **Source:** `README.md` roadmap
