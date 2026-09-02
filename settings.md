@@ -19,7 +19,7 @@
 
 ### build:css
 - **Command:** `node tools/css/build-css.mjs`
-- **What it does:** Buduje finalne zasoby CSS (pipeline release dla stylów).
+- **What it does:** Scala `@import` z `css/main.css` i minifikuje wynik do pośredniego bundla `dist/style.min.css`; finalną nazwę produkcyjną nadaje dopiero `build:hash`.
 - **When to use:** Po zmianach w `css/` lub jako część `build`.
 
 ### min:css
@@ -29,21 +29,26 @@
 
 ### build:js
 - **Command:** `node tools/js/build-js.mjs`
-- **What it does:** Buduje finalne zasoby JavaScript.
+- **What it does:** Rozwiązuje importy modułów od `js/main.js` i minifikuje wynik do pośredniego bundla `dist/script.min.js`; kolejność modułów w bundlu jest deterministyczna, a finalną nazwę produkcyjną nadaje `build:hash`.
 - **When to use:** Po zmianach w `js/` lub jako część `build`.
+
+### build:hash
+- **Command:** `node tools/release/build-hash.mjs`
+- **What it does:** Liczy SHA-256 z finalnych zminifikowanych bajtów obu pośrednich bundli, skraca skrót do 16 znaków szesnastkowych i zmienia ich nazwy na `style.<hash>.min.css` oraz `script.<hash>.min.js` w katalogu głównym `dist`; zapisuje `dist/build-manifest.json`, który jest źródłem finalnych nazw dla `build:sw`, `build:dist` i QA.
+- **When to use:** Po `build:css` i `build:js`, przed `build:sw`; zwykle jako część `build`.
 
 ### build:sw
 - **Command:** `node tools/sw/build-sw.mjs`
-- **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny) i `dist/sw.js` (profil produkcyjny), każdy z własną listą pre-cache i własną rewizją.
-- **When to use:** Po zmianach wpływających na service workera lub cache’owane assety.
+- **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny, niezmieniony) i `dist/sw.js` (profil produkcyjny, który precache’uje dokładne nazwy bundli odczytane z `dist/build-manifest.json`), każdy z własną listą pre-cache i własną rewizją.
+- **When to use:** Po `build:hash`, po zmianach wpływających na service workera lub cache’owane assety.
 
 ### build:dist
 - **Command:** `node tools/release/build-dist.mjs`
-- **What it does:** Składa artefakty produkcyjne do katalogu `dist`.
-- **When to use:** Po buildzie CSS/JS/SW, bezpośrednio przed publikacją.
+- **What it does:** Składa artefakty produkcyjne do katalogu `dist`: kopiuje pliki statyczne, przepisuje odwołania w HTML na nazwy bundli z `dist/build-manifest.json` i zastępuje blok znaczników w `dist/_headers` dokładnymi regułami `immutable` dla obu bundli.
+- **When to use:** Po `build:hash` i `build:sw`, bezpośrednio przed publikacją.
 
 ### build
-- **Command:** `npm run build:clean && npm run build:css && npm run build:js && npm run build:sw && npm run build:dist`
+- **Command:** `npm run build:clean && npm run build:css && npm run build:js && npm run build:hash && npm run build:sw && npm run build:dist`
 - **What it does:** Uruchamia pełny pipeline produkcyjny od czyszczenia do złożenia `dist`.
 - **When to use:** Standardowa komenda przed wdrożeniem.
 
@@ -69,8 +74,8 @@
 
 ### qa:references
 - **Command:** `node tools/qa/check-references.mjs`
-- **What it does:** Statycznie sprawdza odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i kanoniczną listę precache z `tools/sw/build-sw.mjs`; nie wymaga serwera ani przeglądarki.
-- **When to use:** Po zmianach ścieżek, nazw plików lub zawartości `assets/`, przed buildem i przed publikacją.
+- **What it does:** Statycznie sprawdza odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i stałą listę precache z `tools/sw/build-sw.mjs`, a także kontrakt bundli produkcyjnych: własność nazw, brak nazw ze skrótem wpisanych na sztywno w skryptach i dokładnie jeden blok znaczników w kanonicznym `_headers`; nie wymaga serwera, przeglądarki ani katalogu `dist/`. Gdy istnieje `dist/build-manifest.json`, weryfikuje dodatkowo wygenerowany release: bundle, przepisany HTML, `dist/sw.js` i `dist/_headers`.
+- **When to use:** Po zmianach ścieżek, nazw plików lub zawartości `assets/`, przed buildem oraz po buildzie przed publikacją.
 
 ### qa
 - **Command:** `npm run qa:lighthouse && npm run qa:a11y`

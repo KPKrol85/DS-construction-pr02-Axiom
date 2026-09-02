@@ -120,16 +120,17 @@ Serwer `http-server` startuje na `http://localhost:8080` z wyłączonym cache (`
 
 - `npm run serve` — lokalny serwer katalogu roboczego na porcie 8080.
 - `npm run serve:dist` — ten sam serwer dla katalogu `dist/`.
-- `npm run build` — pełny build: `build:clean` → `build:css` → `build:js` → `build:sw` → `build:dist`.
+- `npm run build` — pełny build: `build:clean` → `build:css` → `build:js` → `build:hash` → `build:sw` → `build:dist`.
 - `npm run build:clean` — usuwa i tworzy na nowo katalog `dist/`.
-- `npm run build:css` — scala `@import` z `css/main.css` i minifikuje wynik do `dist/style.min.css`.
-- `npm run build:js` — rozwiązuje importy modułów od `js/main.js` i minifikuje wynik do `dist/script.min.js`.
-- `npm run build:sw` — generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny) i `dist/sw.js` (profil produkcyjny); każdy profil ma własną listę precache i własną rewizję cache liczoną z zasobów, które precache’uje.
-- `npm run build:dist` — kopiuje pliki statyczne do `dist/` i przepisuje odwołania w HTML na `style.min.css` oraz `script.min.js`.
+- `npm run build:css` — scala `@import` z `css/main.css` i minifikuje wynik do pośredniego `dist/style.min.css`.
+- `npm run build:js` — rozwiązuje importy modułów od `js/main.js` i minifikuje wynik do pośredniego `dist/script.min.js`; kolejność modułów w bundlu jest deterministyczna.
+- `npm run build:hash` — liczy SHA-256 z finalnych zminifikowanych bajtów obu bundli, skraca skrót do 16 znaków szesnastkowych i zmienia nazwy plików pośrednich na `style.<hash>.min.css` oraz `script.<hash>.min.js` w katalogu głównym wdrożenia; zapisuje `dist/build-manifest.json` — jedyne źródło finalnych nazw dla kolejnych kroków.
+- `npm run build:sw` — generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny, niezmieniony) i `dist/sw.js` (profil produkcyjny, który precache’uje dokładne nazwy bundli odczytane z `dist/build-manifest.json`); każdy profil ma własną listę precache i własną rewizję cache liczoną z zasobów, które precache’uje.
+- `npm run build:dist` — kopiuje pliki statyczne do `dist/`, przepisuje odwołania w HTML na nazwy bundli z `dist/build-manifest.json` i zastępuje blok znaczników w `dist/_headers` dokładnymi regułami cache dla tych dwóch adresów.
 - `npm run build:head` — generuje sekcje `<head>` na podstawie `tools/templates/head.partial.html` i `tools/templates/pages.meta.json`.
 - `npm run img:build` — generuje w `assets/img/_optimized/` warianty WebP i AVIF wyłącznie dla źródeł i szerokości zadeklarowanych w `tools/images/build-images.mjs` na podstawie `srcset` utrzymywanych stron; `npm run img:clean` usuwa ten katalog.
 - `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y; każdy skrypt sam startuje i zatrzymuje lokalny serwer QA.
-- `npm run qa:references` — statyczna kontrola spójności odwołań lokalnych; nie wymaga serwera ani przeglądarki.
+- `npm run qa:references` — statyczna kontrola spójności odwołań lokalnych i kontraktu bundli produkcyjnych; nie wymaga serwera, przeglądarki ani katalogu `dist/`. Gdy `dist/build-manifest.json` istnieje, weryfikuje dodatkowo wygenerowany release.
 - `npm run lint` — ESLint dla `js/`, `tools/`, `tests/`, `sw.template.js` i `vitest.config.mjs`.
 - `npm test` — skupiony zestaw testów Vitest w środowisku jsdom dla formularza kontaktowego i lightboxa; nie wymaga serwera ani przeglądarki.
 
@@ -140,9 +141,9 @@ npm run build
 npm run serve:dist
 ```
 
-Build zapisuje wynik do `dist/`: zminifikowane `style.min.css` i `script.min.js`, wygenerowany `sw.js`, skopiowane `assets/`, `services/`, `legal/`, `js/`, `css/` oraz pliki z katalogu głównego (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `LICENSE`). Katalog `dist/` powstaje lokalnie i nie jest przechowywany w repozytorium.
+Build zapisuje wynik do `dist/`: bundle produkcyjne o nazwach zawierających skrót treści (`style.<hash>.min.css`, `script.<hash>.min.js`), `build-manifest.json` z ich finalnymi nazwami, wygenerowany `sw.js` (profil produkcyjny), wygenerowany `_headers` z dokładnymi regułami cache dla obu bundli, skopiowane `assets/`, `services/`, `legal/`, `js/`, `css/` oraz pliki z katalogu głównego (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `LICENSE`). Katalog `dist/` powstaje lokalnie i nie jest przechowywany w repozytorium.
 
-Build nie był uruchamiany w ramach przygotowania tej dokumentacji — powyższy opis pochodzi z konfiguracji skryptów.
+Sekwencja `npm run build` była uruchamiana wielokrotnie na czystym `dist/` podczas weryfikacji O-01: identyczne źródła dają identyczne nazwy bundli produkcyjnych oraz identyczne wygenerowane pliki `sw.js` i `_headers`.
 
 ### Testy i walidacja
 
@@ -165,7 +166,7 @@ npm run qa:references
 ```
 
 - `lint` uruchamia ESLint dla `js/`, `tools/`, `tests/`, `sw.template.js` i `vitest.config.mjs`.
-- `qa:references` rozwiązuje odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i kanoniczną listę precache z `tools/sw/build-sw.mjs`; nierozwiązane odwołanie kończy przebieg kodem różnym od zera.
+- `qa:references` rozwiązuje odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i stałą listę precache z `tools/sw/build-sw.mjs`, a dodatkowo sprawdza kontrakt bundli produkcyjnych: kto jest właścicielem nazw, czy żaden skrypt nie zapisuje nazwy ze skrótem na sztywno i czy kanoniczny `_headers` zawiera dokładnie jeden blok znaczników. Gdy istnieje `dist/build-manifest.json`, weryfikuje też wygenerowany release — bundle, przepisany HTML, `dist/sw.js` i `dist/_headers`. Nierozwiązane odwołanie lub naruszony kontrakt kończy przebieg kodem różnym od zera.
 
 Dodatkowo dostępne są dwa audyty, które samodzielnie startują i zatrzymują lokalny serwer QA:
 
@@ -182,7 +183,7 @@ Każdy z tych skryptów startuje i zatrzymuje własny serwer lokalny, więc `npm
 
 Repozytorium jest przygotowane pod hosting statyczny (konfiguracja w formacie Netlify):
 
-- `_headers` — nagłówki bezpieczeństwa (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) oraz polityka cache: bundle produkcyjne o stałych nazwach (`style.min.css`, `script.min.js`) oraz niewersjonowane pliki z `css/` i `js/` mają skończony czas świeżości z rewalidacją, wersjonowane ścieżki fontów zachowują długotrwałe `immutable`, obrazy i pliki metadanych mają skończony czas świeżości, a `sw.js` i strony HTML pozostają poza długotrwałym cache (`no-cache`).
+- `_headers` — nagłówki bezpieczeństwa (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) oraz polityka cache. Plik w katalogu głównym jest kanoniczny i zawiera blok znaczników przeznaczony na reguły bundli produkcyjnych; `build:dist` zastępuje ten blok wyłącznie w `dist/_headers` dokładnymi regułami dla nazw z bieżącego builda (`Cache-Control: public, max-age=31536000, immutable`), ponieważ te adresy niosą skrót własnej treści. Niewersjonowane pliki z `css/` i `js/` — w tym `js/theme-init.js`, ładowany bezpośrednio przez strony produkcyjne — zachowują skończony czas świeżości z rewalidacją, wersjonowane ścieżki fontów zachowują długotrwałe `immutable`, obrazy i pliki metadanych mają skończony czas świeżości, a `sw.js` i strony HTML pozostają poza długotrwałym cache (`no-cache`).
 - Formularz kontaktowy korzysta z Netlify Forms i reCAPTCHA; CSP w `_headers` dopuszcza domeny reCAPTCHA.
 - Katalogiem wyjściowym wdrożenia jest `dist/`.
 
@@ -217,7 +218,7 @@ Repozytorium nie zawiera wyników audytu potwierdzających zgodność z konkretn
 - Service Worker jest rejestrowany w `js/core/service-worker.js` dla `/sw.js` z zakresem `/`.
 - Strategie: dokumenty — network-first z fallbackiem na cache i `offline.html`; style i skrypty — stale-while-revalidate; obrazy — cache-first.
 - Podczas `activate` usuwane są cache o nieaktualnej rewizji; Service Worker używa `skipWaiting()` i `clients.claim()`.
-- `sw.template.js` jest jedynym ręcznie edytowanym źródłem Service Workera; `npm run build:sw` generuje z niego zarówno `sw.js` w katalogu głównym (profil lokalny, precache źródeł serwowanych przez `npm run serve`), jak i `dist/sw.js` (profil produkcyjny, precache bundli z `dist/`).
+- `sw.template.js` jest jedynym ręcznie edytowanym źródłem Service Workera; `npm run build:sw` generuje z niego zarówno `sw.js` w katalogu głównym (profil lokalny, precache źródeł serwowanych przez `npm run serve`), jak i `dist/sw.js` (profil produkcyjny, precache dokładnych nazw bundli odczytanych z `dist/build-manifest.json`).
 
 Repozytorium nie zawiera weryfikacji instalowalności ani testów działania offline.
 
@@ -386,16 +387,17 @@ npm run serve
 
 - `npm run serve` — local server for the working directory on port 8080.
 - `npm run serve:dist` — the same server for the `dist/` directory.
-- `npm run build` — full build: `build:clean` → `build:css` → `build:js` → `build:sw` → `build:dist`.
+- `npm run build` — full build: `build:clean` → `build:css` → `build:js` → `build:hash` → `build:sw` → `build:dist`.
 - `npm run build:clean` — removes and recreates the `dist/` directory.
-- `npm run build:css` — inlines the `@import` chain from `css/main.css` and minifies the result to `dist/style.min.css`.
-- `npm run build:js` — resolves module imports from `js/main.js` and minifies the result to `dist/script.min.js`.
-- `npm run build:sw` — generates both service workers from `sw.template.js`: the root `sw.js` (local profile) and `dist/sw.js` (production profile); each profile carries its own precache list and its own cache revision hashed from the assets that profile precaches.
-- `npm run build:dist` — copies static files into `dist/` and rewrites HTML references to `style.min.css` and `script.min.js`.
+- `npm run build:css` — inlines the `@import` chain from `css/main.css` and minifies the result to the fixed intermediate `dist/style.min.css`.
+- `npm run build:js` — resolves module imports from `js/main.js` and minifies the result to the fixed intermediate `dist/script.min.js`; module emission order is deterministic.
+- `npm run build:hash` — hashes the final minified bytes of both bundles with SHA-256, truncates the digest to 16 hexadecimal characters, and renames the intermediates to `style.<hash>.min.css` and `script.<hash>.min.js` at the deployment root; writes `dist/build-manifest.json`, the single source of the final names for the steps that follow.
+- `npm run build:sw` — generates both service workers from `sw.template.js`: the root `sw.js` (local profile, unchanged) and `dist/sw.js` (production profile, precaching the exact bundle names read from `dist/build-manifest.json`); each profile carries its own precache list and its own cache revision hashed from the assets that profile precaches.
+- `npm run build:dist` — copies static files into `dist/`, rewrites the HTML references to the bundle names from `dist/build-manifest.json`, and replaces the marker block in `dist/_headers` with the exact cache rules for those two URLs.
 - `npm run build:head` — generates `<head>` sections from `tools/templates/head.partial.html` and `tools/templates/pages.meta.json`.
 - `npm run img:build` — generates WebP and AVIF variants in `assets/img/_optimized/` only for the sources and widths declared in `tools/images/build-images.mjs` from the `srcset` declarations of the maintained pages; `npm run img:clean` removes that directory.
 - `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits; each script starts and stops its own local QA server.
-- `npm run qa:references` — static local reference-integrity check; needs no server and no browser.
+- `npm run qa:references` — static local reference and production bundle contract check; needs no server, no browser, and no `dist/`. When `dist/build-manifest.json` exists, it additionally verifies the generated release.
 - `npm run lint` — ESLint for `js/`, `tools/`, `tests/`, `sw.template.js`, and `vitest.config.mjs`.
 - `npm test` — the focused Vitest suite in a jsdom environment for the contact form and the lightbox; needs no server and no browser.
 
@@ -406,9 +408,9 @@ npm run build
 npm run serve:dist
 ```
 
-The build writes its output to `dist/`: minified `style.min.css` and `script.min.js`, a generated `sw.js`, copies of `assets/`, `services/`, `legal/`, `js/`, `css/`, and the root files (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `_headers`, `LICENSE`). The `dist/` directory is produced locally and is not stored in the repository.
+The build writes its output to `dist/`: the content-addressed production bundles (`style.<hash>.min.css`, `script.<hash>.min.js`), `build-manifest.json` recording their final names, a generated `sw.js` (production profile), a generated `_headers` carrying the exact cache rules for both bundles, copies of `assets/`, `services/`, `legal/`, `js/`, `css/`, and the root files (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `LICENSE`). The `dist/` directory is produced locally and is not stored in the repository.
 
-The build was not executed while preparing this documentation — the description above comes from the script configuration.
+The `npm run build` sequence was run repeatedly from a clean `dist/` while verifying O-01: identical sources produce identical production bundle filenames and identical generated `sw.js` and `_headers`.
 
 ### Testing and Validation
 
@@ -431,7 +433,7 @@ npm run qa:references
 ```
 
 - `lint` runs ESLint for `js/`, `tools/`, `tests/`, `sw.template.js`, and `vitest.config.mjs`.
-- `qa:references` resolves the local references declared by the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the canonical precache list owned by `tools/sw/build-sw.mjs`; an unresolved reference exits the run non-zero.
+- `qa:references` resolves the local references declared by the HTML pages, `css/**/*.css`, `manifest.webmanifest`, and the static precache list owned by `tools/sw/build-sw.mjs`, and additionally checks the production bundle contract: who owns the names, that no script hardcodes a hashed filename, and that the canonical `_headers` carries exactly one marker block. When `dist/build-manifest.json` exists, it also verifies the generated release — the bundles, the rewritten HTML, `dist/sw.js`, and `dist/_headers`. An unresolved reference or a violated contract exits the run non-zero.
 
 In addition, two audits start and stop their own local QA server:
 
@@ -448,7 +450,7 @@ Each of those scripts starts and stops its own local server, so `npm run qa` run
 
 The repository is prepared for static hosting (Netlify-format configuration):
 
-- `_headers` — security headers (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) and the cache policy: the fixed-name production bundles (`style.min.css`, `script.min.js`) and the unversioned files under `css/` and `js/` use a finite freshness window with revalidation, the versioned font paths keep long-lived `immutable` caching, images and metadata files use finite caching, and `sw.js` and the HTML pages stay outside long-lived caching (`no-cache`).
+- `_headers` — security headers (CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`) and the cache policy. The root file is canonical and carries a marker block reserved for the production bundle rules; `build:dist` replaces that block only in `dist/_headers` with the exact rules for the current build's filenames (`Cache-Control: public, max-age=31536000, immutable`), because those URLs carry a digest of their own content. The unversioned files under `css/` and `js/` — including `js/theme-init.js`, which production pages load directly — keep a finite freshness window with revalidation, the versioned font paths keep long-lived `immutable` caching, images and metadata files use finite caching, and `sw.js` and the HTML pages stay outside long-lived caching (`no-cache`).
 - The contact form uses Netlify Forms and reCAPTCHA; the CSP in `_headers` allows the reCAPTCHA domains.
 - The deployment output directory is `dist/`.
 
@@ -483,7 +485,7 @@ The repository contains no audit results confirming conformance with a specific 
 - The service worker is registered in `js/core/service-worker.js` for `/sw.js` with scope `/`.
 - Strategies: documents — network-first with a cache and `offline.html` fallback; styles and scripts — stale-while-revalidate; images — cache-first.
 - On `activate`, caches with an outdated revision are removed; the service worker uses `skipWaiting()` and `clients.claim()`.
-- `sw.template.js` is the only hand-edited service worker source; `npm run build:sw` generates both the root `sw.js` (local profile, precaching the sources served by `npm run serve`) and `dist/sw.js` (production profile, precaching the built bundles from `dist/`) from it.
+- `sw.template.js` is the only hand-edited service worker source; `npm run build:sw` generates both the root `sw.js` (local profile, precaching the sources served by `npm run serve`) and `dist/sw.js` (production profile, precaching the exact bundle names read from `dist/build-manifest.json`) from it.
 
 The repository contains no installability verification and no offline behavior tests.
 
