@@ -1,8 +1,8 @@
 # Axiom — Development Plan
 
-**Last reviewed:** 2026-09-01
+**Last reviewed:** 2026-09-02
 **Project type:** Static multi-page front-end website (vanilla HTML/CSS/JS) with a Node build pipeline and static-hosting configuration
-**Plan status:** All planned phases are complete; only the optional items remain open.
+**Plan status:** All planned phases are complete; only the optional item `O-01` remains open.
 
 ## Planning principles
 
@@ -13,7 +13,7 @@
 
 ## Current priorities
 
-- No item is currently prioritized; Phases 1 through 6 are complete. Only the optional items `O-01` and `O-02` remain open.
+- No item is currently prioritized; Phases 1 through 6 are complete. Only the optional item `O-01` remains open.
 
 ## Phase 1 — Delivery and repository contracts
 
@@ -143,6 +143,7 @@
   - **Value:** removes the trade-off behind `PH1-02` by making long-lived immutable caching safe for `style.min.css` and `script.min.js`
   - **Scope boundary:** optional and broader than `PH1-02`, which is solvable with header rules alone
 
-- [ ] **O-02 — Record third-party font licensing in the repository**
+- [x] **O-02 — Record third-party font licensing in the repository**
   - **Value:** completes the attribution contract already started in `LICENSE` section 8 and the `README.md` attributions section for the self-hosted Lato, Montserrat, and Poppins files
-  - **Scope boundary:** optional; no project file currently claims a license for those fonts
+  - **Scope boundary:** documentation only; the font binaries, stylesheets, build scripts, and the proprietary root `LICENSE` are unchanged
+  - **Completion condition:** every self-hosted font family stores its upstream `OFL.txt` next to its font files and is recorded in the root `THIRD-PARTY-NOTICES.md`, which both `README.md` attributions sections reference
