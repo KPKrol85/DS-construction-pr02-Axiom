@@ -3,6 +3,7 @@
 **Last reviewed:** 2026-09-02
 **Project type:** Static multi-page front-end website (vanilla HTML/CSS/JS) with a Node build pipeline and static-hosting configuration
 **Plan status:** All planned phases and both optional improvements are complete.
+**Archived:** 2026-09-02
 
 ## Planning principles
 

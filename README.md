@@ -93,7 +93,13 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 ├── package.json
 ├── vitest.config.mjs           # konfiguracja Vitest (środowisko jsdom)
 ├── settings.md                 # opis skryptów npm
-├── CHANGELOG.md
+├── docs/
+│   ├── CHANGELOG.md
+│   └── archive/
+│       ├── audits/
+│       │   └── daily-AUDIT.md
+│       └── plans/
+│           └── PLAN.md
 ├── LICENSE
 └── README.md
 ```
@@ -252,11 +258,11 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 - Zmiany w Service Workerze wprowadzaj w `sw.template.js`, a następnie uruchom `npm run build:sw`; nie edytuj wygenerowanych plików `sw.js` ręcznie.
 - Metadane stron aktualizuj w `tools/templates/pages.meta.json` i regeneruj przez `npm run build:head`.
 - Warianty obrazów w `assets/img/_optimized/` pochodzą z `npm run img:build`; listę źródeł i szerokości deklaruje `tools/images/build-images.mjs` zgodnie z `srcset` na stronach — po zmianie `srcset` zaktualizuj tę deklarację i uruchom skrypt ponownie.
-- Opis wszystkich skryptów npm znajduje się w `settings.md`, historia istotnych zmian w `CHANGELOG.md`.
+- Opis wszystkich skryptów npm znajduje się w `settings.md`, historia istotnych zmian w `docs/CHANGELOG.md`.
 
 ### Roadmap
 
-- Brak otwartych pozycji roadmapy; opcjonalne usprawnienia są prowadzone w `PLAN.md`.
+- Brak otwartych pozycji roadmapy; opcjonalne usprawnienia są prowadzone w `docs/archive/plans/PLAN.md`.
 
 ### Licencja
 
@@ -360,7 +366,13 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 ├── package.json
 ├── vitest.config.mjs           # Vitest configuration (jsdom environment)
 ├── settings.md                 # npm script reference
-├── CHANGELOG.md
+├── docs/
+│   ├── CHANGELOG.md
+│   └── archive/
+│       ├── audits/
+│       │   └── daily-AUDIT.md
+│       └── plans/
+│           └── PLAN.md
 ├── LICENSE
 └── README.md
 ```
@@ -519,11 +531,11 @@ State kept in the browser:
 - Make service worker changes in `sw.template.js` and then run `npm run build:sw`; do not edit generated `sw.js` files by hand.
 - Update page metadata in `tools/templates/pages.meta.json` and regenerate it through `npm run build:head`.
 - Image variants in `assets/img/_optimized/` come from `npm run img:build`; `tools/images/build-images.mjs` declares the sources and widths to match the `srcset` declarations on the pages — after changing a `srcset`, update that declaration and run the script again.
-- All npm scripts are described in `settings.md`, and significant changes are recorded in `CHANGELOG.md`.
+- All npm scripts are described in `settings.md`, and significant changes are recorded in `docs/CHANGELOG.md`.
 
 ### Roadmap
 
-- No open roadmap items; optional improvements are tracked in `PLAN.md`.
+- No open roadmap items; optional improvements are tracked in `docs/archive/plans/PLAN.md`.
 
 ### License
 

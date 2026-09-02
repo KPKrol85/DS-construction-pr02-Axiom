@@ -3,6 +3,7 @@
 **Audit date:** 2026-08-30
 **Project type:** Static multi-page front-end website (vanilla HTML/CSS/JS) with a Node build pipeline and static-hosting configuration
 **Audit mode:** Static repository review
+**Archived:** 2026-09-02
 
 ## Status review — 2026-09-01
 
