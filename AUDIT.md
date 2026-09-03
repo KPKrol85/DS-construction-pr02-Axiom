@@ -71,6 +71,9 @@ None detected.
 
 ### [P1-01] Every canonical, social and sitemap URL names an origin that does not resolve
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The canonical public origin was corrected to `https://construction-pr02-axiom.netlify.app` and synchronized across generated metadata, JSON-LD, sitemap and robots configuration.
+
 - **Classification:** Contract mismatch
 - **Affected area:** SEO metadata, social previews, structured data, deployment contract
 - **Evidence:** `tools/templates/pages.meta.json` — 30 `canonical` / `og_url` values; `tools/html/build-head.mjs:11`; `sitemap.xml:6` and the 11 further `<loc>` entries; `robots.txt:17`; the inline JSON-LD `@id` / `url` / `item` values in all 14 pages that carry a block. 254 occurrences of the origin across tracked sources.

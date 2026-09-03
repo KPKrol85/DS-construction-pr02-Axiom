@@ -193,7 +193,7 @@ Repozytorium jest przygotowane pod hosting statyczny (konfiguracja w formacie Ne
 - Formularz kontaktowy korzysta z Netlify Forms i reCAPTCHA; CSP w `_headers` dopuszcza domeny reCAPTCHA.
 - Katalogiem wyjściowym wdrożenia jest `dist/`.
 
-Kanoniczny origin zapisany w metadanych stron, `sitemap.xml` i `robots.txt` to `https://construction-project-02.netlify.app`. Repozytorium nie potwierdza, czy pod tym adresem działa aktualna wersja projektu.
+Kanoniczny origin zapisany w metadanych stron, `sitemap.xml` i `robots.txt` to `https://construction-pr02-axiom.netlify.app`. Repozytorium nie potwierdza, czy pod tym adresem działa aktualna wersja projektu.
 
 ### Dostępność
 
@@ -466,7 +466,7 @@ The repository is prepared for static hosting (Netlify-format configuration):
 - The contact form uses Netlify Forms and reCAPTCHA; the CSP in `_headers` allows the reCAPTCHA domains.
 - The deployment output directory is `dist/`.
 
-The canonical origin recorded in page metadata, `sitemap.xml`, and `robots.txt` is `https://construction-project-02.netlify.app`. The repository does not confirm whether the current version of the project is live at that address.
+The canonical origin recorded in page metadata, `sitemap.xml`, and `robots.txt` is `https://construction-pr02-axiom.netlify.app`. The repository does not confirm whether the current version of the project is live at that address.
 
 ### Accessibility
 

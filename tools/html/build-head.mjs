@@ -8,7 +8,9 @@ const projectRoot = path.resolve(__dirname, "../..");
 
 const templatePath = path.join(projectRoot, "tools/templates/head.partial.html");
 const metaPath = path.join(projectRoot, "tools/templates/pages.meta.json");
-const defaultOgImage = "https://construction-project-02.netlify.app/assets/img/og/og-1200x630.jpg";
+// Page metadata uses root-relative paths resolved against this public origin.
+const siteOrigin = "https://construction-pr02-axiom.netlify.app";
+const defaultOgImage = "/assets/img/og/og-1200x630.jpg";
 
 const template = fs.readFileSync(templatePath, "utf8").trimEnd();
 const pageMeta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
@@ -49,7 +51,11 @@ const renderHead = (filePath, meta) => {
       throw new Error(`Missing required metadata value for ${token} in ${filePath}`);
     }
 
-    return output.replaceAll(token, escapeAttr(value));
+    const renderedValue = ["{{CANONICAL}}", "{{OG_URL}}", "{{OG_IMAGE}}"].includes(token)
+      ? new URL(value, siteOrigin).href
+      : value;
+
+    return output.replaceAll(token, escapeAttr(renderedValue));
   }, template);
 };
 
