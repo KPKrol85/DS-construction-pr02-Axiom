@@ -84,6 +84,9 @@ None detected.
 
 ### [P1-02] The careers form collects personal data and a CV with no submission path
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The careers form is now an explicitly non-operational demonstration interface: all recruitment data and CV controls are disabled, the submission path was removed, and the page clearly states that real applications are not accepted or processed.
+
 - **Classification:** Defect
 - **Affected area:** Forms, public content integrity, `legal/kariera.html`
 - **Evidence:** `legal/kariera.html:156` (`<form id="career__form" action="#" method="post" novalidate>`), `:162-185` (fields, including the PDF upload at `:185`), `:188` (consent checkbox), `:195` (submit button)

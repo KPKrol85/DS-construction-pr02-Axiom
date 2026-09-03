@@ -18,6 +18,10 @@ Recorded history begins with the initial standalone repository import; the entri
 - Added a layered CSS architecture aggregated by `css/main.css` (`tokens`, `base`, `layout`, `components`, `sections`) with `prefers-reduced-motion` handling in animated sections.
 - Added guarded `localStorage` access in `js/utils/storage.js` so theme and cookie-consent state degrade silently when browser storage is unavailable.
 
+### Fixed
+
+- Converted the careers form into an explicitly non-operational demonstration interface by disabling all recruitment-data and CV controls, removing its submission path, and stating that real applications are not accepted or processed (P1-02).
+
 ### Build and Tooling
 
 - Added a Node-based release pipeline (`build:clean` → `build:css` → `build:js` → `build:sw` → `build:dist`) producing `dist/style.min.css`, `dist/script.min.js`, a generated `dist/sw.js`, and the copied static deployment tree.

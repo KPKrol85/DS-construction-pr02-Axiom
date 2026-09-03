@@ -148,52 +148,52 @@
       <section class="legal" aria-labelledby="career-title">
         <div class="legal__container">
           <h1 id="career-title" class="legal__title">Kariera</h1>
-          <p class="lead legal__lead">
-            Dołącz do naszego zespołu! Wypełnij formularz, aby zgłosić swoją kandydaturę. Poszukujemy osób ambitnych, odpowiedzialnych i gotowych do współpracy przy realizacji projektów budowlanych.
+          <p id="career-demo-notice" class="lead legal__lead">
+            Ten interfejs rekrutacyjny jest częścią demonstracyjnego projektu „Axiom Construction”. Strona nie przyjmuje ani nie przetwarza prawdziwych zgłoszeń i CV.
           </p>
 
-          <!-- Formularz kontaktowy -->
+          <!-- Demonstracyjny formularz rekrutacyjny -->
           <div class="legal__content">
-            <form id="career__form" class="career__form" action="#" method="post" aria-labelledby="career-title" novalidate>
+            <form id="career__form" class="career__form" aria-labelledby="career-title" aria-describedby="career-demo-notice">
               <div class="form__group">
                 <label for="fullname">
                   Imię i nazwisko
                   <span aria-hidden="true">*</span>
                 </label>
-                <input type="text" id="fullname" name="fullname" required placeholder="Wpisz swoje imię i nazwisko" />
+                <input type="text" id="fullname" name="fullname" required disabled placeholder="Wpisz swoje imię i nazwisko" />
               </div>
               <div class="form__group">
                 <label for="email">
                   Adres e-mail
                   <span aria-hidden="true">*</span>
                 </label>
-                <input type="email" id="email" name="email" required placeholder="Twój adres e-mail" />
+                <input type="email" id="email" name="email" required disabled placeholder="Twój adres e-mail" />
               </div>
               <div class="form__group">
                 <label for="phone">Telefon kontaktowy</label>
-                <input type="tel" id="phone" name="phone" placeholder="np. +48 600 123 456" />
+                <input type="tel" id="phone" name="phone" disabled placeholder="np. +48 600 123 456" />
               </div>
               <div class="form__group">
                 <label for="position">Stanowisko / specjalizacja</label>
-                <input type="text" id="position" name="position" placeholder="Np. murarz, elektryk, kierownik budowy..." />
+                <input type="text" id="position" name="position" disabled placeholder="Np. murarz, elektryk, kierownik budowy..." />
               </div>
               <div class="form__group">
                 <label for="message">Krótki opis doświadczenia</label>
-                <textarea id="message" name="message" rows="5" placeholder="Opisz swoje doświadczenie lub powiedz, dlaczego chcesz z nami pracować"></textarea>
+                <textarea id="message" name="message" rows="5" disabled placeholder="Opisz swoje doświadczenie lub powiedz, dlaczego chcesz z nami pracować"></textarea>
               </div>
               <div class="form__group">
                 <label for="cv">Załącz CV (PDF, max 5MB)</label>
-                <input type="file" id="cv" name="cv" accept=".pdf" />
+                <input type="file" id="cv" name="cv" accept=".pdf" disabled />
               </div>
               <div class="form__group checkbox">
-                <input type="checkbox" id="consent" name="consent" required />
+                <input type="checkbox" id="consent" name="consent" required disabled />
                 <label for="consent">
                   Wyrażam zgodę na przetwarzanie moich danych osobowych na potrzeby procesu rekrutacji zgodnie z
                   <a href="polityka-prywatnosci.html">Polityką prywatności</a>
                   .
                 </label>
               </div>
-              <button type="submit" class="btn btn-primary">Wyślij wiadomość</button>
+              <button type="button" class="btn btn-primary" disabled>Wysyłanie zgłoszeń niedostępne</button>
             </form>
           </div>
         </div>
