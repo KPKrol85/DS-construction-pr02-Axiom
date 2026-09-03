@@ -110,6 +110,9 @@ None detected.
 
 ### [P1-04] Most homepage content stays invisible when JavaScript does not run
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The reveal hidden state is now scoped to documents with the existing `html.js` enhancement marker, so reveal content remains visible without JavaScript while the existing scroll animation behavior is preserved when JavaScript is active.
+
 - **Classification:** Defect
 - **Affected area:** Progressive enhancement, CSS utilities, homepage and service pages
 - **Evidence:** `css/components/utilities.css:95-100` (`.u-hidden { opacity: 0 }`); `js/sections/hero.js:4-46` (the only code that adds `u-show`); `index.html` — 29 elements carry `u-hidden`; each of the six `services/*.html` pages — 13; `index.html:1211-1213` (`<noscript>`); `css/layout/layout.css:205-208` (the `html.js` guard used for the navigation)
