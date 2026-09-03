@@ -21,6 +21,7 @@ Recorded history begins with the initial standalone repository import; the entri
 ### Fixed
 
 - Converted the careers form into an explicitly non-operational demonstration interface by disabling all recruitment-data and CV controls, removing its submission path, and stating that real applications are not accepted or processed (P1-02).
+- Restored offline retry and automatic recovery by loading `js/offline.js` from `offline.html`, updating the connection-status live region, and adding the script to both local and production Service Worker precache profiles and revision inputs (P1-03).
 
 ### Build and Tooling
 

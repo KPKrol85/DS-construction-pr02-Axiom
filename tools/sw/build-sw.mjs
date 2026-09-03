@@ -20,19 +20,22 @@ const WEB_MANIFEST_PATH = path.join(ROOT, "manifest.webmanifest");
 const BASE_PRECACHE = [
   "/",
   "/offline.html",
+  "/js/offline.js",
   "/manifest.webmanifest",
 ];
 
 // Local precache base: the URLs served from the repository root by
 // `npm run serve`. The production bundles do not exist there; all 15
 // maintained HTML pages load css/main.css, js/main.js, and js/theme-init.js
-// directly, so those are the files a locally installed service worker can
-// precache. The remaining entries are shared with the production profile.
+// directly, while offline.html additionally loads js/offline.js for recovery.
+// Those are the files a locally installed service worker can precache. The
+// remaining entries are shared with the production profile.
 const LOCAL_PRECACHE = [
   "/",
   "/offline.html",
   "/css/main.css",
   "/js/main.js",
+  "/js/offline.js",
   "/js/theme-init.js",
   "/manifest.webmanifest",
 ];
@@ -66,6 +69,7 @@ const createProfiles = async () => {
       revisionInputs: [
         path.join(ROOT, "css/main.css"),
         path.join(ROOT, "js/main.js"),
+        path.join(ROOT, "js/offline.js"),
         path.join(ROOT, "js/theme-init.js"),
         WEB_MANIFEST_PATH,
       ],
@@ -75,10 +79,12 @@ const createProfiles = async () => {
       description: "production - dist/ deployment root",
       outputPath: path.join(DIST_DIR, "sw.js"),
       precache: [...BASE_PRECACHE, ...bundleFiles.map((file) => `/${file}`)],
-      // The content-addressed production bundles this profile precaches, named
-      // by build:hash, which `npm run build` runs before build:sw.
+      // The content-addressed bundles plus the standalone recovery script this
+      // profile precaches. build:hash names the bundles before build:sw runs;
+      // build:dist later copies js/offline.js byte-for-byte from the root.
       revisionInputs: [
         ...bundleFiles.map((file) => path.join(DIST_DIR, file)),
+        path.join(ROOT, "js/offline.js"),
         WEB_MANIFEST_PATH,
       ],
     },

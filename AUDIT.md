@@ -97,6 +97,9 @@ None detected.
 
 ### [P1-03] The offline page's recovery controls are inert because their only script is never loaded
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The offline recovery script is now loaded by `offline.html`, updates the connection-status live region, and is included in both local and production Service Worker precache profiles so retry and automatic recovery remain available during the offline fallback.
+
 - **Classification:** Defect
 - **Affected area:** Service worker offline fallback, `offline.html`
 - **Evidence:** `js/offline.js:1-8`; `offline.html:148` (`<button id="retryBtn">`), `offline.html:150` (`<p class="sr-only" id="netStatus" aria-live="polite">`), `offline.html:83` and `:348` (the only two scripts the page loads)
