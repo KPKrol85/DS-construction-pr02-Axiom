@@ -11,9 +11,10 @@
 //   no build, no local server, and no browser.
 //
 //   Post-build (only when dist/build-manifest.json exists): verifies the real
-//   generated deployment - the bundles on disk, the rewritten HTML, the
-//   production service worker, and the generated dist/_headers - against the
-//   manifest that build:hash produced. Skipped, not failed, without a build.
+//   generated deployment - the bundles on disk, the rewritten HTML, the source
+//   files the deployment publishes beside the bundles, the production service
+//   worker, and the generated dist/_headers - against the manifest that
+//   build:hash produced. Skipped, not failed, without a build.
 //
 // Exit codes:
 //   0 - every checked local reference resolves and every contract holds
@@ -103,6 +104,26 @@ const collectFiles = async (dir, extension, files = []) => {
     if (entry.isFile() && entry.name.endsWith(extension)) {
       files.push(entryPath);
     }
+  }
+
+  return files.sort();
+};
+
+// Every file under a directory, as sorted POSIX paths relative to it. Unlike
+// collectFiles this filters nothing, so a stray file of any name or extension is
+// visible when a generated directory is compared against an allowlist.
+const collectPublishedFiles = async (dir, base = dir, files = []) => {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const entryPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      await collectPublishedFiles(entryPath, base, files);
+      continue;
+    }
+
+    files.push(toPosix(path.relative(base, entryPath)));
   }
 
   return files.sort();
@@ -489,6 +510,15 @@ const staleProductionReferences = [
   ...BUNDLES.map((bundle) => bundle.intermediate),
 ];
 
+// The only canonical source files the release assembler publishes beside the
+// generated bundles: the pre-paint theme script every maintained page loads, and
+// the recovery script offline.html loads and the production service worker
+// precaches. Every other module of the js/main.js graph reaches production
+// inside the JavaScript bundle, and the css/ layers inside the CSS bundle, so
+// the deployment publishes neither source tree. tools/release/build-dist.mjs
+// owns that copy contract; this list is what its output must match.
+const publishedSourceScripts = ["theme-init.js", "offline.js"];
+
 // Verifies the real generated deployment against the manifest build:hash wrote.
 // Returns false when there is no build to check, which is a skip, not a failure.
 const checkGeneratedRelease = async (state) => {
@@ -528,6 +558,40 @@ const checkGeneratedRelease = async (state) => {
     if (declaredHash !== actualHash) {
       note(`dist/${filename}`, `filename claims hash ${declaredHash}, its bytes hash to ${actualHash}`);
     }
+  }
+
+  // The source payload published beside the bundles. A css/ tree, or anything
+  // under js/ outside the allowlist, means the deployment shipped a second,
+  // unreferenced copy of code the bundles already carry.
+  try {
+    await fs.stat(path.join(distDir, "css"));
+    note("dist/css/", "publishes the unbundled stylesheet source tree, which no production page references");
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+
+  let publishedScripts;
+  try {
+    publishedScripts = await collectPublishedFiles(path.join(distDir, "js"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+
+    publishedScripts = [];
+  }
+
+  for (const expected of publishedSourceScripts) {
+    if (publishedScripts.includes(expected)) continue;
+
+    note(`dist/js/${expected}`, "is not published, but production pages load it directly");
+  }
+
+  for (const published of publishedScripts) {
+    if (publishedSourceScripts.includes(published)) continue;
+
+    note(
+      `dist/js/${published}`,
+      "is published, but production reaches this source through the content-addressed JavaScript bundle",
+    );
   }
 
   // Every generated page points at both bundles and at neither source entry

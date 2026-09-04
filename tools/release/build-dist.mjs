@@ -11,7 +11,12 @@ import {
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 
-const rootFilesToCopy = [
+// Copied into dist/ file by file, each one keeping its path. The root entries
+// are the deployment's own pages and metadata; the two js/ entries are the only
+// canonical source files a production page still requests by name after the
+// HTML rewrite below, so they are named here individually rather than reached
+// by copying their directory.
+const filesToCopy = [
   "index.html",
   "404.html",
   "offline.html",
@@ -21,9 +26,19 @@ const rootFilesToCopy = [
   "sitemap.xml",
   "_headers",
   "LICENSE",
+  // Loaded synchronously by every maintained page before the application
+  // bundle, so the stored theme is applied before the first paint.
+  path.join("js", "theme-init.js"),
+  // Loaded by offline.html for retry and online recovery, and precached by the
+  // production service worker.
+  path.join("js", "offline.js"),
 ];
 
-const dirsToCopy = ["assets", "services", "legal", "js", "css"];
+// Copied recursively, whole. css/ and js/ are deliberately not here: the
+// stylesheet layers and the js/main.js module graph reach production only as
+// the content-addressed bundles build:hash named, so publishing either source
+// tree would ship a second, unreferenced copy of the same code.
+const dirsToCopy = ["assets", "services", "legal"];
 
 const htmlFiles = [
   "index.html",
@@ -155,7 +170,7 @@ const writeProductionHeaders = async (bundles) => {
 // release build before it writes a dist/ tree whose HTML could not be rewritten.
 const bundles = await readBundleManifest(distDir);
 
-for (const file of rootFilesToCopy) {
+for (const file of filesToCopy) {
   await copyFile(path.join(rootDir, file), path.join(distDir, file));
 }
 

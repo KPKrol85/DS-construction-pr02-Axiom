@@ -74,7 +74,7 @@
 
 ### qa:references
 - **Command:** `node tools/qa/check-references.mjs`
-- **What it does:** Statycznie sprawdza odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i stałą listę precache z `tools/sw/build-sw.mjs`, a także kontrakt bundli produkcyjnych: własność nazw, brak nazw ze skrótem wpisanych na sztywno w skryptach i dokładnie jeden blok znaczników w kanonicznym `_headers`; nie wymaga serwera, przeglądarki ani katalogu `dist/`. Gdy istnieje `dist/build-manifest.json`, weryfikuje dodatkowo wygenerowany release: bundle, przepisany HTML, `dist/sw.js` i `dist/_headers`.
+- **What it does:** Statycznie sprawdza odwołania lokalne deklarowane przez strony HTML, `css/**/*.css`, `manifest.webmanifest` i stałą listę precache z `tools/sw/build-sw.mjs`, a także kontrakt bundli produkcyjnych: własność nazw, brak nazw ze skrótem wpisanych na sztywno w skryptach i dokładnie jeden blok znaczników w kanonicznym `_headers`; nie wymaga serwera, przeglądarki ani katalogu `dist/`. Gdy istnieje `dist/build-manifest.json`, weryfikuje dodatkowo wygenerowany release: bundle, przepisany HTML, zawężony zestaw plików źródłowych publikowanych obok bundli, `dist/sw.js` i `dist/_headers`.
 - **When to use:** Po zmianach ścieżek, nazw plików lub zawartości `assets/`, przed buildem oraz po buildzie przed publikacją.
 
 ### qa

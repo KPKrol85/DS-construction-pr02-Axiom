@@ -20,14 +20,16 @@
 # bundle exists until a release build names one.
 # <<< AXIOM PRODUCTION BUNDLE CACHE RULES <<<
 
-# Canonical sources copied into `dist/` by `build:dist`. Fixed, unversioned
-# URLs whose contents can change between deploys. Production pages still load
-# `/js/theme-init.js` directly, so this group follows the bundle policy.
+# The standalone source scripts `build:dist` publishes beside the bundles, and
+# the only unversioned source URLs the deployment serves: every stylesheet layer
+# and every module of the `js/main.js` graph reaches production inside a
+# content-addressed bundle instead. These two keep fixed URLs whose contents can
+# change between deploys, so each response stays fresh briefly, then revalidates.
 
-/css/*
+/js/theme-init.js
   Cache-Control: public, max-age=300, must-revalidate
 
-/js/*
+/js/offline.js
   Cache-Control: public, max-age=300, must-revalidate
 
 # Self-hosted font releases. The URL carries the release version in both the

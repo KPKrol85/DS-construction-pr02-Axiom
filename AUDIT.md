@@ -218,6 +218,9 @@ None detected.
 
 ### Narrow what the production build copies into `dist/`
 
+- **Status:** COMPLETED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The production release now publishes the content-addressed CSS and JavaScript bundles plus only the required standalone `js/theme-init.js` and `js/offline.js` files, with post-build QA enforcing the narrowed payload.
+
 - **Relevant area:** `tools/release/build-dist.mjs:26` — `dirsToCopy` includes `js` and `css`.
 - **Current evidence:** The release copies the complete unbundled `css/` and `js/` source trees into the deployment even though production pages load only the two content-addressed bundles plus `js/theme-init.js`. The `_headers` file already acknowledges this by giving `/css/*` and `/js/*` their own finite revalidated policy. The current CSS layers total 2869 lines and the module graph 18 files, all shipped a second time in unminified form.
 - **Potential value:** A smaller deployment and one fewer way for a stale unbundled source to be served, without changing the bundle contract that `bundle-names.mjs` already owns.
