@@ -21,6 +21,7 @@ const BASE_PRECACHE = [
   "/",
   "/offline.html",
   "/js/offline.js",
+  "/js/theme-init.js",
   "/manifest.webmanifest",
 ];
 
@@ -79,12 +80,16 @@ const createProfiles = async () => {
       description: "production - dist/ deployment root",
       outputPath: path.join(DIST_DIR, "sw.js"),
       precache: [...BASE_PRECACHE, ...bundleFiles.map((file) => `/${file}`)],
-      // The content-addressed bundles plus the standalone recovery script this
-      // profile precaches. build:hash names the bundles before build:sw runs;
-      // build:dist later copies js/offline.js byte-for-byte from the root.
+      // The content-addressed bundles plus the two standalone scripts and the
+      // web manifest this profile precaches, so its revision tracks every
+      // production asset whose bytes can change under a fixed URL. build:hash
+      // names the bundles before build:sw runs; build:dist copies
+      // js/theme-init.js and js/offline.js into dist/ only afterwards, so both
+      // are hashed from the canonical root source those copies come from.
       revisionInputs: [
         ...bundleFiles.map((file) => path.join(DIST_DIR, file)),
         path.join(ROOT, "js/offline.js"),
+        path.join(ROOT, "js/theme-init.js"),
         WEB_MANIFEST_PATH,
       ],
     },

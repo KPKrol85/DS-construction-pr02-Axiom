@@ -228,6 +228,9 @@ None detected.
 
 ### Precache `js/theme-init.js` in the production service-worker profile
 
+- **Status:** COMPLETED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The production Service Worker now precaches `/js/theme-init.js` and includes the canonical script in its revision inputs, while preserving the existing local profile and release contract.
+
 - **Relevant area:** `tools/sw/build-sw.mjs:20-24` — `BASE_PRECACHE`.
 - **Current evidence:** The local profile precaches `/js/theme-init.js` (line 36); the production profile does not, although every production page loads it directly from `<head>` and `_headers` documents that fact. Offline, that request has no cached response, so the page renders on the `data-theme="light"` value hardcoded in the markup.
 - **Potential value:** A visitor who chose the dark theme keeps it on an offline navigation instead of getting a flash to light, at the cost of one small file in the precache.
