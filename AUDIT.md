@@ -164,6 +164,9 @@ None detected.
 
 ### [P2-04] One rule keys off the system colour scheme in a theme system driven by `data-theme`
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The active primary-navigation colour now follows the existing `data-theme` state instead of the operating-system colour preference, so explicit site-theme choices are respected in both light and dark modes.
+
 - **Classification:** Defect
 - **Affected area:** Theming, primary navigation
 - **Evidence:** `css/components/utilities.css:17-21`, against `css/tokens/tokens.css:101` (`:root[data-theme="dark"]`) and `js/theme-init.js:4-9`

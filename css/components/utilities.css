@@ -14,10 +14,8 @@ body[data-current="services"] .site-nav__link[href$="#uslugi"] {
   background: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  #primaryNav .site-nav__link[aria-current="page"] {
-    color: var(--accent-400);
-  }
+:root[data-theme="dark"] #primaryNav .site-nav__link[aria-current="page"] {
+  color: var(--accent-400);
 }
 
 /* Aria Current */
