@@ -1,9 +1,9 @@
 // Generated file - do not edit.
 // Source: sw.template.js
-// Generator: tools/sw/build-sw.mjs (npm run build:sw)
+// Generator: tools/sw/build-sw.mjs (npm run build:sw:local)
 // Profile: local - repository root (npm run serve)
 
-const REVISION = "c7eff6c576b9f79e";
+const REVISION = "5aeb3c3b22b4b154";
 const CACHE_PREFIX = "axiom-static-";
 const CACHE_NAME = `${CACHE_PREFIX}${REVISION}`;
 const HTML_CACHE_PREFIX = "html-pages-";

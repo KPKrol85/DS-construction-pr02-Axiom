@@ -40,15 +40,25 @@
 ### build:sw
 - **Command:** `node tools/sw/build-sw.mjs`
 - **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny, niezmieniony) i `dist/sw.js` (profil produkcyjny, który precache’uje dokładne nazwy bundli odczytane z `dist/build-manifest.json`), każdy z własną listą pre-cache i własną rewizją.
-- **When to use:** Po `build:hash`, po zmianach wpływających na service workera lub cache’owane assety.
+- **When to use:** Tylko gdy oba profile mają zostać odświeżone jednocześnie; wymaga wcześniejszego `build:hash` dla profilu produkcyjnego.
+
+### build:sw:local
+- **Command:** `node tools/sw/build-sw.mjs --profile=local`
+- **What it does:** Generuje wyłącznie lokalny `sw.js` w katalogu głównym, bez wymagania `dist/build-manifest.json`.
+- **When to use:** Jawnie przed lokalnymi testami PWA uruchamianymi przez `npm run serve`.
+
+### build:sw:production
+- **Command:** `node tools/sw/build-sw.mjs --profile=production`
+- **What it does:** Generuje wyłącznie produkcyjny `dist/sw.js` z nazwami bundli odczytanymi z `dist/build-manifest.json`; nie zapisuje głównego `sw.js`.
+- **When to use:** Po `build:hash`, przed `build:dist`; standardowo jako część `build`.
 
 ### build:dist
 - **Command:** `node tools/release/build-dist.mjs`
 - **What it does:** Składa artefakty produkcyjne do katalogu `dist`: kopiuje pliki statyczne, przepisuje odwołania w HTML na nazwy bundli z `dist/build-manifest.json` i zastępuje blok znaczników w `dist/_headers` dokładnymi regułami `immutable` dla obu bundli.
-- **When to use:** Po `build:hash` i `build:sw`, bezpośrednio przed publikacją.
+- **When to use:** Po `build:hash` i `build:sw:production`, bezpośrednio przed publikacją.
 
 ### build
-- **Command:** `npm run build:clean && npm run build:css && npm run build:js && npm run build:hash && npm run build:sw && npm run build:dist`
+- **Command:** `npm run build:clean && npm run build:css && npm run build:js && npm run build:hash && npm run build:sw:production && npm run build:dist`
 - **What it does:** Uruchamia pełny pipeline produkcyjny od czyszczenia do złożenia `dist`.
 - **When to use:** Standardowa komenda przed wdrożeniem.
 

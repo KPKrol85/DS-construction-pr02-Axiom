@@ -8,6 +8,27 @@ const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, "dist");
 const TEMPLATE_PATH = path.join(ROOT, "sw.template.js");
 const WEB_MANIFEST_PATH = path.join(ROOT, "manifest.webmanifest");
+const PROFILE_NAMES = ["local", "production"];
+
+const getRequestedProfileNames = () => {
+  const args = process.argv.slice(2);
+
+  // Preserve the existing direct/build:sw behavior as a compatibility path,
+  // while the named npm scripts select one output explicitly.
+  if (args.length === 0) return PROFILE_NAMES;
+
+  const [profileArg] = args;
+  const prefix = "--profile=";
+  const profileName = profileArg?.startsWith(prefix) ? profileArg.slice(prefix.length) : "";
+
+  if (args.length !== 1 || !PROFILE_NAMES.includes(profileName)) {
+    throw new Error(
+      "Usage: node tools/sw/build-sw.mjs [--profile=local|--profile=production]",
+    );
+  }
+
+  return [profileName];
+};
 
 // Production precache base: the fixed URLs served from the deployment root that
 // build:dist assembles. Kept as a flat array of string literals because
@@ -47,22 +68,16 @@ const LOCAL_PRECACHE = [
 // list, its revision inputs, and where the rendered file lands. Neither output
 // is canonical, and neither can change without this script producing it.
 //
-// Built per run rather than declared as a constant, because the production
-// profile's bundle URLs are only known once build:hash has named them. A
-// revision is hashed from precached inputs only; no profile may take a
-// generated service worker - its own output least of all - as a revision input.
-const createProfiles = async () => {
-  // The production bundle filenames generated for this build. Validated by the
-  // shared release contract, so a missing, stale, or malformed manifest stops
-  // the build here instead of yielding a service worker that precaches a URL
-  // the deployment does not serve.
-  const bundles = await readBundleManifest(DIST_DIR);
-  const bundleFiles = BUNDLES.map((bundle) => bundles[bundle.key]);
-
-  return [
-    {
+// Built only for the requested profile because production bundle URLs are only
+// known once build:hash has named them, while local generation must not depend
+// on dist/. A revision is hashed from precached inputs only; no profile may take
+// a generated service worker - its own output least of all - as an input.
+const createProfile = async (profileName) => {
+  if (profileName === "local") {
+    return {
       name: "local",
       description: "local - repository root (npm run serve)",
+      npmScript: "build:sw:local",
       outputPath: path.join(ROOT, "sw.js"),
       precache: LOCAL_PRECACHE,
       // The development assets this profile precaches, so its revision tracks
@@ -74,26 +89,35 @@ const createProfiles = async () => {
         path.join(ROOT, "js/theme-init.js"),
         WEB_MANIFEST_PATH,
       ],
-    },
-    {
-      name: "production",
-      description: "production - dist/ deployment root",
-      outputPath: path.join(DIST_DIR, "sw.js"),
-      precache: [...BASE_PRECACHE, ...bundleFiles.map((file) => `/${file}`)],
-      // The content-addressed bundles plus the two standalone scripts and the
-      // web manifest this profile precaches, so its revision tracks every
-      // production asset whose bytes can change under a fixed URL. build:hash
-      // names the bundles before build:sw runs; build:dist copies
-      // js/theme-init.js and js/offline.js into dist/ only afterwards, so both
-      // are hashed from the canonical root source those copies come from.
-      revisionInputs: [
-        ...bundleFiles.map((file) => path.join(DIST_DIR, file)),
-        path.join(ROOT, "js/offline.js"),
-        path.join(ROOT, "js/theme-init.js"),
-        WEB_MANIFEST_PATH,
-      ],
-    },
-  ];
+    };
+  }
+
+  // The production bundle filenames generated for this build. Validated by the
+  // shared release contract, so a missing, stale, or malformed manifest stops
+  // the build here instead of yielding a service worker that precaches a URL
+  // the deployment does not serve.
+  const bundles = await readBundleManifest(DIST_DIR);
+  const bundleFiles = BUNDLES.map((bundle) => bundles[bundle.key]);
+
+  return {
+    name: "production",
+    description: "production - dist/ deployment root",
+    npmScript: "build:sw:production",
+    outputPath: path.join(DIST_DIR, "sw.js"),
+    precache: [...BASE_PRECACHE, ...bundleFiles.map((file) => `/${file}`)],
+    // The content-addressed bundles plus the two standalone scripts and the web
+    // manifest this profile precaches, so its revision tracks every production
+    // asset whose bytes can change under a fixed URL. build:hash names the
+    // bundles before build:sw:production runs; build:dist copies
+    // js/theme-init.js and js/offline.js into dist/ only afterwards, so both are
+    // hashed from the canonical root source those copies come from.
+    revisionInputs: [
+      ...bundleFiles.map((file) => path.join(DIST_DIR, file)),
+      path.join(ROOT, "js/offline.js"),
+      path.join(ROOT, "js/theme-init.js"),
+      WEB_MANIFEST_PATH,
+    ],
+  };
 };
 
 // Prepended to every generated output so the ownership is visible in the file
@@ -101,7 +125,7 @@ const createProfiles = async () => {
 const headerLines = (profile) => [
   "// Generated file - do not edit.",
   "// Source: sw.template.js",
-  "// Generator: tools/sw/build-sw.mjs (npm run build:sw)",
+  `// Generator: tools/sw/build-sw.mjs (npm run ${profile.npmScript})`,
   `// Profile: ${profile.description}`,
   "",
 ];
@@ -118,7 +142,7 @@ const readRevisionInput = async (profile, filePath) => {
 
     const relative = relativeToRoot(filePath);
     const hint = relative.startsWith("dist/")
-      ? " It is named by build:hash from the bundles build:css and build:js write, all of which run before build:sw in `npm run build`."
+      ? " It is named by build:hash from the bundles build:css and build:js write, all of which run before build:sw:production in `npm run build`."
       : "";
 
     throw new Error(
@@ -175,14 +199,15 @@ const renderServiceWorker = (template, profile, revision, assets) => {
 };
 
 const buildServiceWorker = async () => {
+  const requestedProfileNames = getRequestedProfileNames();
   const [template, manifestIcons, profiles] = await Promise.all([
     fs.readFile(TEMPLATE_PATH, "utf8"),
     getManifestIcons(),
-    createProfiles(),
+    Promise.all(requestedProfileNames.map((profileName) => createProfile(profileName))),
   ]);
 
-  // Every profile renders before anything is written, so a failure leaves no
-  // output behind and no output can be refreshed while the other goes stale.
+  // Validate and render every requested profile before writes begin, so an
+  // input or rendering failure leaves all selected outputs untouched.
   const generated = [];
   for (const profile of profiles) {
     const revision = await buildRevision(profile);
