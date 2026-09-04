@@ -125,6 +125,9 @@ None detected.
 
 ### [P2-01] `npm run build:head` is not idempotent and reformats every page on each run
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The head generator now normalizes retained script indentation and preserves each page's line-ending convention, making repeated `npm run build:head` executions byte-stable after the initial normalization.
+
 - **Classification:** Maintenance risk
 - **Affected area:** Metadata generation tooling
 - **Evidence:** `tools/html/build-head.mjs:56-65` (`indentBlock`), `:67-79` (`extractHeadExtras`), `:98-103`

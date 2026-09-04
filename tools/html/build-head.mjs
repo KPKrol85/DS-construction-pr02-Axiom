@@ -61,13 +61,21 @@ const renderHead = (filePath, meta) => {
 
 const indentBlock = (block, spaces = 4) => {
   const prefix = " ".repeat(spaces);
-  const lines = block.trim().split("\n");
-  const nonEmpty = lines.filter((line) => line.trim().length > 0);
-  const minIndent = nonEmpty.length > 0 ? Math.min(...nonEmpty.map((line) => line.match(/^\s*/)[0].length)) : 0;
+  const [firstLine, ...restLines] = block.trim().split("\n");
+  // The retained block is matched from `<script` onwards, so its first line never
+  // carries the source indentation. Measuring the dedent baseline across every line
+  // therefore always yields zero and stacks another prefix onto the continuation
+  // lines on each run, so the baseline is measured on the continuation lines only.
+  const contentLines = restLines.filter((line) => line.trim().length > 0);
+  const baseIndent =
+    contentLines.length > 0 ? Math.min(...contentLines.map((line) => line.match(/^[ \t]*/)[0].length)) : 0;
+  const outerIndent = new RegExp(`^[ \\t]{0,${baseIndent}}`);
 
-  return lines
-    .map((line) => `${prefix}${line.slice(minIndent)}`)
-    .join("\n");
+  const normalized = restLines.map((line) =>
+    line.trim().length > 0 ? `${prefix}${line.replace(outerIndent, "")}` : line
+  );
+
+  return [`${prefix}${firstLine.replace(/^[ \t]+/, "")}`, ...normalized].join("\n");
 };
 
 const extractHeadExtras = (headInner) => {
@@ -102,7 +110,10 @@ for (const [filePath, meta] of Object.entries(pageMeta)) {
   const generatedHead = renderHead(filePath, meta);
 
   const headSections = [generatedHead, ...extraBlocks];
-  const nextHeadInner = `\n${headSections.join("\n\n")}\n  `;
+  // The template and each page carry the repository line endings, so the assembled
+  // head is normalised back to the page's own convention to keep runs byte-stable.
+  const eol = html.includes("\r\n") ? "\r\n" : "\n";
+  const nextHeadInner = `\n${headSections.join("\n\n")}\n  `.replace(/\r\n|\n/g, eol);
 
   const updatedHtml = html.replace(headMatch[0], `<head>${nextHeadInner}</head>`);
 
