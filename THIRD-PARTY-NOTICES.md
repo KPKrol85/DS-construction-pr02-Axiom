@@ -20,13 +20,13 @@ Plik ten nie zastępuje tych licencji — wiążąca jest treść wskazanych pli
 
 ## Fonts
 
-The project self-hosts three font families as WOFF2 files. All three are licensed under the
+The project self-hosts two font families as WOFF2 files. Both are licensed under the
 SIL Open Font License, Version 1.1. Condition 2 of that license requires each redistributed
 copy of the font software to contain the copyright notice and the license, which is why the
 upstream `OFL.txt` is stored next to the font files of each family.
 
 Each family keeps its own copy of `OFL.txt` because the upstream copyright notices differ.
-The license text itself is identical in all three files.
+The license text itself is identical in both files.
 
 ### Lato
 
@@ -62,21 +62,3 @@ The license text itself is identical in all three files.
 - **Copyright notice embedded in the redistributed files:** Copyright 2011 The Montserrat
   Project Authors (https://github.com/JulietaUla/Montserrat)
 - **License text in this repository:** [assets/fonts/montserrat-v31-latin/OFL.txt](assets/fonts/montserrat-v31-latin/OFL.txt)
-
-### Poppins
-
-- **Files in this repository:**
-  - [assets/fonts/poppins-v24-latin/poppins-v24-latin-regular.woff2](assets/fonts/poppins-v24-latin/poppins-v24-latin-regular.woff2)
-- **Upstream source:** the `ofl/poppins` family directory of the Google Fonts repository
-  (<https://github.com/google/fonts/tree/main/ofl/poppins>), whose `METADATA.pb` declares the
-  family source repository <https://github.com/itfoundry/Poppins>
-- **Designers (upstream `METADATA.pb`):** Indian Type Foundry, Jonny Pinhorn, Ninad Kale
-- **License:** SIL Open Font License, Version 1.1
-- **Copyright notice (upstream `OFL.txt`):** Copyright 2020 The Poppins Project Authors
-  (https://github.com/itfoundry/Poppins)
-- **Copyright notice embedded in the redistributed files:** identical to the notice above
-- **License text in this repository:** [assets/fonts/poppins-v24-latin/OFL.txt](assets/fonts/poppins-v24-latin/OFL.txt)
-- **Note:** the `OFL.txt` in the `itfoundry/Poppins` repository carries a different header
-  (Copyright 2014-2019 Indian Type Foundry (info@indiantypefoundry.com)). The copy stored
-  here is the one distributed with the Google Fonts package that matches the notice embedded
-  in these files.

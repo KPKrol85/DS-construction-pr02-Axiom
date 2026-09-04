@@ -271,7 +271,7 @@ Projekt jest objęty własnościową licencją KP_Code (Własnościowa Licencja 
 ### Atrybucje
 
 - Licencje zależności deweloperskich są wypisane w sekcji 8 pliku [LICENSE](LICENSE).
-- Fonty Lato, Montserrat i Poppins są hostowane lokalnie w `assets/fonts/` na licencji SIL Open Font License 1.1; atrybucje oraz ścieżki do przechowywanych tekstów licencji zbiera plik [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+- Fonty Lato i Montserrat są hostowane lokalnie w `assets/fonts/` na licencji SIL Open Font License 1.1; atrybucje oraz ścieżki do przechowywanych tekstów licencji zbiera plik [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ## EN
 
@@ -544,4 +544,4 @@ The project is covered by the KP_Code proprietary project license (KP_CODE Propr
 ### Attributions
 
 - Licenses of the development dependencies are listed in section 8 of [LICENSE](LICENSE).
-- The Lato, Montserrat, and Poppins fonts are self-hosted in `assets/fonts/` under the SIL Open Font License 1.1; the attributions and the paths to the stored license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+- The Lato and Montserrat fonts are self-hosted in `assets/fonts/` under the SIL Open Font License 1.1; the attributions and the paths to the stored license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

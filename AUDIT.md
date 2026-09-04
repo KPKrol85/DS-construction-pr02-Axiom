@@ -177,6 +177,9 @@ None detected.
 
 ### [P2-05] A self-hosted font family is shipped but never used
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The unused Poppins font family and its bundled license file were removed, and the README and third-party attribution records now list only the self-hosted Lato and Montserrat families actually used by the project.
+
 - **Classification:** Maintenance risk
 - **Affected area:** Assets, deployment payload, attribution documentation
 - **Evidence:** `assets/fonts/poppins-v24-latin/poppins-v24-latin-regular.woff2`; `css/tokens/tokens.css:126-153` declares `@font-face` for Montserrat and Lato only; no `font-family` declaration in `css/` names Poppins; `THIRD-PARTY-NOTICES.md:66-78`; `README.md:274` and `:547`
