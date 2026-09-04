@@ -44,7 +44,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - `lighthouse` 12.8.2 i `@lhci/cli` 0.15.1 — audyty Lighthouse
 - `pa11y` 8.0.0 — automatyczne audyty dostępności
 - `eslint` 10.9.1 — statyczna analiza JavaScriptu (`npm run lint`)
-- `vitest` 4.1.11 i `jsdom` 30.0.1 — skupione testy DOM formularza kontaktowego i lightboxa (`npm test`)
+- `vitest` 4.1.11 i `jsdom` 30.0.1 — skupione testy DOM formularza kontaktowego, lightboxa, nawigacji i modala informacji o projekcie/cookies (`npm test`)
 
 ### Architektura
 
@@ -83,7 +83,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── qa/                     # Lighthouse, pa11y, kontrola odwołań
 │   ├── release/                # czyszczenie i składanie dist/
 │   └── templates/              # head.partial.html + pages.meta.json
-├── tests/                      # skupione testy Vitest (formularz, lightbox)
+├── tests/                      # 4 skupione zestawy Vitest dla komponentów DOM
 ├── sw.template.js              # jedyne ręcznie edytowane źródło Service Workera
 ├── sw.js                       # Service Worker generowany z szablonu (profil lokalny)
 ├── manifest.webmanifest
@@ -138,7 +138,7 @@ Serwer `http-server` startuje na `http://localhost:8080` z wyłączonym cache (`
 - `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — audyty Lighthouse i pa11y; każdy skrypt sam startuje i zatrzymuje lokalny serwer QA.
 - `npm run qa:references` — statyczna kontrola spójności odwołań lokalnych i kontraktu bundli produkcyjnych; nie wymaga serwera, przeglądarki ani katalogu `dist/`. Gdy `dist/build-manifest.json` istnieje, weryfikuje dodatkowo wygenerowany release.
 - `npm run lint` — ESLint dla `js/`, `tools/`, `tests/`, `sw.template.js` i `vitest.config.mjs`.
-- `npm test` — skupiony zestaw testów Vitest w środowisku jsdom dla formularza kontaktowego i lightboxa; nie wymaga serwera ani przeglądarki.
+- `npm test` — skupiony zestaw testów Vitest w środowisku jsdom dla formularza kontaktowego, lightboxa, nawigacji i modala informacji o projekcie/cookies; nie wymaga serwera ani przeglądarki.
 
 ### Build produkcyjny
 
@@ -159,9 +159,11 @@ Skupiony zestaw testów jednostkowych i komponentowych uruchamia jedna komenda; 
 npm test
 ```
 
-- `test` uruchamia Vitest w środowisku jsdom dla `tests/contact-form.test.js` i `tests/lightbox.test.js` — łącznie 20 testów; konfigurację zawiera `vitest.config.mjs`.
+- `test` uruchamia Vitest w środowisku jsdom dla 4 plików: `tests/contact-form.test.js`, `tests/lightbox.test.js`, `tests/navigation.test.js` i `tests/cookies.test.js` — łącznie 33 testy; konfigurację zawiera `vitest.config.mjs`.
 - Formularz kontaktowy: walidacja pól wymaganych, dostępne podsumowanie błędów, limit 500 znaków wiadomości oraz zapis, odtworzenie i usunięcie po udanym wysłaniu wersji roboczej przechowywanej pod kluczem `contactFormMessage`.
 - Lightbox: otwarcie i przeniesienie fokusu, pułapka fokusu obejmująca dynamicznie tworzone przyciski nawigacji, powrót fokusu do elementu otwierającego oraz nawigacja klawiszami `ArrowRight` i `ArrowLeft`.
+- Nawigacja: stan zwinięty i otwarty na urządzeniach mobilnych, synchronizacja ARIA/`inert`/klas i blokady przewijania, przeniesienie i powrót fokusu, zamknięcie przez Escape, aktywację linku i wskaźnik poza menu oraz synchronizacja po przejściu do widoku desktopowego.
+- Modal informacji o projekcie/cookies: obsługa zapisanej zgody, blokada przewijania, fokus początkowy i jego pułapka, zablokowany Escape bez zamykania, zapis zgody w `localStorage` i ciasteczku oraz przywrócenie przewijania i fokusu.
 - Testy nie wykonują zapytań sieciowych. Repozytorium nie zawiera testów e2e.
 
 Dostępne są też dwie kontrole statyczne, które nie wymagają serwera ani przeglądarki:
@@ -317,7 +319,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - `lighthouse` 12.8.2 and `@lhci/cli` 0.15.1 — Lighthouse audits
 - `pa11y` 8.0.0 — automated accessibility audits
 - `eslint` 10.9.1 — JavaScript static analysis (`npm run lint`)
-- `vitest` 4.1.11 and `jsdom` 30.0.1 — focused DOM tests for the contact form and the lightbox (`npm test`)
+- `vitest` 4.1.11 and `jsdom` 30.0.1 — focused DOM tests for the contact form, lightbox, navigation, and project-information/cookie modal (`npm test`)
 
 ### Architecture
 
@@ -356,7 +358,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── qa/                     # Lighthouse, pa11y, reference check
 │   ├── release/                # dist cleanup and assembly
 │   └── templates/              # head.partial.html + pages.meta.json
-├── tests/                      # focused Vitest suites (contact form, lightbox)
+├── tests/                      # 4 focused Vitest suites for DOM components
 ├── sw.template.js              # the only hand-edited service worker source
 ├── sw.js                       # service worker generated from the template (local profile)
 ├── manifest.webmanifest
@@ -411,7 +413,7 @@ npm run serve
 - `npm run qa:lighthouse`, `npm run qa:a11y`, `npm run qa` — Lighthouse and pa11y audits; each script starts and stops its own local QA server.
 - `npm run qa:references` — static local reference and production bundle contract check; needs no server, no browser, and no `dist/`. When `dist/build-manifest.json` exists, it additionally verifies the generated release.
 - `npm run lint` — ESLint for `js/`, `tools/`, `tests/`, `sw.template.js`, and `vitest.config.mjs`.
-- `npm test` — the focused Vitest suite in a jsdom environment for the contact form and the lightbox; needs no server and no browser.
+- `npm test` — the focused Vitest suite in a jsdom environment for the contact form, lightbox, navigation, and project-information/cookie modal; needs no server and no browser.
 
 ### Production Build
 
@@ -432,9 +434,11 @@ The focused unit and component suite runs from a single command; the tests need 
 npm test
 ```
 
-- `test` runs Vitest in a jsdom environment over `tests/contact-form.test.js` and `tests/lightbox.test.js` — 20 tests in total; the configuration lives in `vitest.config.mjs`.
+- `test` runs Vitest in a jsdom environment over 4 files: `tests/contact-form.test.js`, `tests/lightbox.test.js`, `tests/navigation.test.js`, and `tests/cookies.test.js` — 33 tests in total; the configuration lives in `vitest.config.mjs`.
 - Contact form: required-field validation, the accessible error summary, the 500-character message limit, and the draft stored under `contactFormMessage` being saved, restored, and removed after a successful submission.
 - Lightbox: opening and initial focus, the focus trap including the dynamically created navigation controls, focus return to the triggering element, and `ArrowRight` / `ArrowLeft` navigation.
+- Navigation: collapsed and open mobile states, ARIA/`inert`/class and scroll-lock synchronization, focus transfer and return, closing through Escape, link activation, and an outside pointer interaction, plus synchronization when switching to the desktop breakpoint.
+- Project-information/cookie modal: stored-consent handling, scroll locking, initial focus and focus trapping, blocked Escape without dismissal, consent persistence in `localStorage` and a cookie, and scroll/focus restoration.
 - The tests make no network requests. The repository contains no end-to-end tests.
 
 Two static checks are also available that need no server and no browser:

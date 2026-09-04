@@ -238,6 +238,9 @@ None detected.
 
 ### Extend the focused test suite to the remaining focus-managing components
 
+- **Status:** COMPLETED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The focused Vitest/jsdom suite now covers mobile navigation and the project-information/cookie modal, including focus management, ARIA/state synchronization, consent persistence, and keyboard interactions.
+
 - **Relevant area:** `tests/` — `contact-form.test.js` and `lightbox.test.js`, 20 tests.
 - **Current evidence:** The two most complex interactive modules are covered, and writing the lightbox focus-trap test already surfaced a real defect in the control creation order (recorded in `docs/CHANGELOG.md`). The mobile navigation (`js/components/navigation.js`) and the consent modal (`js/components/cookies.js`) implement comparable behavior — focus capture, focus return, Escape handling, scroll locking, `aria-expanded` synchronization — with no automated coverage.
 - **Potential value:** The same class of regression the lightbox test caught would be caught in the two components that gate access to the rest of every page.

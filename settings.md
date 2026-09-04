@@ -94,5 +94,5 @@
 
 ### test
 - **Command:** `vitest run`
-- **What it does:** Uruchamia skupiony zestaw testów Vitest w środowisku jsdom (`tests/contact-form.test.js`, `tests/lightbox.test.js`) pokrywający zachowanie formularza kontaktowego i lightboxa; nie wymaga serwera ani przeglądarki.
-- **When to use:** Po zmianach w `js/components/forms.js`, `js/components/lightbox.js` lub `js/utils/a11y.js`, przed commitem i przed release.
+- **What it does:** Uruchamia 33 skupione testy Vitest w środowisku jsdom w 4 plikach (`tests/contact-form.test.js`, `tests/lightbox.test.js`, `tests/navigation.test.js`, `tests/cookies.test.js`) pokrywających zachowanie formularza kontaktowego, lightboxa, nawigacji i modala informacji o projekcie/cookies; nie wymaga serwera ani przeglądarki.
+- **When to use:** Po zmianach w `js/components/forms.js`, `js/components/lightbox.js`, `js/components/navigation.js`, `js/components/cookies.js`, `js/utils/a11y.js` lub powiązanej konfiguracji, przed commitem i przed release.
