@@ -203,6 +203,9 @@ None detected.
 
 ### [P2-07] Runtime code paths remain for controls and services the project does not have
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The nonexistent mobile theme-toggle selector and runtime branch were removed, together with the unused Google Analytics and Meta Pixel calls and their ESLint globals, while preserving the working desktop theme toggle and contact-form behavior.
+
 - **Classification:** Maintenance risk
 - **Affected area:** JavaScript configuration and components
 - **Evidence:** `js/core/config.js:4` (`themeToggleMobile: "#themeToggleMobile"`) with the branch it feeds at `js/components/theme.js:8`, `:27-30`, `:45`; `js/components/forms.js:193-200` (`gtag` / `fbq` calls) with the globals declared for them at `eslint.config.mjs` in the `js/**/*.js` block
