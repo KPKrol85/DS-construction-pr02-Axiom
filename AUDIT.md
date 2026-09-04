@@ -190,6 +190,9 @@ None detected.
 
 ### [P2-06] `README.md` points at archive files that do not exist
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The PL and EN README structure trees and Roadmap sections now reference the existing date-suffixed archived audit and plan files, with no obsolete unsuffixed archive paths remaining.
+
 - **Classification:** Documentation mismatch
 - **Affected area:** Project documentation
 - **Evidence:** `README.md:100` and `:373` (`daily-AUDIT.md` in the structure tree), `:102` and `:375` (`PLAN.md`), `:265` and `:538` (the PL and EN Roadmap sections pointing readers at `docs/archive/plans/PLAN.md`); actual files `docs/archive/audits/daily-AUDIT-2026-09-02.md` and `docs/archive/plans/PLAN-2026-09-02.md`

@@ -97,9 +97,9 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── CHANGELOG.md
 │   └── archive/
 │       ├── audits/
-│       │   └── daily-AUDIT.md
+│       │   └── daily-AUDIT-2026-09-02.md
 │       └── plans/
-│           └── PLAN.md
+│           └── PLAN-2026-09-02.md
 ├── LICENSE
 └── README.md
 ```
@@ -262,7 +262,7 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 
 ### Roadmap
 
-- Brak otwartych pozycji roadmapy; opcjonalne usprawnienia są prowadzone w `docs/archive/plans/PLAN.md`.
+- Brak otwartych pozycji roadmapy; opcjonalne usprawnienia są prowadzone w `docs/archive/plans/PLAN-2026-09-02.md`.
 
 ### Licencja
 
@@ -370,9 +370,9 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── CHANGELOG.md
 │   └── archive/
 │       ├── audits/
-│       │   └── daily-AUDIT.md
+│       │   └── daily-AUDIT-2026-09-02.md
 │       └── plans/
-│           └── PLAN.md
+│           └── PLAN-2026-09-02.md
 ├── LICENSE
 └── README.md
 ```
@@ -535,7 +535,7 @@ State kept in the browser:
 
 ### Roadmap
 
-- No open roadmap items; optional improvements are tracked in `docs/archive/plans/PLAN.md`.
+- No open roadmap items; optional improvements are tracked in `docs/archive/plans/PLAN-2026-09-02.md`.
 
 ### License
 
