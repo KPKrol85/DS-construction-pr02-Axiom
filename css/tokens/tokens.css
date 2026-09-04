@@ -120,7 +120,7 @@
   --feature-border: color-mix(in srgb, var(--text-body) 12%, transparent);
   --feature-accent: var(--accent);
   --feature-shadow: color-mix(in srgb, var(--text-body) 10%, transparent);
-  --feature-hover-bg: color-mix(in srgb, var(--surface-2) 94%);
+  --feature-hover-bg: color-mix(in srgb, var(--surface-2) 94%, var(--feature-accent) 6%);
 }
 
 @font-face {

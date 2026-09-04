@@ -151,6 +151,9 @@ None detected.
 
 ### [P2-03] The dark-theme hover token uses `color-mix()` with a single colour
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The dark-theme hover token now uses a valid two-colour mix of `--surface-2` and `--feature-accent`, producing a distinct interactive background while preserving the existing light-theme and component behavior.
+
 - **Classification:** Source-visible risk
 - **Affected area:** Design tokens, dark theme
 - **Evidence:** `css/tokens/tokens.css:123` (`--feature-hover-bg: color-mix(in srgb, var(--surface-2) 94%)`), against `:38` for the light-theme equivalent; consumed at `css/components/utilities.css:207`, `:218`, `:229` and `css/sections/faq.css:91`, `:112`
