@@ -138,6 +138,9 @@ None detected.
 
 ### [P2-02] `X-Robots-Tag: all` contradicts the `noindex` policy the utility pages declare
 
+- **Status:** RESOLVED — implemented and recorded in CHANGELOG.md
+- **Resolution:** The blanket `X-Robots-Tag: all` directive was removed from the global deployment headers, leaving the generated per-page robots metadata as the single indexing-policy source for HTML pages.
+
 - **Classification:** Contract mismatch
 - **Affected area:** Deployment headers, indexing policy
 - **Evidence:** `_headers:1-2` (`/*` → `X-Robots-Tag: all`); `404.html:11`, `offline.html:11`, `success.html:11` (`noindex, follow`); confirmed on the live deployment, where `/404.html` is served with `X-Robots-Tag: all`
