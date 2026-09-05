@@ -556,24 +556,31 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
+/* Every link keeps the same 44px pointer target around a 22px glyph, so the
+   row stays evenly spaced whatever the icon's own silhouette is. */
 .footer__social-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-round);
   color: var(--text-body);
   text-decoration: none;
   transition:
     transform 0.25s ease,
+    background-color 0.2s ease,
     color 0.2s ease;
 }
 
 .footer__social-link:hover {
   transform: translateY(-2px);
   color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .footer__social-link:focus-visible {
@@ -581,44 +588,13 @@ footer {
   outline-offset: 3px;
 }
 
-.footer__social-link svg {
-  width: 24px;
-  height: 24px;
+.footer__social-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
 }
 
-.footer__contact-actions {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-5);
-  margin-top: var(--space-2);
-}
-
-.footer__contact-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-body);
-  transition:
-    transform 0.25s ease,
-    color 0.2s ease;
-}
-
-.footer__contact-link:hover {
-  transform: translateY(-2px);
-  color: var(--accent);
-}
-
-.footer__contact-link:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 3px;
-}
-
-.footer__contact-link svg {
-  width: 24px;
-  height: 24px;
-}
-
-footer a:not(.footer__social-link):not(.footer__contact-link) {
+footer a:not(.footer__social-link) {
   position: relative;
   display: inline-block;
   color: var(--text-body);
@@ -632,7 +608,7 @@ footer .footer__section a:hover {
   color: var(--accent);
 }
 
-footer a:not(.footer__social-link):not(.footer__contact-link)::after {
+footer a:not(.footer__social-link)::after {
   content: "";
   position: absolute;
   left: 0;
@@ -648,12 +624,12 @@ footer a:not(.footer__social-link):not(.footer__contact-link)::after {
   pointer-events: none;
 }
 
-footer a:not(.footer__social-link):not(.footer__contact-link):hover::after,
-footer a:not(.footer__social-link):not(.footer__contact-link):focus-visible::after {
+footer a:not(.footer__social-link):hover::after,
+footer a:not(.footer__social-link):focus-visible::after {
   transform: scaleX(1);
 }
 
-footer a:not(.footer__social-link):not(.footer__contact-link):focus-visible {
+footer a:not(.footer__social-link):focus-visible {
   outline: 3px solid var(--accent-400);
   outline-offset: 3px;
 }
@@ -692,9 +668,8 @@ footer a[href^="mailto:"]:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  footer a:not(.footer__social-link):not(.footer__contact-link)::after,
-  .footer__social-link,
-  .footer__contact-link {
+  footer a:not(.footer__social-link)::after,
+  .footer__social-link {
     transition: none;
   }
 }
@@ -722,17 +697,10 @@ footer a[href^="mailto:"]:focus-visible {
     gap: var(--space-4);
   }
   .footer__social {
-    gap: var(--space-7);
+    gap: var(--space-3);
   }
-  .footer__contact-actions {
-    gap: var(--space-7);
-  }
-  .footer__social-link svg {
-    width: 18px;
-    height: 18px;
-  }
-  .footer__contact-link svg {
-    width: 18px;
-    height: 18px;
+  .footer__social-icon {
+    width: 20px;
+    height: 20px;
   }
 }

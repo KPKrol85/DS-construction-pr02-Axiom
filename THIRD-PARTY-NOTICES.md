@@ -62,3 +62,20 @@ The license text itself is identical in both files.
 - **Copyright notice embedded in the redistributed files:** Copyright 2011 The Montserrat
   Project Authors (https://github.com/JulietaUla/Montserrat)
 - **License text in this repository:** [assets/fonts/montserrat-v31-latin/OFL.txt](assets/fonts/montserrat-v31-latin/OFL.txt)
+
+## Icons
+
+### Font Awesome Free
+
+- **Material in this repository:** the GitHub, Facebook, Instagram and X brand glyphs, kept
+  as the `viewBox` and `path` data of the icon registry in
+  [js/components/icons.js](js/components/icons.js). Only the geometry of each glyph is
+  redistributed; no Font Awesome font file, stylesheet, or package is bundled, and nothing
+  is loaded from a CDN.
+- **Upstream source:** Font Awesome Free v7.3.1 (<https://fontawesome.com>), brands set
+- **Author:** Fonticons, Inc.
+- **License:** the icons of Font Awesome Free are licensed under CC BY 4.0
+  (<https://creativecommons.org/licenses/by/4.0/>), as stated by the project's combined
+  license page
+- **License text:** <https://fontawesome.com/license/free>
+- **Attribution:** icons by Font Awesome — Fonticons, Inc., used under CC BY 4.0.
