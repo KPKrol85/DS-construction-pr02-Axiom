@@ -25,6 +25,7 @@ Recorded history begins with the initial standalone repository import; the entri
 - Restored offline retry and automatic recovery by loading `js/offline.js` from `offline.html`, updating the connection-status live region, and adding the script to both local and production Service Worker precache profiles and revision inputs (P1-03).
 - Corrected the reveal hidden state by scoping it to the existing `html.js` enhancement marker, keeping reveal content visible without JavaScript while preserving the scroll animation when JavaScript is active (P1-04).
 - Fixed responsive legal tables by containing horizontal overflow within `.legal__table-wrap`, keeping all columns reachable on narrow viewports without introducing page-level scrolling, and added keyboard-focusable table regions with accessible caption labels and a visible `:focus-visible` state.
+- Updated the main contact form privacy acknowledgement so the required checkbox confirms review of the Privacy Policy instead of presenting consent as the legal basis for ordinary data processing, with matching validation and test copy while preserving Netlify Forms behaviour.
 
 ### Build and Tooling
 

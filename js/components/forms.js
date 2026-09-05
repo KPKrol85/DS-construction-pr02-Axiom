@@ -118,7 +118,7 @@ export const initContactForm = () => {
     if (consent && !consent.checked) {
       setInvalid(consent);
       valid = false;
-      showStatus("Zaznacz zgodę na przetwarzanie danych.", false);
+      showStatus("Potwierdź zapoznanie się z Polityką prywatności.", false);
     }
     if (msg && msg.value.length > CONTACT_FORM.maxMessageLength) {
       setInvalid(msg);
