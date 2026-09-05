@@ -452,8 +452,8 @@ body.nav-open {
 /* Footer */
 
 footer {
-  background: var(--footer-bg-1);
-  color: var(--body);
+  background: var(--footer-bg);
+  color: var(--text-body);
 }
 
 :root[data-theme="dark"] footer {
