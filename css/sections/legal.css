@@ -173,6 +173,70 @@
   color: var(--text-link);
 }
 
+/* Legal tables */
+
+.legal__table-wrap {
+  --legal-table-line: color-mix(in srgb, var(--text-body) 20%, transparent);
+  container-type: inline-size;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  margin: var(--space-5) 0;
+  background: var(--surface-1);
+  border: 1px solid var(--feature-border);
+  border-radius: var(--radius-2);
+}
+
+.legal__table-wrap:focus-visible {
+  outline: 3px solid var(--accent-400);
+  outline-offset: 3px;
+}
+
+.legal__table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: var(--fs-8);
+  line-height: var(--lh-body);
+}
+
+/* Pinned to the wrapper's visible width so the summary stays readable while the table scrolls. */
+.legal__table caption {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  width: 100cqi;
+  caption-side: top;
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-body);
+  font-size: var(--fs-9-micro);
+  text-align: left;
+  text-wrap: pretty;
+}
+
+.legal__table :is(th, td) {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+
+.legal__table thead th {
+  background: var(--surface-2);
+  color: var(--text-title);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  border-bottom: 1px solid var(--legal-table-line);
+}
+
+.legal__table tbody :is(th, td) {
+  border-top: 1px solid var(--legal-table-line);
+}
+
+.legal__table tbody th {
+  color: var(--text-title);
+  font-weight: 600;
+}
+
 .legal__meta {
   margin-top: var(--space-7);
   padding-top: var(--space-4);
