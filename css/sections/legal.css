@@ -345,3 +345,107 @@
     transition: none;
   }
 }
+
+/* Demonstracyjne kategorie dokumentów — tylko strona certyfikatów */
+
+.certificates__notice {
+  padding: var(--space-5);
+  background: var(--surface-1);
+  border: 1px solid var(--feature-border);
+  border-inline-start: 3px solid var(--feature-accent);
+  border-radius: var(--radius-2);
+}
+
+.certificates__notice-label {
+  color: var(--text-title);
+  font-size: var(--fs-7);
+}
+
+.certificates__notice p:last-child,
+.certificates__verification p:last-child {
+  margin-bottom: 0;
+}
+
+.certificates__section {
+  padding: var(--space-7) 0 0;
+}
+
+.certificates .certificates__section-title {
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+
+.certificates__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.certificates__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--feature-border);
+  border-radius: var(--radius-2);
+  overflow-wrap: anywhere;
+}
+
+.certificates__badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  background: var(--surface-2);
+  color: var(--text-title);
+  border: 1px solid var(--feature-border);
+  border-radius: var(--radius-1);
+  font-size: var(--fs-9-micro);
+  font-weight: 700;
+  letter-spacing: var(--ls-wider);
+}
+
+.certificates__card-title {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-6);
+  text-wrap: pretty;
+}
+
+.certificates .certificates__scope {
+  margin: var(--space-3) 0 var(--space-5);
+}
+
+.certificates__details {
+  width: 100%;
+  margin: auto 0 0;
+  font-size: var(--fs-8);
+  line-height: var(--lh-body);
+}
+
+.certificates__row {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--feature-border);
+}
+
+.certificates__row:last-child {
+  padding-bottom: 0;
+}
+
+.certificates__row dt {
+  color: var(--text-title);
+  font-weight: 700;
+}
+
+.certificates__row dd {
+  margin: 0;
+  color: var(--text-body);
+}
+
+.certificates__verification {
+  margin-top: var(--space-7);
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--feature-border);
+}

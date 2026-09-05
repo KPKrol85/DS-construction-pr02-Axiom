@@ -109,15 +109,15 @@
     "twitter_image_alt": "Axiom Construction — wykończenia wnętrz"
   },
   "legal/certyfikaty.html": {
-    "title": "Certyfikaty i uprawnienia — Axiom Construction",
-    "description": "Poznaj certyfikaty, uprawnienia i szkolenia zespołu Axiom Construction. Sprawdź standardy jakości oraz zgodność z normami budowlanymi.",
+    "title": "Certyfikaty i kwalifikacje — demo | Axiom Construction",
+    "description": "Demonstracyjna prezentacja certyfikatów, kwalifikacji i szkoleń na stronie fikcyjnej firmy Axiom Construction. Przykłady nie potwierdzają rzeczywistych uprawnień.",
     "canonical": "/legal/certyfikaty.html",
     "og_url": "/legal/certyfikaty.html",
-    "robots": "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
-    "og_title": "Certyfikaty i uprawnienia — Axiom Construction",
-    "og_description": "Poznaj certyfikaty, uprawnienia i szkolenia zespołu Axiom Construction. Sprawdź standardy jakości oraz zgodność z normami budowlanymi.",
-    "og_image_alt": "Axiom Construction — certyfikaty i uprawnienia",
-    "twitter_image_alt": "Axiom Construction - certyfikaty i uprawnienia"
+    "robots": "noindex, follow",
+    "og_title": "Certyfikaty i kwalifikacje — demo | Axiom Construction",
+    "og_description": "Demonstracyjna prezentacja certyfikatów, kwalifikacji i szkoleń na stronie fikcyjnej firmy Axiom Construction. Przykłady nie potwierdzają rzeczywistych uprawnień.",
+    "og_image_alt": "Axiom Construction — demonstracyjna prezentacja certyfikatów",
+    "twitter_image_alt": "Axiom Construction — demonstracyjna prezentacja certyfikatów"
   },
   "legal/kariera.html": {
     "title": "Kariera — Axiom Construction",

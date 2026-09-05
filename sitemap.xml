@@ -70,11 +70,5 @@
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
-  <url>
-    <loc>https://construction-pr02-axiom.netlify.app/legal/certyfikaty.html</loc>
-    <lastmod>2025-10-22</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
 
 </urlset>
