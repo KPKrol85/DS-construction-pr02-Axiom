@@ -9,7 +9,7 @@ const projectRoot = path.resolve(__dirname, "../..");
 const templatePath = path.join(projectRoot, "tools/templates/head.partial.html");
 const metaPath = path.join(projectRoot, "tools/templates/pages.meta.json");
 // Page metadata uses root-relative paths resolved against this public origin.
-const siteOrigin = "https://construction-pr02-axiom.netlify.app";
+const siteOrigin = "https://ds-construction-pr02-axiom.netlify.app";
 const defaultOgImage = "/assets/img/og/og-1200x630.jpg";
 
 const template = fs.readFileSync(templatePath, "utf8").trimEnd();

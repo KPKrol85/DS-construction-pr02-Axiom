@@ -14,4 +14,4 @@ Allow: /
 User-agent: Twitterbot
 Allow: /
 
-Sitemap: https://construction-pr02-axiom.netlify.app/sitemap.xml
+Sitemap: https://ds-construction-pr02-axiom.netlify.app/sitemap.xml

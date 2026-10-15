@@ -47,6 +47,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 
 ### Fixed
 
+- Migrated the canonical production origin to `https://ds-construction-pr02-axiom.netlify.app` across regenerated page metadata, JSON-LD, the sitemap, robots.txt, the Terms of Service link and README, preserving URL paths and fragments; verified reference integrity and head-generation idempotence.
 - Restored reliable offline retry and connection-status updates.
 - Kept scroll-reveal content accessible when JavaScript is unavailable.
 - Fixed initial gallery-lightbox focus trapping to include dynamically created controls.
