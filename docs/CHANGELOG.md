@@ -48,6 +48,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 ### Changed
 
 - Applied the approved Construction Dossier pilot to the home About section and the house-construction service page: a left-aligned introduction with ruled, body-size highlights, and the work process as a numbered, ruled sequence replacing elevated cards and pointer affordances on non-interactive items.
+- Recomposed the home hero and About section as one Construction Dossier introduction: a distinct brand name and ruled service descriptor on a text-anchored scrim that keeps the heading readable in both themes, and a wide-screen pairing of the About explanation with its coordination photograph.
 
 ### Fixed
 

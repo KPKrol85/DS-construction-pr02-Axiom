@@ -2,7 +2,7 @@
 
 **Analysis date:** 2026-10-16  
 **Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules  
-**Status:** In progress — IMP-DESIGN-01 completed; IMP-DESIGN-02 to IMP-DESIGN-05 remain proposed  
+**Status:** In progress — IMP-DESIGN-01 and IMP-DESIGN-02 completed; IMP-DESIGN-03 to IMP-DESIGN-05 remain proposed  
 **Analysis mode:** Evidence-based creative design review  
 **Focus:** Project-wide design
 
@@ -127,17 +127,9 @@ Priorities express prospective implementation value and dependencies, not defect
 
 ### IMP-DESIGN-02 — Compose the hero and about section as one construction introduction
 
-- **Status:** Proposed
-- **Priority:** P1
-- **Affected area:** Home hero and `#o-nas`.
-- **Evidence:** **Source:** `index.html` (`.hero__content`, `#o-nas`), `css/sections/hero.css` and `css/sections/about.css`. Hero name and descriptor share one uppercase panel; the about image follows the copy/highlights in a one-column grid.
-- **Current state:** The hero contains the brand and service descriptor; the next section contains the explanation, four highlights, contact anchor and coordination image.
-- **Design judgment:** These existing parts could work as a connected opening statement rather than two independently centered presentations. Image placement and actual emphasis remain unverified.
-- **Proposed improvement:** Give the brand name and service descriptor separate visual roles within the current heading structure. Align the opening to the dossier grid. On wide screens, compose the about explanation and coordination image as a paired passage, with restrained highlights beneath or alongside the copy. On narrow screens, retain a meaningful reading sequence and give the selected image an explicit crop decision. Keep the existing contact action; do not invent another CTA or business claim.
-- **Expected value:** A first impression that connects the offering to coordination and practical delivery using existing content.
-- **Implementation scope:** `index.html`, `css/sections/hero.css`, `css/sections/about.css`; review the hero and about composition as separate implementation slices under one objective. Retain `#o-nas`, `#kontakt`, heading semantics and reveal contracts.
-- **Dependencies:** IMP-DESIGN-01; rendered inspection of current hero/about assets. Any replacement imagery requires separate approval and rights confirmation.
-- **Acceptance criteria:** At 1440×900, 768×1024, 390×844 and a short landscape viewport, the brand and offering are readable and the image does not obscure the text. Confirm crop/focal decisions against approved assets in both themes. At 200% zoom, the heading and existing contact action remain fully accessible. DOM reading order, theme behavior and reduced-motion rendering remain meaningful.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** The single hero `h1` now pairs a large title-case brand name with a ruled, uppercase service descriptor, aligned bottom-left to the 1200px grid over a text-anchored scrim that replaces the previously ineffective overlay; narrow crops keep the lit building corner. From 1024px, `#o-nas` pairs the explanation, highlights and left-aligned contact CTA with a flat 5:4 coordination photograph, while narrower screens keep the DOM order with a full-column 4:3/3:2 image and a matching `sizes` value. Wording, image sources and alternatives, `#o-nas`/`#kontakt`, the IMP-DESIGN-01 rules and `no-interaction` items, and reveal behavior are preserved.
+- **Verification:** Headless Chrome at 1440×900, 1024×768, 768×1024, 390×844, 320×568, 844×390 and 1280×600 in light, dark, stored and system themes, with and without emulated reduced motion, plus real 200% page zoom (712 CSS px, DPR 2), found no horizontal overflow, single-line or balanced headings, and rendered hero text contrast of at least 5.1:1 (brand) and 6.6:1 (descriptor). Keyboard Tab/Enter reached the focus-visible `Kontakt` CTA and `#kontakt`, About stayed visible without JavaScript, service, legal and 404 pages rendered identically to HEAD apart from lazy-image timing, and `npm run qa:references` and `git diff --check` passed. Firefox, Safari (including the `support.css` no-`backdrop-filter` fallback), touch devices and assistive technologies were not tested.
 - **Impact:** High
 - **Effort:** Medium
 

@@ -54,22 +54,19 @@
 }
 
 .about__media {
-  padding: var(--space-2);
-  margin: var(--space-4) auto;
-  max-width: 520px;
+  margin: 0;
 }
 
+/* The coordination photograph is a flat, ruled plate: no lift or hover zoom,
+   since it is not interactive. Crops keep every face at the table. */
 .about__media .frame {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-1);
   overflow: hidden;
   background: var(--surface-2);
   border: 1px solid color-mix(in srgb, var(--text-body) 12%, transparent);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-  transition:
-    transform 0.4s ease,
-    box-shadow 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
 .about__media img {
@@ -77,24 +74,15 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  transition:
-    transform 0.6s ease-out,
-    filter 0.6s ease-out;
-}
-
-.about__media .frame:hover img {
-  transform: scale(1.02);
-  filter: brightness(1.05);
-}
-
-:root[data-theme="dark"] .about__media .frame {
-  border-color: color-mix(in srgb, var(--text-inverse) 14%, transparent);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  object-position: 50% 40%;
 }
 
 @media (min-width: 760px) {
   .about__lead {
     max-width: 52ch;
+  }
+  .about__media .frame {
+    aspect-ratio: 3 / 2;
   }
 }
 
@@ -105,13 +93,22 @@
   }
 }
 
+/* Wide screens pair the explanation with the coordination photograph
+   (IMP-DESIGN-02); both columns share the hero's left edge. */
 @media (min-width: 1024px) {
+  .about__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--space-8);
+  }
   .about__highlights.features__list {
     max-width: 880px;
     grid-template-columns: repeat(2, 1fr);
   }
   .about__lead {
     max-width: 62ch;
+  }
+  .about__media .frame {
+    aspect-ratio: 5 / 4;
   }
 }
 
@@ -123,7 +120,8 @@
   --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
 }
 
-#o-nas .about__copy {
+#o-nas .about__copy,
+#o-nas .about__media {
   width: min(100%, 880px);
   margin-inline: auto;
 }
@@ -156,4 +154,11 @@
   font-size: 1rem;
   font-weight: 400;
   opacity: 1;
+}
+
+/* In the paired composition the contact action closes the text column. */
+@media (min-width: 1024px) {
+  #o-nas .about__cta {
+    justify-content: flex-start;
+  }
 }

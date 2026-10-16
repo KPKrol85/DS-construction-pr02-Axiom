@@ -1,11 +1,19 @@
+/* Construction introduction (IMP-DESIGN-02): the brand name and the service
+   descriptor sit bottom-left on the site's 1200px editorial grid. A local scrim
+   keeps the text readable in both themes whatever part of the photograph lies
+   beneath it; the photograph itself stays vivid in the upper half. */
+
 .hero {
+  --hero-ink: #fff;
+  --hero-scrim: var(--bg-dark);
   position: relative;
-  height: 65vh;
-  min-height: 320px;
-  max-height: 600px;
+  isolation: isolate;
   display: grid;
-  place-items: center;
-  text-align: center;
+  align-content: end;
+  box-sizing: border-box;
+  min-height: clamp(20rem, 78vh, 52rem);
+  min-height: clamp(20rem, 78svh, 52rem);
+  padding: var(--space-8) var(--section-px-sm) var(--space-7);
   overflow: clip;
 }
 
@@ -17,75 +25,98 @@
   height: 100%;
 }
 
+/* Narrow and portrait crops keep the lit corner of the building and the sky;
+   wide crops keep the upper edge of the canopy. */
 .hero__img {
   object-fit: cover;
-  object-position: center 35%;
+  object-position: 22% 40%;
 }
 
-.hero::before {
+/* Dark theme: a light veil keeps the photograph from glaring against the
+   graphite page. */
+:root[data-theme="dark"] .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-dark) 55%, transparent), color-mix(in srgb, var(--bg-dark) 55%, transparent));
-}
-
-:root[data-theme="dark"] .hero::before {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-dark) 65%, transparent), color-mix(in srgb, var(--bg-dark) 65%, transparent));
+  z-index: 1;
+  background: color-mix(in srgb, var(--hero-scrim) 15%, transparent);
 }
 
 .hero__content {
   position: relative;
-  z-index: 1;
-  color: var(--text-inverse);
-  max-width: 760px;
-  margin: var(--space-2);
+  z-index: 2;
+  width: min(1200px, 100% - 2 * var(--space-2));
+  margin-inline: auto;
+  color: var(--hero-ink);
 }
 
-.hero__content h1 {
-  font-size: var(--fs-4);
-  letter-spacing: var(--ls-wide);
-  text-align: center;
+/* The scrim is anchored to the text block rather than to the hero height, so
+   it stays behind the heading at every viewport height and zoom level. It
+   fades in above the text and spans the full width (clipped by .hero). */
+.hero__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -8rem -100vw -100vh;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--hero-scrim) 60%, transparent) 8rem,
+    color-mix(in srgb, var(--hero-scrim) 72%, transparent) 20rem
+  );
+}
+
+.hero__title {
+  margin: 0;
+  color: inherit;
+  text-shadow: 0 1px 3px color-mix(in srgb, var(--hero-scrim) 55%, transparent);
+}
+
+.hero__brand {
+  display: block;
+  font-size: var(--fs-2);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
   text-wrap: balance;
+}
+
+/* Ruled label: the same uppercase role as the About highlights, led by the
+   brand accent. */
+.hero__descriptor {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid color-mix(in srgb, var(--hero-ink) 45%, transparent);
+  font-family: "Lato", "Source Sans 3", system-ui, sans-serif;
+  font-size: var(--fs-7);
+  font-weight: 700;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-wider);
   text-transform: uppercase;
-  text-shadow:
-    0 2px 6px color-mix(in srgb, var(--bg-dark) 45%, transparent),
-    0 1px 1px color-mix(in srgb, var(--bg-dark) 35%, transparent);
-  animation: fadeInUp 1s ease-out;
-  display: inline-block;
-  padding: var(--space-3) var(--space-4);
-  margin: 0 auto;
-  border-radius: var(--radius-2);
-  background: color-mix(in srgb, var(--bg-dark) 28%, transparent);
-  backdrop-filter: blur(6px) saturate(115%);
-  -webkit-backdrop-filter: blur(6px) saturate(115%);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--bg-dark) 18%, transparent);
 }
 
-.hero__content .accent {
-  color: var(--accent-400);
+.hero__descriptor::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: var(--accent-400);
 }
 
-@media (min-width: 480px) {
-  .hero {
-    height: 56vh;
-    max-height: 900px;
-  }
-}
 @media (min-width: 760px) {
   .hero {
-    height: 85vh;
-    min-height: 500px;
+    padding-bottom: var(--space-8);
   }
-  .hero__img {
-    object-position: center;
+  .hero__brand {
+    font-size: var(--fs-1);
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__content h1 {
-    animation: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: color-mix(in srgb, var(--bg-dark) 55%, transparent);
+  .hero__descriptor {
+    font-size: var(--fs-6);
   }
 }
