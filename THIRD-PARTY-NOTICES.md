@@ -33,6 +33,8 @@ The license text itself is identical in both files.
 - **Files in this repository:**
   - [assets/fonts/lato-v25-latin/lato-v25-latin-regular.woff2](assets/fonts/lato-v25-latin/lato-v25-latin-regular.woff2)
   - [assets/fonts/lato-v25-latin/lato-v25-latin-700.woff2](assets/fonts/lato-v25-latin/lato-v25-latin-700.woff2)
+  - [assets/fonts/lato-v25-latin/lato-v25-latin-ext-regular.woff2](assets/fonts/lato-v25-latin/lato-v25-latin-ext-regular.woff2)
+  - [assets/fonts/lato-v25-latin/lato-v25-latin-ext-700.woff2](assets/fonts/lato-v25-latin/lato-v25-latin-ext-700.woff2)
 - **Upstream source:** the `ofl/lato` family directory of the Google Fonts repository
   (<https://github.com/google/fonts/tree/main/ofl/lato>), whose `METADATA.pb` declares the
   family source repository <https://github.com/googlefonts/LatoGFVersion>
@@ -50,6 +52,8 @@ The license text itself is identical in both files.
 - **Files in this repository:**
   - [assets/fonts/montserrat-v31-latin/montserrat-v31-latin-regular.woff2](assets/fonts/montserrat-v31-latin/montserrat-v31-latin-regular.woff2)
   - [assets/fonts/montserrat-v31-latin/montserrat-v31-latin-600.woff2](assets/fonts/montserrat-v31-latin/montserrat-v31-latin-600.woff2)
+  - [assets/fonts/montserrat-v31-latin/montserrat-v31-latin-ext-regular.woff2](assets/fonts/montserrat-v31-latin/montserrat-v31-latin-ext-regular.woff2)
+  - [assets/fonts/montserrat-v31-latin/montserrat-v31-latin-ext-600.woff2](assets/fonts/montserrat-v31-latin/montserrat-v31-latin-ext-600.woff2)
 - **Upstream source:** the `ofl/montserrat` family directory of the Google Fonts repository
   (<https://github.com/google/fonts/tree/main/ofl/montserrat>), whose `METADATA.pb` declares
   the family source repository <https://github.com/JulietaUla/Montserrat>
