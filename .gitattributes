@@ -1,0 +1,26 @@
+# Detect text files automatically.
+* text=auto
+
+# Source, configuration, documentation and text assets use LF.
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+*.webmanifest text eol=lf
+*.svg text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+LICENSE text eol=lf
+_headers text eol=lf
+
+# Binary assets must not undergo line-ending conversion.
+*.jpg -text
+*.png -text
+*.ico -text
+*.webp -text
+*.avif -text
+*.woff2 -text
