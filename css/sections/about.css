@@ -114,3 +114,46 @@
     max-width: 62ch;
   }
 }
+
+/* Construction Dossier pilot (IMP-DESIGN-01): the introduction and highlights
+   read as one left-aligned column under the centred title, separated by
+   sectional rules instead of raised cards. */
+
+#o-nas {
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
+}
+
+#o-nas .about__copy {
+  width: min(100%, 880px);
+  margin-inline: auto;
+}
+
+#o-nas .about__lead {
+  max-width: 62ch;
+  margin: var(--space-5) 0 var(--space-6);
+  font-size: var(--fs-6);
+  text-align: left;
+}
+
+#o-nas .about__highlights {
+  max-width: none;
+  margin: 0;
+  gap: 0 var(--space-6);
+  border-bottom: 1px solid var(--dossier-rule);
+}
+
+#o-nas .about__highlights .features__item {
+  padding: var(--space-4) 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--dossier-rule);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#o-nas .about__highlights .features__item span {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 1;
+}

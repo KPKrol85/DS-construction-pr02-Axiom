@@ -2,7 +2,7 @@
 
 **Analysis date:** 2026-10-16  
 **Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules  
-**Status:** Proposed — awaiting owner review; no implementation authorized  
+**Status:** In progress — IMP-DESIGN-01 completed; IMP-DESIGN-02 to IMP-DESIGN-05 remain proposed  
 **Analysis mode:** Evidence-based creative design review  
 **Focus:** Project-wide design
 
@@ -119,17 +119,9 @@ Priorities express prospective implementation value and dependencies, not defect
 
 ### IMP-DESIGN-01 — Establish the Axiom dossier typography and material language
 
-- **Status:** Proposed
-- **Priority:** P1
-- **Affected area:** Shared typography, section introductions, surfaces and accent roles.
-- **Evidence:** **Source:** `css/tokens/tokens.css`, `css/base/base.css` (`.section__title`, `.features__item`), `css/components/buttons.css`, `css/layout/layout.css`; translucent hero title in `css/sections/hero.css`.
-- **Current state:** The existing palette and font families are shared, while gradients, shadows, blur and rounded panels occur across several content and control roles.
-- **Design judgment:** A recognizable construction-document voice could come from a smaller set of intentional editorial gestures rather than adding decoration. This is a direction choice, not a token-consistency repair.
-- **Proposed improvement:** Establish distinct brand-title, section-title, service-title, body and process-number roles using the existing families. Use aligned headings and restrained sectional rules as a recurring motif. Reserve strong accent and elevation for emphasis or interaction; allow explanatory material to sit directly on its section surface. Define light and dark editions together.
-- **Expected value:** A common visual grammar that can connect later compositions and supporting pages without replacing the brand.
-- **Implementation scope:** Existing token/base/component/section CSS and minimal class-level HTML changes where necessary. First review one home section and one service section; then apply approved shared rules. Carry only proportionate typography/surface continuity into legal and utility pages. Preserve certificate notices and legal tables.
-- **Dependencies:** Rendered baseline and owner approval of the direction. No new font asset required.
-- **Acceptance criteria:** Brand, section, service, body and numeric roles are visibly distinguishable at 1440px, 768px and 390px without relying on color alone. Selected text, links, controls and focus states meet applicable contrast requirements in both themes. Polish strings and actual font rendering are checked, including at 200% zoom. Legal prose and tables remain readable and operable. Existing reduced-motion behavior remains effective.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Implemented only on home `#o-nas` and the `services/budowa-domow.html` `.service-details` section, using CSS scoped to those sections and the existing `no-interaction` class on their eight list items. The About introduction and highlights and the numbered work steps now use left-aligned explanatory text, body-size descriptions and restrained sectional rules instead of raised cards, with step numbers on a separate typographic line. Shared selectors, tokens, fonts, content, `Krok n:` labels, step order, anchors, the contact CTA and reveal behavior are preserved.
+- **Verification:** Browser inspection at 1440, 768, 390 and 320px in light and dark system-preference themes, plus a 720×450 viewport as a 200% zoom approximation, found no horizontal overflow, intact step order and labels, visible CTA keyboard focus, text contrast of at least 4.58:1, and an unchanged `remonty-mieszkan` page; `npm run qa:references` passed. Real 200% browser zoom, `prefers-reduced-motion` emulation, Firefox, Safari and assistive technologies were not tested.
 - **Impact:** High
 - **Effort:** Medium
 

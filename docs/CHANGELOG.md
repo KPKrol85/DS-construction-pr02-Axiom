@@ -45,6 +45,10 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Updated contact-form privacy acknowledgement to reference the Privacy Policy without presenting consent as the default legal basis for processing.
 - Redesigned the Certificates page as an explicitly demonstrational showcase without fabricated qualifications or verification claims.
 
+### Changed
+
+- Applied the approved Construction Dossier pilot to the home About section and the house-construction service page: a left-aligned introduction with ruled, body-size highlights, and the work process as a numbered, ruled sequence replacing elevated cards and pointer affordances on non-interactive items.
+
 ### Fixed
 
 - Migrated the canonical production origin to `https://ds-construction-pr02-axiom.netlify.app` across regenerated page metadata, JSON-LD, the sitemap, robots.txt, the Terms of Service link and README, preserving URL paths and fragments; verified reference integrity and head-generation idempotence.
