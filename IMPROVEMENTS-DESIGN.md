@@ -2,7 +2,7 @@
 
 **Analysis date:** 2026-10-16  
 **Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules  
-**Status:** In progress — IMP-DESIGN-01 and IMP-DESIGN-02 completed; IMP-DESIGN-03 to IMP-DESIGN-05 remain proposed  
+**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-03 completed; IMP-DESIGN-04 and IMP-DESIGN-05 remain proposed  
 **Analysis mode:** Evidence-based creative design review  
 **Focus:** Project-wide design
 
@@ -135,17 +135,9 @@ Priorities express prospective implementation value and dependencies, not defect
 
 ### IMP-DESIGN-03 — Give service scope and work sequence distinct editorial compositions
 
-- **Status:** Proposed
-- **Priority:** P2
-- **Affected area:** Home service overview and service-page introductions/process sections.
-- **Evidence:** **Source:** `index.html#uslugi`, `css/sections/services.css`, `css/sections/services-subpages.css`, `services/budowa-domow.html` (`.service-intro__inner`, ordered `.features__list`). The representative service page already supplies four numbered steps and a scope checklist.
-- **Current state:** Six offerings use the same home-card structure; ordered service steps reuse the general feature-panel presentation. The service intro combines image, prose, checklist and two established actions.
-- **Design judgment:** Service selection and chronological explanation deserve different visual syntax. Their existing content is sufficient to express that distinction without new features.
-- **Proposed improvement:** Present the six services as aligned editorial entries with image, title, concise scope and clear link treatment. Preserve equal discoverability rather than arbitrarily promoting one trade. Present the existing ordered process as a connected numbered sequence with quieter surfaces, keeping the scope checklist separate. Use the same approach across the six service pages with their own existing text.
-- **Expected value:** A construction-specific relationship between what is offered and how work is organized; less dependence on the same panel metaphor for unrelated content roles.
-- **Implementation scope:** Home service markup/styles and shared service-page CSS, piloted on `services/budowa-domow.html` before the other five pages. Preserve service routes, gallery anchors, ordered lists, accessible step wording, DOM order and current CTA destinations. No workflow changes or new claims.
-- **Dependencies:** IMP-DESIGN-01. Can proceed independently of IMP-DESIGN-02 once shared rules are approved; image reuse must stay within approved assets.
-- **Acceptance criteria:** All six service links remain equally locatable at 1440px, 1024px, 768px and 390px. The work sequence is visually distinct from the service overview and retains the same accessible order and labels. At narrow widths and 200% zoom, numbers do not detach from step text. Keyboard focus and touch targets remain clear in both themes; no sideways process scroller is introduced.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** The six home service links are now equal, ruled catalogue entries (compact image/text rows below 600px, two or three aligned columns above) with flat 3:2 photographs, a drawn link chevron, title hover/focus states and no card elevation or hover lift; `.service` was removed from the shared shadow/lift rules. All six service pages share a flat photograph, left-aligned description, square-marker scope checklist and paired actions, while the `budowa-domow` numbered process rules now apply, scoped to `.service-details`, to every page with `no-interaction` steps. Routes, copy, image sources/`sizes`/alternatives, ordered lists, `Krok n:` and `aria-hidden` numbers, gallery anchors and CTA destinations are unchanged.
+- **Verification:** Headless Chrome at 1440, 1024, 768 and 390px (plus 320px screenshots) in stored light/dark and system themes found six equal links, four labelled steps with attached numbers, intact CTA targets and no horizontal overflow; text contrast was at least 9.78:1 and step numbers 4.59:1, the `budowa-domow` process, About and other home sections computed identically to HEAD, and Tab/Enter, reduced motion and no-JavaScript fallback behaved correctly. Emulated 200% zoom (720 and 512 CSS px at DPR 2), `npm run qa:references` and `git diff --check` on the implementation files passed; the browser zoom UI, Firefox, Safari, touch hardware and assistive technologies were not tested, and the shared CTA buttons keep their existing 2.0:1 light-theme focus ring.
 - **Impact:** High
 - **Effort:** Medium
 

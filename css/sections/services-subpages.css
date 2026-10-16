@@ -6,6 +6,11 @@
   background: var(--surface-2);
 }
 
+.service-intro,
+.service-details {
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
+}
+
 .service-intro__inner,
 .service-details__inner,
 .gallery__inner {
@@ -17,10 +22,16 @@
 .service-intro__inner,
 .service-details__inner {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
+  padding-inline: var(--space-2);
   text-align: center;
 }
+
+/* Construction Dossier service introduction (IMP-DESIGN-03): the centred
+   title leads a flat photograph and one left-aligned column of description,
+   ruled scope checklist and the two existing actions. Wide screens pair the
+   photograph with that column. */
 
 .service-intro__inner {
   grid-template-areas:
@@ -33,74 +44,128 @@
   grid-area: title;
 }
 
+.service-intro__media,
 .service-intro__copy {
-  grid-area: copy;
+  width: min(100%, 600px);
+  margin-inline: auto;
 }
 
+/* Not interactive, so no lift or hover zoom. */
 .service-intro__media {
   grid-area: media;
+  margin-block: var(--space-2) 0;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
-  border-radius: var(--radius-2);
-  box-shadow: var(--feature-shadow);
-  transition: box-shadow 0.3s ease;
-  max-width: 80%;
-  margin: var(--space-2) auto;
+  border-radius: var(--radius-1);
+  border: 1px solid color-mix(in srgb, var(--text-body) 12%, transparent);
+  background: var(--surface-2);
+}
+
+.service-intro__media picture {
+  display: block;
+  height: 100%;
 }
 
 .service-intro__media img {
-  width: 100%;
-  height: auto;
   display: block;
-  transition: transform 0.4s ease;
-  max-width: 480px;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.service-intro__media:hover img {
-  transform: scale(1.05);
+.service-intro__copy {
+  grid-area: copy;
+  text-align: left;
 }
 
 .service-intro__copy .lead {
-  max-width: 45ch;
-  margin: var(--space-4) auto;
-  padding: 0 var(--space-2);
+  max-width: 62ch;
+  margin: var(--space-2) 0 var(--space-6);
+  font-size: var(--fs-6);
   text-wrap: pretty;
   overflow-wrap: break-word;
   hyphens: auto;
 }
 
+/* Scope is a ruled register with square markers, kept apart from the
+   numbered work sequence below. */
 .checklist {
-  max-width: 42ch;
-  margin: var(--space-6) auto;
-  padding: var(--space-4) 0 var(--space-4) var(--space-5);
-  text-align: left;
+  max-width: 62ch;
+  margin: 0;
+  padding: var(--space-3) 0 var(--space-3) 1.25em;
+  border-block: 1px solid var(--dossier-rule);
+  list-style: square;
 }
 
 .checklist li {
   margin-block: var(--space-2);
+  padding-left: var(--space-1);
   line-height: var(--lh-body);
 }
 
+.checklist li::marker {
+  color: var(--feature-accent);
+}
+
 .service-intro__cta {
-  margin: var(--space-6) auto 0;
+  margin: var(--space-6) 0 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-4);
 }
 
+/* Both actions share the row equally and stack only when their labels no
+   longer fit side by side. */
 .service-intro__cta .btn {
-  max-width: 180px;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: max-content;
+  max-width: 220px;
   margin: 0;
 }
 
-.features__item h3 {
-  transition: color 0.22s ease;
+/* Work sequence: the approved IMP-DESIGN-01 ruled, numbered steps, shared by
+   every service page. The visible number is the existing aria-hidden span;
+   the sr-only "Krok n:" label is untouched. */
+
+.service-details .features__list {
+  margin-bottom: 0;
+  gap: 0 var(--space-7);
+  text-align: left;
+  border-bottom: 1px solid var(--dossier-rule);
+}
+
+.service-details .features__item {
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-5) 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--dossier-rule);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.service-details .features__item h3 {
+  margin: 0;
   font-size: var(--fs-6);
 }
 
-.features__item p {
-  font-size: var(--fs-7);
+.service-details .features__item h3 > [aria-hidden="true"] {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--feature-accent);
+  font-size: var(--fs-5);
+  font-weight: 400;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1;
+}
+
+.service-details .features__item p {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 1rem;
 }
 
 .cta {
@@ -133,73 +198,23 @@
 
 @media (min-width: 1024px) {
   .service-intro__inner {
-    text-align: left;
-    align-items: start;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     grid-template-areas:
       "title title"
       "media copy";
+    column-gap: var(--space-8);
+    align-items: start;
+  }
+  .service-intro__media,
+  .service-intro__copy {
+    width: auto;
+    margin-inline: 0;
   }
   .service-intro__media {
-    align-self: center;
-    margin-left: var(--space-8);
+    margin-top: var(--space-3);
   }
-}
-
-@media (min-width: 1024px) {
-  .features__list {
+  .service-details .features__list {
     grid-template-columns: 1fr 1fr;
     max-width: 900px;
   }
-}
-
-/* Construction Dossier pilot (IMP-DESIGN-01), limited to budowa-domow: the
-   work steps read as a ruled, numbered sequence instead of raised cards. The
-   visible number is the existing aria-hidden span; the sr-only "Krok n:"
-   label is untouched. */
-
-body[data-service="budowa-domow"] .service-details {
-  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
-}
-
-body[data-service="budowa-domow"] .service-details__inner {
-  padding-inline: var(--space-2);
-}
-
-body[data-service="budowa-domow"] .service-details .features__list {
-  margin-bottom: 0;
-  gap: 0 var(--space-7);
-  text-align: left;
-  border-bottom: 1px solid var(--dossier-rule);
-}
-
-body[data-service="budowa-domow"] .service-details .features__item {
-  align-content: start;
-  gap: var(--space-2);
-  padding: var(--space-5) 0;
-  background: none;
-  border: 0;
-  border-top: 1px solid var(--dossier-rule);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-body[data-service="budowa-domow"] .service-details .features__item h3 {
-  margin: 0;
-}
-
-body[data-service="budowa-domow"] .service-details .features__item h3 > [aria-hidden="true"] {
-  display: block;
-  margin-bottom: var(--space-3);
-  color: var(--feature-accent);
-  font-size: var(--fs-5);
-  font-weight: 400;
-  font-variant-numeric: lining-nums tabular-nums;
-  line-height: 1;
-}
-
-body[data-service="budowa-domow"] .service-details .features__item p {
-  margin: 0;
-  max-width: 60ch;
-  font-size: 1rem;
 }
