@@ -1,9 +1,9 @@
 # Axiom — Design Improvements
 
-**Analysis date:** 2026-10-16  
-**Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules  
-**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-04 completed; IMP-DESIGN-05 remains proposed  
-**Analysis mode:** Evidence-based creative design review  
+**Analysis date:** 2026-10-16
+**Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules
+**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-04 completed; IMP-DESIGN-05 remains proposed
+**Analysis mode:** Evidence-based creative design review
 **Focus:** Project-wide design
 
 ## 1. Methodology and evidence
@@ -120,32 +120,32 @@ Priorities express prospective implementation value and dependencies, not defect
 ### IMP-DESIGN-01 — Establish the Axiom dossier typography and material language
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** Implemented only on home `#o-nas` and the `services/budowa-domow.html` `.service-details` section, using CSS scoped to those sections and the existing `no-interaction` class on their eight list items. The About introduction and highlights and the numbered work steps now use left-aligned explanatory text, body-size descriptions and restrained sectional rules instead of raised cards, with step numbers on a separate typographic line. Shared selectors, tokens, fonts, content, `Krok n:` labels, step order, anchors, the contact CTA and reveal behavior are preserved.
-- **Verification:** Browser inspection at 1440, 768, 390 and 320px in light and dark system-preference themes, plus a 720×450 viewport as a 200% zoom approximation, found no horizontal overflow, intact step order and labels, visible CTA keyboard focus, text contrast of at least 4.58:1, and an unchanged `remonty-mieszkan` page; `npm run qa:references` passed. Real 200% browser zoom, `prefers-reduced-motion` emulation, Firefox, Safari and assistive technologies were not tested.
+- **Result:** Redesigned the home About section and house-construction work sequence with left-aligned typography, restrained sectional rules and numbered steps instead of elevated cards. Existing content, navigation, CTA and interaction contracts remain unchanged.
+- **Verification:** Browser checks at 1440–320px in light/dark themes confirmed responsive layout, readable contrast, keyboard focus and preserved content; `npm run qa:references` passed. Real 200% zoom, reduced-motion emulation and cross-browser testing were not performed.
 - **Impact:** High
 - **Effort:** Medium
 
 ### IMP-DESIGN-02 — Compose the hero and about section as one construction introduction
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** The single hero `h1` now pairs a large title-case brand name with a ruled, uppercase service descriptor, aligned bottom-left to the 1200px grid over a text-anchored scrim that replaces the previously ineffective overlay; narrow crops keep the lit building corner. From 1024px, `#o-nas` pairs the explanation, highlights and left-aligned contact CTA with a flat 5:4 coordination photograph, while narrower screens keep the DOM order with a full-column 4:3/3:2 image and a matching `sizes` value. Wording, image sources and alternatives, `#o-nas`/`#kontakt`, the IMP-DESIGN-01 rules and `no-interaction` items, and reveal behavior are preserved.
-- **Verification:** Headless Chrome at 1440×900, 1024×768, 768×1024, 390×844, 320×568, 844×390 and 1280×600 in light, dark, stored and system themes, with and without emulated reduced motion, plus real 200% page zoom (712 CSS px, DPR 2), found no horizontal overflow, single-line or balanced headings, and rendered hero text contrast of at least 5.1:1 (brand) and 6.6:1 (descriptor). Keyboard Tab/Enter reached the focus-visible `Kontakt` CTA and `#kontakt`, About stayed visible without JavaScript, service, legal and 404 pages rendered identically to HEAD apart from lazy-image timing, and `npm run qa:references` and `git diff --check` passed. Firefox, Safari (including the `support.css` no-`backdrop-filter` fallback), touch devices and assistive technologies were not tested.
+- **Result:** Reworked the hero with a prominent brand heading, ruled service descriptor and improved text contrast. The About section now pairs its content with a responsive photograph on desktop while preserving mobile reading order, image sources, links and existing interactions.
+- **Verification:** Headless Chrome checks across desktop, tablet and mobile in all theme modes, including reduced motion and real 200% zoom, confirmed responsive layout, accessible contrast and keyboard navigation; `npm run qa:references` and `git diff --check` passed. Firefox, Safari and assistive technologies were not tested.
 - **Impact:** High
 - **Effort:** Medium
 
 ### IMP-DESIGN-03 — Give service scope and work sequence distinct editorial compositions
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** The six home service links are now equal, ruled catalogue entries (compact image/text rows below 600px, two or three aligned columns above) with flat 3:2 photographs, a drawn link chevron, title hover/focus states and no card elevation or hover lift; `.service` was removed from the shared shadow/lift rules. All six service pages share a flat photograph, left-aligned description, square-marker scope checklist and paired actions, while the `budowa-domow` numbered process rules now apply, scoped to `.service-details`, to every page with `no-interaction` steps. Routes, copy, image sources/`sizes`/alternatives, ordered lists, `Krok n:` and `aria-hidden` numbers, gallery anchors and CTA destinations are unchanged.
-- **Verification:** Headless Chrome at 1440, 1024, 768 and 390px (plus 320px screenshots) in stored light/dark and system themes found six equal links, four labelled steps with attached numbers, intact CTA targets and no horizontal overflow; text contrast was at least 9.78:1 and step numbers 4.59:1, the `budowa-domow` process, About and other home sections computed identically to HEAD, and Tab/Enter, reduced motion and no-JavaScript fallback behaved correctly. Emulated 200% zoom (720 and 512 CSS px at DPR 2), `npm run qa:references` and `git diff --check` on the implementation files passed; the browser zoom UI, Firefox, Safari, touch hardware and assistive technologies were not tested, and the shared CTA buttons keep their existing 2.0:1 light-theme focus ring.
+- **Result:** Replaced six elevated home service cards with responsive Construction Dossier catalogue entries. Standardized all six service pages with flat imagery, editorial descriptions, scope checklists, paired actions and numbered work sequences while preserving routes, content and accessibility attributes.
+- **Verification:** Chrome checks across desktop/mobile, theme modes, reduced motion and emulated 200% zoom confirmed layout, navigation and preserved interactions; `npm run qa:references` and `git diff --check` passed. Cross-browser and assistive-technology tests were not performed; the existing light-theme CTA focus-ring contrast remains approximately 2.0:1.
 - **Impact:** High
 - **Effort:** Medium
 
 ### IMP-DESIGN-04 — Curate gallery imagery into a demonstrational construction narrative
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** All 12 home and 36 service photographs keep their sources, order, links and alternatives but now sit as equal, flat plates at their native 3:2 ratio in a one/two/three-column grid aligned with the service catalogue; no image is featured because the opening photograph is a split composite. Each figure gained a `<figcaption>` outside the link with a factual Polish description (home captions also name the service area; composites are described as "Dwa ujęcia" without before/after claims), while the lightbox keeps its alt-based captions and `lightbox.js` is unchanged.
-- **Verification:** The in-app browser at 1440, 768, 390, 320 and 720×450 (200% zoom approximation) in light, dark and system themes found no horizontal overflow, uncropped plates, caption contrast of at least 9.12:1 and focus rings of at least 4.07:1; keyboard and mouse opening, DOM-ordered ArrowLeft/ArrowRight and button navigation, Escape/backdrop closing, focus return, immersive fallback and per-page six-image grouping worked, captions stayed visible without JavaScript, and `npm test -- tests/lightbox.test.js` (9/9), `npm run qa:references` and `git diff --check` passed. Reduced motion was checked only as loaded CSS rules, native fullscreen was refused by the browser pane, and Firefox, Safari, touch devices and assistive technologies were not tested; initial focus not entering the open lightbox is pre-existing and identical on HEAD.
+- **Result:** Redesigned the home and six service galleries as responsive, flat 3:2 image grids with factual Polish `<figcaption>` descriptions. All photographs, image references, ordering and alt-based lightbox captions remain unchanged.
+- **Verification:** Browser checks at 1440–320px in light/dark/system themes confirmed responsive layout, caption contrast, keyboard navigation and image ordering; focused lightbox tests passed (9/9), as did `npm run qa:references`. Initial focus failing to enter the lightbox is a confirmed pre-existing issue; native fullscreen and reduced-motion behavior were not fully tested.
 - **Impact:** Medium
 - **Effort:** Medium
 
