@@ -50,6 +50,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Applied the approved Construction Dossier pilot to the home About section and the house-construction service page: a left-aligned introduction with ruled, body-size highlights, and the work process as a numbered, ruled sequence replacing elevated cards and pointer affordances on non-interactive items.
 - Recomposed the home hero and About section as one Construction Dossier introduction: a distinct brand name and ruled service descriptor on a text-anchored scrim that keeps the heading readable in both themes, and a wide-screen pairing of the About explanation with its coordination photograph.
 - Gave the service overview and service pages distinct Construction Dossier compositions: the six home service links became equal, ruled catalogue entries without card elevation or hover lift, every service page gained a flat photograph with a left-aligned description, ruled scope checklist and paired actions, and the numbered, ruled work sequence now applies to all six pages with non-interactive steps.
+- Presented the home and six service galleries as Construction Dossier plates: equal, flat photographs at their native 3:2 ratio in one, two or three columns, each with a visible, factual Polish caption (home captions also name the related service area), a restrained hover state and a focus ring of at least 3:1 in both themes; image sources, order, alternatives and the lightbox's alt-based captions are unchanged.
 
 ### Fixed
 

@@ -2,7 +2,7 @@
 
 **Analysis date:** 2026-10-16  
 **Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules  
-**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-03 completed; IMP-DESIGN-04 and IMP-DESIGN-05 remain proposed  
+**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-04 completed; IMP-DESIGN-05 remains proposed  
 **Analysis mode:** Evidence-based creative design review  
 **Focus:** Project-wide design
 
@@ -143,17 +143,9 @@ Priorities express prospective implementation value and dependencies, not defect
 
 ### IMP-DESIGN-04 — Curate gallery imagery into a demonstrational construction narrative
 
-- **Status:** Proposed
-- **Priority:** P2
-- **Affected area:** Home gallery and related service galleries; image relationship to the introduction.
-- **Evidence:** **Source:** `index.html#galeria`, service gallery structures, `css/sections/gallery.css` (`.gallery__container`, `.gallery__item`, `.gallery__link`) and `js/components/lightbox.js` (DOM-derived ordering and alt-derived captions).
-- **Current state:** Gallery thumbnails share the same 4:3 treatment and automatic grid. Meaning is conveyed through image alternatives and the lightbox; the home thumbnail markup does not provide visible editorial captions.
-- **Design judgment:** Selected context, work-detail and finished-space images could communicate the breadth of the demonstration more deliberately. The suitability of any individual asset remains unassessed.
-- **Proposed improvement:** After asset review, select an existing image with a clear compositional role as the opening gallery anchor, followed by a regular supporting sequence. Use restrained visible captions based only on observable subject matter and approved demonstration wording. Seek consistent light, color and material emphasis where the existing set allows it; avoid implying that unrelated photographs document one commission or a verified before/after transformation. Let mobile present the same sequence without visual/DOM reordering.
-- **Expected value:** A gallery with editorial emphasis and an understandable relationship to the services, while retaining the current browsing model.
-- **Implementation scope:** Gallery HTML and its owning CSS; update responsive source declarations only if approved display sizes require it. Preserve each `.gallery__container` grouping and `.gallery__link`, original-image access, alternatives, focus management, keyboard navigation, live announcements and fullscreen behavior. New visible captions must not silently change the lightbox's alt-based caption contract. No image acquisition, generation or case-study feature is included.
-- **Dependencies:** IMP-DESIGN-01 and image selection/rights/demonstration approval from section 4. A larger feature is conditional on adequate source resolution and an approved crop; otherwise retain regular image sizes and use sequencing/captions alone.
-- **Acceptance criteria:** Review final approved assets at desktop, tablet and mobile sizes, including focal points, caption readability and absence of misleading relationships. No small source is enlarged beyond an approved acceptable presentation. Thumbnail order, lightbox order and reading order agree. Verify keyboard opening/closing, arrow navigation, focus return and reduced motion in both themes. Run the existing focused lightbox test file through project tooling and `npm run qa:references` after approved markup changes.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** All 12 home and 36 service photographs keep their sources, order, links and alternatives but now sit as equal, flat plates at their native 3:2 ratio in a one/two/three-column grid aligned with the service catalogue; no image is featured because the opening photograph is a split composite. Each figure gained a `<figcaption>` outside the link with a factual Polish description (home captions also name the service area; composites are described as "Dwa ujęcia" without before/after claims), while the lightbox keeps its alt-based captions and `lightbox.js` is unchanged.
+- **Verification:** The in-app browser at 1440, 768, 390, 320 and 720×450 (200% zoom approximation) in light, dark and system themes found no horizontal overflow, uncropped plates, caption contrast of at least 9.12:1 and focus rings of at least 4.07:1; keyboard and mouse opening, DOM-ordered ArrowLeft/ArrowRight and button navigation, Escape/backdrop closing, focus return, immersive fallback and per-page six-image grouping worked, captions stayed visible without JavaScript, and `npm test -- tests/lightbox.test.js` (9/9), `npm run qa:references` and `git diff --check` passed. Reduced motion was checked only as loaded CSS rules, native fullscreen was refused by the browser pane, and Firefox, Safari, touch devices and assistive technologies were not tested; initial focus not entering the open lightbox is pre-existing and identical on HEAD.
 - **Impact:** Medium
 - **Effort:** Medium
 
