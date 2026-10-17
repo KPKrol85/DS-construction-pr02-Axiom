@@ -4,9 +4,14 @@
 // gallery and lightbox markup from index.html and only asserts observable
 // behavior: attributes, focus, and the displayed image and caption.
 
+import { readFileSync } from "node:fs";
+
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { initLightbox } from "../js/components/lightbox.js";
+
+// Vitest runs from the project root, where the canonical stylesheet lives.
+const GALLERY_CSS = readFileSync("css/sections/gallery.css", "utf8");
 
 const GALLERY_ITEMS = [
   { href: "assets/img/realizacje/remont-02-1600x1067.jpg", alt: "Remont mieszkania" },
@@ -49,9 +54,14 @@ const trackedDocumentListeners = [];
 
 const originalOffsetParent = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "offsetParent");
 
-const mountGallery = () => {
+const mountGallery = ({ withStyles = false } = {}) => {
   document.body.className = "";
   document.body.innerHTML = GALLERY_FIXTURE;
+  if (withStyles) {
+    const style = document.createElement("style");
+    style.textContent = GALLERY_CSS;
+    document.body.prepend(style);
+  }
   const spy = vi.spyOn(document, "addEventListener").mockImplementation((type, handler, options) => {
     trackedDocumentListeners.push([type, handler, options]);
     documentAddEventListener(type, handler, options);
@@ -81,12 +91,13 @@ beforeAll(() => {
   // jsdom performs no layout, so every element reports offsetParent === null.
   // js/utils/a11y.js uses that property to drop non-rendered elements, so the
   // focus trap would otherwise be built from an empty list. This stub reports
-  // the layout parent for rendered elements and null inside a [hidden] subtree.
+  // the layout parent for rendered elements and null inside a [hidden] or
+  // display: none subtree, as a browser does.
   Object.defineProperty(HTMLElement.prototype, "offsetParent", {
     configurable: true,
     get() {
       for (let node = this; node instanceof HTMLElement; node = node.parentElement) {
-        if (node.hasAttribute("hidden")) return null;
+        if (node.hasAttribute("hidden") || document.defaultView.getComputedStyle(node).display === "none") return null;
       }
       return this.parentElement;
     },
@@ -133,6 +144,25 @@ describe("lightbox opening", () => {
 
     expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
     expect(lb.contains(document.activeElement)).toBe(true);
+  });
+
+  it("focuses a close button that the gallery stylesheet renders", () => {
+    // Regression: gallery.css once hid .lb__close with display: none, so a
+    // browser could not focus it and focus stayed behind the dialog.
+    const lb = mountGallery({ withStyles: true });
+    const closeBtn = lb.querySelector(".lb__close");
+
+    openFromGallery(0);
+
+    expect(document.defaultView.getComputedStyle(closeBtn).display).not.toBe("none");
+    expect(document.defaultView.getComputedStyle(closeBtn).visibility).not.toBe("hidden");
+    expect(document.activeElement).toBe(closeBtn);
+
+    // Shift+Tab from the close button wraps inside the dialog, which requires
+    // the button to be part of the rendered focus trap.
+    pressKey("Tab", { shiftKey: true });
+
+    expect(document.activeElement).toBe(lb.querySelector(".lb__fs"));
   });
 });
 
@@ -191,6 +221,30 @@ describe("lightbox closing", () => {
     expect(lb.getAttribute("aria-hidden")).toBe("true");
     expect(lb.hasAttribute("hidden")).toBe(true);
     expect(document.body.classList.contains("lb-open")).toBe(false);
+  });
+
+  it("leaves fullscreen before closing from the close button", async () => {
+    const lb = mountGallery();
+    const trigger = openFromGallery(1);
+    let fullscreenElement = lb.querySelector(".lb__figure");
+    Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => fullscreenElement });
+    document.exitFullscreen = vi.fn(() => {
+      fullscreenElement = null;
+      return Promise.resolve();
+    });
+
+    try {
+      lb.querySelector(".lb__close").click();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(document.exitFullscreen).toHaveBeenCalledTimes(1);
+      expect(lb.getAttribute("aria-hidden")).toBe("true");
+      expect(document.activeElement).toBe(trigger);
+    } finally {
+      delete document.fullscreenElement;
+      delete document.exitFullscreen;
+    }
   });
 
   it("returns focus to the gallery item after closing with Escape", () => {

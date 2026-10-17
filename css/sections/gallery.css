@@ -244,6 +244,9 @@
   transition: opacity 0.18s ease;
 }
 
+/* The close button receives focus when the lightbox opens, so it stays
+   visible in the top corner with the fullscreen toggle beside it. */
+.lb__close,
 .lb__fs {
   position: absolute;
   top: 12px;
@@ -262,12 +265,23 @@
   z-index: 10000;
 }
 
+.lb__close:hover,
 .lb__fs:hover {
   background: color-mix(in srgb, #000 65%, transparent);
 }
 
+.lb__close:focus-visible,
 .lb__fs:focus-visible {
   outline: 2px solid var(--accent-400);
+}
+
+.lb__close {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.lb__fs {
+  right: 60px;
 }
 
 .lb__backdrop {
@@ -302,19 +316,24 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
+/* The lightbox is always a dark overlay, so the caption uses fixed colours
+   rather than theme tokens. A 72% black band keeps white text above 8:1 even
+   over a white area of the photograph. In portrait the caption sits below the
+   image; in landscape, where height is short, it overlays the image's foot. */
 .lb__caption {
   position: absolute;
+  top: calc(100% + var(--space-2));
   left: 0;
   right: 0;
-  bottom: -52px;
-  text-align: center;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-2);
+  background: rgb(0 0 0 / 0.72);
+  color: #fff;
   font-size: var(--fs-8);
-  color: var(--text-inverse, #fff);
-  opacity: 0.9;
-}
-
-.lb__close {
-  display: none !important;
+  line-height: 1.45;
+  text-align: center;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
 body.lb-open {
@@ -329,10 +348,9 @@ body.lb-open {
     max-height: 100vh;
   }
   .lb__caption {
-    left: 0;
-    right: 0;
+    top: auto;
     bottom: 0;
-    background-color: #00000073;
+    border-radius: 0 0 var(--radius-2) var(--radius-2);
   }
 }
 

@@ -58,6 +58,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Restored reliable offline retry and connection-status updates.
 - Kept scroll-reveal content accessible when JavaScript is unavailable.
 - Fixed initial gallery-lightbox focus trapping to include dynamically created controls.
+- Fixed gallery-lightbox focus and caption readability: the close button is now visible and receives focus on opening, keeping Tab and Shift+Tab inside the dialog and leaving fullscreen before closing; captions use a fixed dark band with white text in every theme, placed below the photograph in portrait and over its lower edge in landscape.
 - Corrected dark-theme hover backgrounds for feature cards and related interactive elements.
 - Aligned active navigation colors with the selected site theme rather than the operating-system preference.
 - Removed inactive mobile-theme handling and unsupported analytics event calls without changing working theme or form behavior.

@@ -127,15 +127,16 @@ export const initLightbox = () => {
     open(href, alt);
     render(currentIndex);
   });
-  if (backdrop)
-    backdrop.addEventListener("click", () => {
-      if (isFs()) {
-        exitFs().finally(() => close());
-        return;
-      }
-      if (isImmersiveFallback()) lb.classList.remove("is-immersive");
-      close();
-    });
+  // The close button stays reachable in fullscreen, so it shares the
+  // backdrop's dismissal path and leaves fullscreen before closing.
+  const dismiss = () => {
+    if (isFs()) {
+      exitFs().finally(() => close());
+      return;
+    }
+    close();
+  };
+  if (backdrop) backdrop.addEventListener("click", dismiss);
   if (imgEl) {
     imgEl.addEventListener("click", () => {
       toggleFs();
@@ -323,7 +324,7 @@ export const initLightbox = () => {
       if (active) detectEnd();
     });
   })();
-  if (closeBtn) closeBtn.addEventListener("click", close);
+  if (closeBtn) closeBtn.addEventListener("click", dismiss);
   document.addEventListener("keydown", (e) => {
     if (lb.getAttribute("aria-hidden") !== "false") return;
     if (e.key === "Escape") {
