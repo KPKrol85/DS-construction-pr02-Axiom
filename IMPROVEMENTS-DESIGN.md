@@ -2,7 +2,7 @@
 
 **Analysis date:** 2026-10-16
 **Project type:** Static multi-page demonstration website for a fictional construction and renovation brand, built with HTML, CSS and vanilla JavaScript ES modules
-**Status:** In progress — IMP-DESIGN-01 to IMP-DESIGN-04 completed; IMP-DESIGN-05 remains proposed
+**Status:** Completed — IMP-DESIGN-01 to IMP-DESIGN-05 implemented and verified
 **Analysis mode:** Evidence-based creative design review
 **Focus:** Project-wide design
 
@@ -151,17 +151,9 @@ Priorities express prospective implementation value and dependencies, not defect
 
 ### IMP-DESIGN-05 — Create a deliberate project-contact closing composition
 
-- **Status:** Proposed
-- **Priority:** P2
-- **Affected area:** Home `#kontakt`, service closing CTAs and shared footer.
-- **Evidence:** **Source:** `index.html#kontakt`, footer markup, `css/sections/contact.css` (`.contact-form__container`), `css/layout/layout.css` (`.footer__content`), service `.cta` rules, `legal/regulamin.html#tos-9` (the form's actual project-contact purpose).
-- **Current state:** Home contact is a centered form panel followed by a multi-group footer; service pages close with a separate CTA to the same contact area. The legal content distinguishes real operator contact from the fictional construction offering.
-- **Design judgment:** A dossier-like final contact block could provide a clearer visual finish without adding another action, promising a real construction estimate or expanding the form workflow.
-- **Proposed improvement:** Compose the existing contact heading and form as the main closing passage, with a quieter supporting operator-contact register drawn only from approved existing details. Give service endings the same visual signature, then let footer navigation and attribution provide the secondary finish. On mobile, prioritize heading and form before supporting details. Keep demonstration context visible according to the approved content treatment.
-- **Expected value:** A recognizable ending that connects the visual direction to the site's actual project-contact functionality.
-- **Implementation scope:** Home contact presentation, service CTA styling and shared footer layout. Minimal presentation markup only; preserve `contactForm`, all field names/IDs, validation/status associations, Netlify attributes, honeypot, reCAPTCHA area, action URL, draft storage, direct contact links and existing footer destinations. No new fields, persistent mobile bar, submission behavior or business promises.
-- **Dependencies:** IMP-DESIGN-01; owner approval of any repeated operator detail and adjacent wording so it remains accurate for a demonstration. Can proceed independently of the gallery proposal.
-- **Acceptance criteria:** At desktop, tablet, mobile, short landscape and 200% zoom, the heading/form form one primary closing passage and all controls, messages and captcha area remain reachable. Footer links, social destinations and direct contact actions remain intact. Both themes retain visible focus and readable normal, error and success states. Verify existing form behavior using the focused contact-form tests and a local browser scenario without transmitting a real message; live Netlify delivery remains a separate check.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Recomposed home `#kontakt` and the six service CTAs as one measured, left-aligned Construction Dossier column: a quiet note identifying KP_Code Digital Studio, a sectional rule, then the flat form or the two existing actions. The shared footer became a quieter, left-aligned ruled register; form, Netlify, navigation and footer-destination contracts are unchanged.
+- **Verification:** Browser checks at 1440–320px, short landscape and a 200%-zoom-equivalent viewport in light/dark/system themes confirmed layout, keyboard order, visible focus and readable error, loading and success states; a local invalid-to-success scenario sent no request. Focused form tests (11/11), `npm run qa:references` and `git diff --check` passed; real browser zoom, reduced-motion emulation, the live reCAPTCHA widget and Netlify delivery were not tested.
 - **Impact:** Medium
 - **Effort:** Medium
 

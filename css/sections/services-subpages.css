@@ -168,32 +168,58 @@
   font-size: 1rem;
 }
 
+/* Closing passage (IMP-DESIGN-05): the same surface and measured,
+   left-aligned column as the home contact section — a quiet note, a
+   sectional rule, then the two existing actions at their natural width. */
+
 .cta {
-  background: var(--surface-2);
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
+  background: var(--surface-1);
+  border-top: 1px solid var(--feature-border);
   text-align: center;
 }
 
+:root[data-theme="dark"] body .cta {
+  background: var(--surface-3);
+}
+
+.cta p,
+.cta__row {
+  width: min(100% - var(--space-4), 680px);
+  margin-inline: auto;
+  text-align: left;
+}
+
 .cta p {
-  max-width: 45ch;
-  margin: var(--space-4) auto;
-  padding: 0 var(--space-2);
+  margin-block: var(--space-6) 0;
+  font-size: 1rem;
   text-wrap: pretty;
   overflow-wrap: break-word;
   hyphens: auto;
 }
 
 .cta__row {
-  margin: var(--space-6) auto 0;
+  margin-block: var(--space-5) 0;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--dossier-rule);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--space-4);
 }
 
 .cta__row .btn {
-  width: 180px;
   margin: 0;
-  font-size: var(--fs-9-micro);
+}
+
+/* The darker accent keeps the focus ring at 3:1 or more on the light
+   surface. */
+.cta .btn:focus-visible {
+  outline-color: var(--accent-600);
+}
+
+:root[data-theme="dark"] body .cta .btn:focus-visible {
+  outline-color: var(--accent-400);
 }
 
 @media (min-width: 1024px) {

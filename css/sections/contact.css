@@ -1,6 +1,18 @@
 /* Contact form */
 
+/* Construction Dossier closing passage (IMP-DESIGN-05): the centred title
+   leads one measured, left-aligned column at every width: a quiet note naming
+   the project operator, then the flat form under a sectional rule. The
+   service-page CTAs repeat this column. Field and state colours are set per
+   theme so boundaries and messages stay readable on the section surface. */
+
 .contact-form__section {
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
+  --field-border: color-mix(in srgb, var(--text-body) 55%, transparent);
+  --field-focus: var(--accent-600);
+  --form-error: #b00020;
+  --form-success: #136b33;
+  --form-warn: #a04a12;
   background: var(--surface-1);
   border-top: 1px solid var(--feature-border);
   text-align: center;
@@ -9,17 +21,40 @@
 }
 
 :root[data-theme="dark"] body .contact-form__section {
+  --field-focus: var(--accent-400);
+  --form-error: #ff8a80;
+  --form-success: #7ad894;
+  --form-warn: var(--accent-400);
   background: var(--surface-3);
 }
 
+.contact-form__lead,
 .contact-form__container {
-  max-width: 500px;
-  margin: var(--space-6) auto;
-  padding: var(--space-4);
-  background: var(--surface-2);
-  border-radius: var(--radius-2);
-  box-shadow: var(--feature-shadow);
+  width: min(100% - var(--space-4), 680px);
+  margin-inline: auto;
   text-align: left;
+}
+
+.contact-form__lead {
+  margin-block: var(--space-6) 0;
+  font-size: 1rem;
+  text-wrap: pretty;
+}
+
+.contact-form__container {
+  margin-block: var(--space-5) 0;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--dossier-rule);
+}
+
+/* Revealed by forms.js after a failed submission; the error colour and rule
+   set it apart from the first field label. */
+.form__error-summary:not(.visually-hidden) {
+  margin: 0 0 var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--form-error);
+  color: var(--form-error);
+  font-weight: 700;
 }
 
 .contact-form .form__group {
@@ -28,21 +63,20 @@
 
 .contact-form label {
   display: block;
-  margin: 0 var(--space-4) var(--space-2);
+  margin: 0 0 var(--space-2);
   font-weight: 600;
-  font-size: var(--fs-9-micro);
+  font-size: var(--fs-8);
   color: var(--text-body);
-  opacity: 0.9;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
 }
 
 .contact-form :is(input, textarea, select) {
   display: block;
-  margin: 0 auto;
-  width: 90%;
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--primary-400);
+  margin: 0;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--field-border);
   border-radius: var(--radius-2);
   font-family: "Lato", "Source Sans 3", system-ui, sans-serif;
   font-size: var(--fs-7);
@@ -50,10 +84,8 @@
   box-sizing: border-box;
   background: var(--text-inverse);
   color: var(--text-body);
-}
-
-:root[data-theme="dark"] body .contact-form :is(input, textarea, select) {
-  border-color: var(--primary-600);
+  /* Keeps a focused or invalid field and its label clear of the sticky header. */
+  scroll-margin-top: calc(var(--header-h) + var(--space-8));
 }
 
 .contact-form :is(input, textarea)::placeholder {
@@ -77,21 +109,17 @@
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
 }
 
-.contact-form :is(input, textarea, select):focus-visible {
-  border-color: var(--accent);
-  outline: 3px solid var(--accent-400);
+/* Fields, the consent link and the submit button share one accent ring; the
+   darker accent keeps it at 3:1 or more on the light surface. */
+.contact-form :is(input, textarea, select):focus-visible,
+.contact-form__section :is(a, button):focus-visible {
+  outline: 3px solid var(--field-focus);
   outline-offset: 2px;
 }
 
-.contact-form :is(input, textarea, select):focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
-  outline: none;
-}
-
 .is-invalid {
-  border-color: #b00020 !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, #b00020 25%, transparent) !important;
+  border-color: var(--form-error, #b00020) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--form-error, #b00020) 25%, transparent) !important;
 }
 
 .contact-form :is(input, textarea, select):-webkit-autofill {
@@ -105,23 +133,23 @@
 }
 
 .form__note {
-  margin: var(--space-1) var(--space-4);
+  margin: var(--space-1) 0;
   font-size: var(--fs-8);
   opacity: 0.75;
 }
 
 .form__status {
-  margin: var(--space-1) var(--space-4);
+  margin: var(--space-1) 0;
   font-size: var(--fs-7);
   min-height: 1.2em;
 }
 
 .form__status.ok {
-  color: #17803d;
+  color: var(--form-success);
 }
 
 .form__status.err {
-  color: #b00020;
+  color: var(--form-error);
 }
 
 .form__status.ok::before {
@@ -131,9 +159,8 @@
   height: 1em;
   margin-right: var(--space-2);
   vertical-align: -2px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%2317803d' viewBox='0 0 24 24'><path d='M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.4-1.4z'/></svg>");
-  background-repeat: no-repeat;
-  background-size: 1em 1em;
+  background-color: currentColor;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.4-1.4z'/></svg>") no-repeat center / 1em 1em;
 }
 
 .contact-form .form__consent .form__consent-label {
@@ -157,29 +184,28 @@
 }
 
 :root[data-theme="dark"] body .contact-form .form__consent a {
-  color: var(--accent-600);
+  color: var(--accent-400);
 }
 
 .contact-form .form__consent input[type="checkbox"].is-invalid {
-  outline: 2px solid #b00020;
+  outline: 2px solid var(--form-error);
   outline-offset: 2px;
 }
 
 .form__char-counter {
-  width: 90%;
-  margin: var(--space-1) auto 0;
+  margin: var(--space-1) 0 0;
   text-align: right;
   font-size: var(--fs-8);
   opacity: 0.75;
 }
 
 .form__char-counter.warn {
-  color: var(--accent-600, #b98c45);
+  color: var(--form-warn);
   opacity: 1;
 }
 
 .form__char-counter.limit {
-  color: #b00020;
+  color: var(--form-error);
   opacity: 1;
 }
 
@@ -191,23 +217,24 @@
   overflow: hidden;
 }
 
+/* The verification widget and the submit button keep the column's left edge. */
 .form__captcha-wrap {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   max-width: 100%;
-  margin: var(--space-3) auto var(--space-4);
+  margin: var(--space-3) 0 var(--space-4);
   padding: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .form__captcha-wrap > div[data-netlify-recaptcha],
 .form__captcha-wrap .g-recaptcha,
 .form__captcha-wrap iframe {
   display: inline-block;
-  margin: 0 auto;
-  transform-origin: center center;
+  margin: 0;
+  transform-origin: left center;
 }
 
 fieldset.form__group.form__captcha-wrap {
@@ -216,11 +243,11 @@ fieldset.form__group.form__captcha-wrap {
   margin: var(--space-4) 0 var(--space-5);
   background: transparent;
   box-shadow: none;
-  text-align: center;
+  text-align: left;
 }
 
 .contact-form button[type="submit"],
 .contact-form .btn[type="submit"] {
   display: block;
-  margin: var(--space-6) auto;
+  margin: var(--space-5) 0 0;
 }

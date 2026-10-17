@@ -1150,9 +1150,10 @@
       <!-- Contact form -->
       <section id="kontakt" class="contact-form__section section--divider" aria-labelledby="contact-heading">
         <h2 id="contact-heading" class="section__title">Skontaktuj się z nami!</h2>
+        <p class="contact-form__lead">Axiom to projekt demonstracyjny. Formularz służy do kontaktu z KP_Code Digital Studio w sprawie projektu lub współpracy.</p>
         <div class="contact-form__container">
           <form id="contactForm" name="contact" method="POST" action="/success.html" data-netlify="true" netlify-honeypot="trap" class="contact-form" aria-describedby="formNote formStatus">
-            <div id="errorSummary" class="visually-hidden" role="status" aria-live="assertive" aria-atomic="true"></div>
+            <div id="errorSummary" class="form__error-summary visually-hidden" role="status" aria-live="assertive" aria-atomic="true"></div>
             <a id="skipToError" class="visually-hidden-focusable" href="#errorSummary">Przejdź do pierwszego błędu</a>
             <input type="hidden" name="form-name" value="contact" />
             <div class="form__hp-field" aria-hidden="true" inert>
@@ -1211,7 +1212,7 @@
                 </span>
               </label>
             </div>
-            <p id="formNote" class="form__note">Pola powyżej są wymagane. Odpowiadamy zwykle tego samego dnia.</p>
+            <p id="formNote" class="form__note">Pola powyżej są wymagane. Podaj wyłącznie dane potrzebne do obsługi wiadomości.</p>
             <fieldset class="form__group form__captcha-wrap" data-recaptcha>
               <legend class="sr-only">Weryfikacja reCAPTCHA</legend>
               <div data-netlify-recaptcha="true"></div>

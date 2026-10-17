@@ -451,113 +451,120 @@ body.nav-open {
 
 /* Footer */
 
+/* Construction Dossier finish (IMP-DESIGN-05): a quieter, left-aligned
+   register after the closing passage. Each group opens on a sectional rule
+   with a small uppercase label; the social row and the attribution bar share
+   the same left edge. */
+
 footer {
+  --footer-rule: color-mix(in srgb, var(--text-body) 22%, transparent);
+  --footer-label: color-mix(in srgb, var(--text-body) 75%, transparent);
+  /* A deepened accent keeps focus rings at 3:1 or more on the grey footer. */
+  --footer-focus: color-mix(in srgb, var(--accent-600) 75%, #000);
   background: var(--footer-bg);
+  border-top: 1px solid var(--feature-border);
   color: var(--text-body);
 }
 
 :root[data-theme="dark"] footer {
+  --footer-focus: var(--accent-400);
   background: #0a0a0a;
 }
 
+.footer__content,
+.footer__extras,
+.footer__bottom p {
+  width: min(100% - var(--space-6), 1184px);
+  margin-inline: auto;
+}
+
 .footer__content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--section-py-lg) var(--section-px-sm) var(--space-6);
+  padding: var(--space-7) 0 var(--space-6);
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-8);
-  justify-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  text-align: left;
   content-visibility: auto;
   contain-intrinsic-size: 800px;
 }
 
 .footer__section {
-  width: 100%;
-  max-width: 560px;
-  text-align: center;
-}
-
-.footer__brand {
-  display: grid;
-  justify-items: center;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--footer-rule);
 }
 
 .footer__logo {
   display: block;
   width: auto;
-  height: 52px;
-  margin: 0 auto var(--space-3);
+  height: 44px;
+  margin: 0 0 var(--space-3);
   image-rendering: -webkit-optimize-contrast;
 }
 
 .footer__section h3 {
-  max-width: 24ch;
-  font-size: var(--fs-6);
-  position: relative;
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-8);
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+  line-height: var(--lh-heading);
+  text-transform: uppercase;
 }
 
-.footer__section h3::after {
-  content: "";
-  display: block;
-  width: 32px;
-  height: 1px;
-  margin: var(--space-2) auto;
-  background: color-mix(in srgb, var(--text-body) 20%, transparent);
+/* The brand name and descriptor stay in sentence case as the identity line. */
+.footer__brand h3 {
+  font-size: var(--fs-7);
+  letter-spacing: var(--ls-normal);
+  text-transform: none;
+  max-width: 24ch;
 }
 
 .footer__section p {
-  max-width: 24ch;
+  max-width: 36ch;
+  margin: 0;
   font-size: var(--fs-7);
 }
 
 .footer__section ul {
   list-style: none;
-  margin: var(--space-4) 0;
+  margin: 0;
   padding: 0;
 }
 
 .footer__section li {
-  margin: var(--space-2) 0;
+  margin: 0 0 var(--space-2);
   line-height: var(--lh-body);
-  font-size: var(--fs-8);
+  font-size: var(--fs-7);
 }
 
-.footer__contact-info p {
-  margin: var(--space-5) auto;
-  max-width: 26ch;
+.footer__contact-info {
   font-style: normal;
 }
 
+.footer__contact-info p {
+  margin: 0 0 var(--space-4);
+}
+
 .footer__contact-info strong {
-  color: var(--text-muted);
+  color: var(--footer-label);
   text-transform: uppercase;
-  font-size: var(--fs-8);
-  letter-spacing: var(--ls-wide);
+  font-size: var(--fs-9-micro);
+  letter-spacing: var(--ls-wider);
 }
 
 .footer__extras {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--section-px-sm) var(--space-6);
-  display: grid;
-  justify-items: center;
-  gap: var(--space-6);
+  padding: var(--space-4) 0 var(--space-6);
+  border-top: 1px solid var(--footer-rule);
 }
 
-.footer__extras::before {
-  content: "";
-  width: min(260px, 60%);
-  height: 1px;
-  background: color-mix(in srgb, var(--text-body) 15%, transparent);
-}
-
+/* The negative start margin lets the first icon's glyph, not its 44px
+   target, meet the shared left edge. */
 .footer__social {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
+  margin-inline-start: calc((22px - 44px) / 2);
 }
 
 /* Every link keeps the same 44px pointer target around a 22px glyph, so the
@@ -584,7 +591,7 @@ footer {
 }
 
 .footer__social-link:focus-visible {
-  outline: 2px solid var(--accent-400);
+  outline: 2px solid var(--footer-focus);
   outline-offset: 3px;
 }
 
@@ -630,7 +637,7 @@ footer a:not(.footer__social-link):focus-visible::after {
 }
 
 footer a:not(.footer__social-link):focus-visible {
-  outline: 3px solid var(--accent-400);
+  outline: 3px solid var(--footer-focus);
   outline-offset: 3px;
 }
 
@@ -646,17 +653,14 @@ footer a[href^="mailto:"]:visited {
 }
 
 footer a[href^="tel:"]:hover,
-footer a[href^="tel:"]:focus-visible,
-footer a[href^="mailto:"]:hover,
-footer a[href^="mailto:"]:focus-visible {
+footer a[href^="mailto:"]:hover {
   text-decoration: none;
-  outline: none;
 }
 
 .footer__bottom {
   border-top: 1px solid color-mix(in srgb, var(--text-body) 15%, transparent);
-  padding: var(--space-2);
-  text-align: center;
+  padding: var(--space-2) 0;
+  text-align: left;
   background: #1a1a1a;
   content-visibility: auto;
   contain-intrinsic-size: 80px;
@@ -674,27 +678,43 @@ footer a[href^="mailto:"]:focus-visible {
   }
 }
 
+/* Two columns pair the link lists; the brand and contact groups span the
+   row. */
+@media (min-width: 360px) {
+  .footer__content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+  .footer__brand,
+  .footer__contact {
+    grid-column: 1 / -1;
+  }
+}
+
+/* On tablets the contact details follow the same two columns. */
+@media (min-width: 600px) {
+  .footer__contact-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+}
+
 @media (min-width: 900px) {
+  .footer__contact-info {
+    display: block;
+  }
   .footer__content {
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     align-items: start;
-    text-align: center;
-    gap: var(--space-4);
   }
-  .footer__section h3 {
-    font-size: var(--fs-7);
+  .footer__brand,
+  .footer__contact {
+    grid-column: auto;
   }
-  .footer__section h3::after {
-    margin: var(--space-2) auto 0;
-  }
-  .footer__section p {
+  .footer__section p,
+  .footer__section li {
     font-size: var(--fs-8);
-  }
-  .footer__brand {
-    justify-items: start;
-  }
-  .footer__extras {
-    gap: var(--space-4);
   }
   .footer__social {
     gap: var(--space-3);
