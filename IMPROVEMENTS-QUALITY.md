@@ -49,13 +49,9 @@ One existing check was executed: `node tools/qa/check-references.mjs` passed, ch
 
 ### IMP-QUALITY-05 — Verify continuity when browser storage operations fail
 
-- **Affected area:** Existing best-effort persistence boundary for message drafts and the project-information/cookie modal.
-- **Evidence:** `js/utils/storage.js:1-19`; `js/components/forms.js:60-69`, `js/components/forms.js:173-177`; `js/components/cookies.js` — `initCookieBanner` and `save`; `tests/contact-form.test.js` — `contact form draft persistence`; `tests/cookies.test.js` — `cookie modal acceptance`.
-- **Current implementation:** Shared wrappers catch storage read, write and removal exceptions; reads return null. The form and modal use these wrappers, but existing tests exercise functioning localStorage rather than throwing operations. Modal acceptance also writes a separate cookie before dismissing and restoring focus.
-- **Proposed improvement:** Add narrowly targeted failure-injection cases proving that optional persistence does not interrupt the existing interactions.
-- **Expected quality value:** Preserve usable form and modal behavior when browser storage is denied or cannot accept writes, and protect the deliberate exception boundary from regression.
-- **Implementation scope:** Use the existing Vitest mocking facilities to make storage methods throw. Test the wrappers and representative form/modal outcomes without changing persistence formats, adding retries, promising unavailable persistence or changing consent semantics. Keep these cases separate from the normal-storage production POST tests in IMP-QUALITY-01.
-- **Acceptance criteria:** Throwing reads return null without aborting form/modal initialization; throwing writes do not interrupt typing, counter updates or modal acceptance. Modal acceptance still dismisses the dialog and restores scrolling/focus when localStorage writes fail. A throwing removal does not prevent the local success state and form reset; no assertion claims that the inaccessible draft was deleted. Restore all storage spies before cleanup.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added eight failure-injection tests exercising the real storage wrappers, form and modal: read/write/removal exceptions preserve initialization, typing and counters, local submission success/reset without native fallback, and modal acceptance with cookie writing and scroll/focus restoration. Storage spies are restored before cleanup; runtime behavior, persistence formats and consent semantics remain unchanged.
+- **Verification:** Focused Vitest suites: 25 passed, 0 failed (storage: 3, contact form: 14, cookie modal: 8); focused ESLint and `git diff --check` passed. Vitest required a workspace-local temporary directory after a sandbox EPERM error before test execution; jsdom checks do not establish real-browser storage behavior, successful persistence/deletion under failure, or production network submission.
 - **Impact:** Medium
 - **Effort:** Small
 

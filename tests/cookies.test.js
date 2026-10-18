@@ -167,3 +167,44 @@ describe("cookie modal acceptance", () => {
     expect(document.activeElement).toBe(pageControl);
   });
 });
+
+describe("cookie modal storage failures", () => {
+  it("opens, locks scrolling and focuses acceptance when reading storage throws", () => {
+    const getItem = vi.spyOn(Object.getPrototypeOf(localStorage), "getItem").mockImplementation(() => {
+      throw new Error("Storage read denied");
+    });
+
+    expect(() => mountCookieBanner()).not.toThrow();
+
+    const banner = document.querySelector("#cookieBanner");
+    expect(getItem).toHaveBeenCalledExactlyOnceWith(COOKIE_BANNER.storageKey);
+    expect(banner.hidden).toBe(false);
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(document.activeElement).toBe(document.querySelector("#pageControl"));
+
+    flushAnimationFrames();
+
+    expect(document.activeElement).toBe(banner.querySelector("#cookieAccept"));
+  });
+
+  it("writes the cookie, dismisses and restores scrolling and focus when saving consent throws", () => {
+    document.body.style.overflow = "clip";
+    const { banner, pageControl } = mountCookieBanner();
+    flushAnimationFrames();
+    const acceptButton = banner.querySelector("#cookieAccept");
+    expect(document.activeElement).toBe(acceptButton);
+    expect(document.body.style.overflow).toBe("hidden");
+    const setItem = vi.spyOn(Object.getPrototypeOf(localStorage), "setItem").mockImplementation(() => {
+      throw new Error("Storage write denied");
+    });
+
+    expect(() => acceptButton.click()).not.toThrow();
+
+    expect(setItem).toHaveBeenCalledExactlyOnceWith(COOKIE_BANNER.storageKey, expect.any(String));
+    expect(document.querySelector("#cookieBanner")).toBeNull();
+    expect(banner.isConnected).toBe(false);
+    expect(document.body.style.overflow).toBe("clip");
+    expect(document.activeElement).toBe(pageControl);
+    expect(document.cookie).toContain(`${COOKIE_BANNER.cookieName}=accepted`);
+  });
+});

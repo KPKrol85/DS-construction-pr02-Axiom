@@ -256,3 +256,82 @@ describe("contact form draft persistence", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
+
+describe("contact form storage failures", () => {
+  it("initialises and keeps the message and counter usable when reading a draft throws", () => {
+    const getItem = vi.spyOn(Object.getPrototypeOf(localStorage), "getItem").mockImplementation(() => {
+      throw new Error("Storage read denied");
+    });
+
+    expect(() => mountForm()).not.toThrow();
+
+    const message = document.querySelector("#message");
+    const counter = document.querySelector("#messageCounter");
+    expect(getItem).toHaveBeenCalledExactlyOnceWith(CONTACT_FORM.messageStorageKey);
+    expect(message.value).toBe("");
+    expect(counter.textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+
+    expect(() => typeInto(message, "Nowa wiadomość")).not.toThrow();
+
+    expect(message.value).toBe("Nowa wiadomość");
+    expect(counter.textContent).toBe(`${message.value.length}/${CONTACT_FORM.maxMessageLength}`);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("keeps typed content and updates the counter when saving a draft throws", () => {
+    const form = mountForm();
+    const message = form.querySelector("#message");
+    const counter = form.querySelector("#messageCounter");
+    const setItem = vi.spyOn(Object.getPrototypeOf(localStorage), "setItem").mockImplementation(() => {
+      throw new Error("Storage write denied");
+    });
+
+    for (const value of ["Szkic", "Szkic wiadomości"]) {
+      expect(() => typeInto(message, value)).not.toThrow();
+      expect(message.value).toBe(value);
+      expect(counter.textContent).toBe(`${value.length}/${CONTACT_FORM.maxMessageLength}`);
+      expect(setItem).toHaveBeenLastCalledWith(CONTACT_FORM.messageStorageKey, value);
+    }
+    expect(setItem).toHaveBeenCalledTimes(2);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("resets the form and shows local submission success when removing the draft throws", async () => {
+    vi.useFakeTimers();
+    localStorage.setItem(CONTACT_FORM.messageStorageKey, "Wcześniejszy szkic");
+    const form = mountForm();
+    fillValidForm(form);
+    typeInto(form.querySelector("#message"), form.querySelector("#message").value);
+    const status = form.querySelector("#formStatus");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const requestSubmit = vi.spyOn(form, "requestSubmit").mockImplementation(() => {});
+    const removeItem = vi.spyOn(Object.getPrototypeOf(localStorage), "removeItem").mockImplementation(() => {
+      throw new Error("Storage removal denied");
+    });
+
+    expect(submitForm(form).defaultPrevented).toBe(true);
+    await vi.advanceTimersByTimeAsync(499);
+    expect(form.getAttribute("aria-busy")).toBe("true");
+    expect(form.querySelector("#message").value).not.toBe("");
+    expect(removeItem).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(1);
+
+    expect(removeItem).toHaveBeenCalledExactlyOnceWith(CONTACT_FORM.messageStorageKey);
+    CONTACT_FORM.requiredFields.forEach((id) => {
+      expect(form.querySelector(`#${id}`).value).toBe("");
+    });
+    expect(form.querySelector("#consent").checked).toBe(false);
+    expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.getAttribute("aria-busy")).toBe("false");
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(status.classList.contains("ok")).toBe(true);
+    expect(status.classList.contains("err")).toBe(false);
+    expect(submitBtn.classList.contains("sending")).toBe(false);
+    expect(submitBtn.classList.contains("sent")).toBe(true);
+    expect(submitBtn.textContent).toBe("Wysłano ✓");
+    expect(submitBtn.disabled).toBe(true);
+    expect(requestSubmit).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
