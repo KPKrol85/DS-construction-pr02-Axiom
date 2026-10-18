@@ -17,13 +17,9 @@ One existing check was executed: `node tools/qa/check-references.mjs` passed, ch
 
 ### IMP-QUALITY-01 — Protect production contact submission and native fallback
 
-- **Affected area:** Contact-form POST lifecycle and recovery from an unsuccessful enhanced submission.
-- **Evidence:** `js/components/forms.js:82-90`, `js/components/forms.js:152-204`; `vitest.config.mjs:8-14`; `tests/contact-form.test.js:235-257`; `index.html:1155-1162`, `index.html:1216-1218`.
-- **Current implementation:** Outside localhost, the form sends URL-encoded data to `/`, resets fields and removes the message draft after an OK response, and calls `requestSubmit()` after a rejected request or non-OK response. The configured jsdom URL selects the local timer simulation; the existing success test explicitly expects no fetch call.
-- **Proposed improvement:** Add a focused mocked production-host suite for the existing POST and fallback behavior.
-- **Expected quality value:** Catch changes that break submission encoding, clear a draft before acknowledgement, or recursively intercept the native fallback, without sending a real inquiry.
-- **Implementation scope:** Use a separate test file with a non-local jsdom URL, the real form module, controlled fetch promises and intercepted native submission. Preserve the existing local tests, Netlify fields, action, reCAPTCHA markup and runtime implementation; add no backend or dependency.
-- **Acceptance criteria:** Assert POST method, content type and decoded payload including `form-name`; a second submit while pending causes no additional request; OK completion resets the form and removes the draft. Rejection and non-OK completion each preserve entered data and the draft, restore the button, and request native submission once; the fallback submit event is not intercepted again. All network and navigation are intercepted and test state is restored.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added an isolated production-host suite exercising the real contact-form module: encoded POST payload, pending-request guard, reset and draft removal after acknowledgement, and success UI timing. Network rejection and non-OK responses preserve fields and the draft, restore controls, allow exactly one native fallback without recursive fetches, and permit a subsequent enhanced retry; runtime and Netlify contracts remain unchanged.
+- **Verification:** The new suite (3 tests) and existing contact-form suite (11 tests) passed together: 14 passed, 0 failed; focused ESLint passed. Vitest required a workspace-local temporary directory after a sandbox EPERM error; all fetches and native submissions were intercepted, so live Netlify delivery, reCAPTCHA and browser navigation remain unverified.
 - **Impact:** High
 - **Effort:** Medium
 
