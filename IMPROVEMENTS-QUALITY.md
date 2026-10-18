@@ -41,13 +41,9 @@ One existing check was executed: `node tools/qa/check-references.mjs` passed, ch
 
 ### IMP-QUALITY-04 — Protect theme initialization and synchronized controls
 
-- **Affected area:** Light/dark/system theme selection across the early initializer and interactive module.
-- **Evidence:** `js/theme-init.js:1-11`; `js/components/theme.js:5-44`; `js/core/init.js` — `initApp`; `tests/` — no theme suite.
-- **Current implementation:** The early script selects a stored light/dark preference or the system preference. The interactive module also selects the theme, updates theme-aware logos and button ARIA state, saves explicit toggles, and subscribes to system changes when no saved value exists at initialization. Current component tests do not exercise these contracts.
-- **Proposed improvement:** Add a focused theme-state suite covering initialization agreement and observable control synchronization.
-- **Expected quality value:** Detect divergence between early and interactive selection or stale logos and accessible button states after theme changes.
-- **Implementation scope:** Execute the real initializer and module using controlled storage, a minimal logo/button fixture and a mock media query. Preserve storage key `theme`, existing preference semantics, relative logo URLs and Polish accessible labels; do not redesign theme ownership or controls.
-- **Acceptance criteria:** Stored light and dark preferences override an opposing system preference in both initialization stages. With no saved preference, both stages select the mocked system theme; a system change updates the interactive state before any manual selection. Button activation updates `data-theme`, both logo sources, `aria-pressed`, the action label and stored preference consistently. Initialization does not persist a system-derived choice. Media listeners, storage and root attributes are restored between cases.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added an isolated Vitest/jsdom suite executing both real theme initialization stages, covering stored-preference precedence and system changes through modern and legacy media-query APIs without persistence. Manual toggles synchronize the root theme, both relative logo URLs, Polish ARIA action labels, pressed state and stored preference; production behavior remains unchanged.
+- **Verification:** Focused Vitest suite: 8 passed, 0 failed; focused ESLint and `git diff --check` passed. Vitest required a workspace-local temporary directory after a sandbox EPERM error before test execution; jsdom checks do not verify visual appearance, FOUC, real operating-system or cross-browser behavior, or WCAG compliance.
 - **Impact:** Medium
 - **Effort:** Small
 
