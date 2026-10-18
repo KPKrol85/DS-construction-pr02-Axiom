@@ -33,13 +33,9 @@ One existing check was executed: `node tools/qa/check-references.mjs` passed, ch
 
 ### IMP-QUALITY-03 — Validate accessibility references in maintained HTML
 
-- **Affected area:** Document-owned ID relationships for labels, section names, descriptions and navigation controls.
-- **Evidence:** `index.html:306`, `index.html:1107`, `index.html:1155-1223`, `index.html:1347`; `tools/qa/check-references.mjs:161-181` and `tools/qa/check-references.mjs:407-415`; `tests/contact-form.test.js` — `FORM_FIXTURE`; `tests/navigation.test.js` — `NAVIGATION_FIXTURE`.
-- **Current implementation:** Maintained pages contain explicit label and ARIA ID references. Component tests use copied minimal markup. The reference validator checks URL-bearing attributes, skips fragment-only links and does not validate document IDs or ARIA relationships; the archived audit records a one-time DOM inspection, not a maintained assertion.
-- **Proposed improvement:** Add one source-document integrity suite that parses the 15 canonical HTML pages with the existing jsdom tooling.
-- **Expected quality value:** Catch markup edits that disconnect accessible names or controls while component fixtures and file-path checks continue to pass.
-- **Implementation scope:** Read root, `services/` and `legal/` pages directly; exclude generated output and templates. Check only unique IDs and resolution of explicit `label[for]`, `aria-labelledby`, `aria-describedby` and `aria-controls` references. Keep the current component suites and reference validator intact; add no accessibility framework.
-- **Acceptance criteria:** Every maintained page is included; duplicate IDs and unresolved reference tokens fail with the page path, attribute and offending ID. Space-separated ARIA references are checked individually. A deliberately invalid in-memory document demonstrates each diagnostic without modifying project HTML. Passing establishes reference integrity only, not accessible-name quality or WCAG conformance.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added a Vitest/jsdom suite reading all 15 canonical source pages independently, with an explicit inventory checked against root, services and legal HTML files. It detects duplicate non-empty IDs and unresolved label[for], aria-labelledby, aria-describedby and aria-controls tokens; in-memory cases verify diagnostics and document isolation without changing application sources or existing validators.
+- **Verification:** Focused Vitest suite: 26 passed, 0 failed across all 15 source pages and diagnostic cases; focused ESLint and `git diff --check` passed. Parsing executes no page scripts or external resource requests; this verifies reference integrity only, not accessible-name quality, browser behavior or WCAG conformance.
 - **Impact:** Medium
 - **Effort:** Small
 
