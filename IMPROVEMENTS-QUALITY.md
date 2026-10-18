@@ -25,13 +25,9 @@ One existing check was executed: `node tools/qa/check-references.mjs` passed, ch
 
 ### IMP-QUALITY-02 — Protect the service worker's document fallback order
 
-- **Affected area:** Existing network-first document responses and offline fallback selection.
-- **Evidence:** `sw.template.js:27-42`; `tools/qa/check-references.mjs` — `collectPrecacheReferences` and `checkGeneratedRelease`; `vitest.config.mjs:16`; current `tests/` contains only contact-form, lightbox, navigation and cookie suites.
-- **Current implementation:** Same-origin GET document requests use the network, copy status-200 responses into the HTML cache, and fall back after a network rejection to the requested cached document, then `offline.html`, then `index.html`. Reference checks inspect paths and generated precache declarations, not responses from this handler.
-- **Proposed improvement:** Add a small isolated test of document response selection using the canonical worker template.
-- **Expected quality value:** Detect regressions that bypass an available cached page or select the wrong offline fallback despite valid asset references.
-- **Implementation scope:** In the existing Vitest runner, evaluate `sw.template.js` in an isolated worker-like context with in-memory placeholder substitution and mocked `self`, fetch and Cache Storage. Limit assertions to the document branch; preserve cache names, strategies and generator ownership. Do not generate or edit either `sw.js`, add browser tooling, or extend this into a worker lifecycle campaign.
-- **Acceptance criteria:** A successful network response is returned and a status-200 response is copied to the HTML cache; a non-200 response is returned without that write. On network rejection, assert requested-page precedence, offline-page fallback, and final index fallback using controlled cache availability. Tests use no real network or browser cache and execute the template's handler rather than a copied implementation.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added an isolated Node VM suite executing the canonical worker template with in-memory placeholder substitution and mocked network/cache APIs. It protects network-first document responses, asynchronous storage of a cloned HTTP 200 response in the revision-specific HTML cache, non-200 responses without cache writes, and requested-document → offline → index fallback precedence; runtime and generated outputs remain unchanged.
+- **Verification:** Focused Vitest suite: 5 passed, 0 failed; focused ESLint and `git diff --check` passed. Vitest required a workspace-local temporary directory after a sandbox EPERM error before test execution; mocked tests do not verify browser offline navigation, worker lifecycle or production PWA behavior.
 - **Impact:** Medium
 - **Effort:** Medium
 
