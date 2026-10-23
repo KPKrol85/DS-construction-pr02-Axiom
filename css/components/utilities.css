@@ -196,14 +196,8 @@ body.nav-open .scroll-top {
 
 /* interactions */
 
-.testimonials__card,
 .gallery__item {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-.testimonials__card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
 }
 
 #uslugi,

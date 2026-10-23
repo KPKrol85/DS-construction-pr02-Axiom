@@ -12,60 +12,51 @@
   padding: 0 var(--space-1);
 }
 
+/* Construction Dossier quotations (IMP-UI-02): flat, ruled entries that fill
+   their grid column. The testimonials are not interactive, so they carry no
+   raised card or hover lift. */
+
 .testimonials__container {
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
   margin: var(--space-6) auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--space-4);
+  gap: 0 var(--space-6);
+  text-align: left;
+  border-bottom: 1px solid var(--dossier-rule);
 }
 
 .testimonials__card {
-  background: var(--surface-1);
-  padding: var(--space-6);
-  margin: 0 auto;
-  border-radius: var(--radius-2);
-  box-shadow: 0 4px 10px color-mix(in srgb, black 12%, transparent);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  max-width: 320px;
-}
-
-.testimonials__card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 18px color-mix(in srgb, black 18%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--dossier-rule);
 }
 
 .testimonials__quote {
-  font-size: var(--fs-7);
+  margin: 0;
+  font-size: 1rem;
   font-style: italic;
   color: var(--text-body);
   line-height: var(--lh-body);
-  letter-spacing: var(--ls-wide);
-  max-width: 32ch;
-  opacity: 0.9;
-  margin: 0 auto;
 }
 
-.form__client-info h3 {
-  margin: var(--space-5);
+/* The attribution closes each entry, so names align across a row. */
+.testimonials__attribution {
+  margin-top: auto;
+}
+
+.testimonials__attribution h3 {
+  margin: 0;
   font-size: var(--fs-6);
   color: var(--text-title);
 }
 
-.form__client-info p {
-  color: var(--text-muted);
+.testimonials__attribution p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-body);
   font-size: var(--fs-8);
   font-weight: bold;
   letter-spacing: var(--ls-wider);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .testimonials__card {
-    transition: none;
-  }
-  .testimonials__card:hover {
-    transform: none;
-    box-shadow: 0 4px 10px color-mix(in srgb, black 12%, transparent);
-  }
 }

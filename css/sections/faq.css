@@ -13,26 +13,22 @@
   text-align: center;
 }
 
+/* Construction Dossier question register (IMP-UI-02): the questions read as
+   ruled entries in one left-aligned column under the centred title, without
+   raised cards or hover lift. */
+
 .faq__list {
+  --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
   max-width: 700px;
   margin: var(--space-6) auto;
   display: grid;
-  gap: var(--space-4);
+  gap: 0;
   text-align: left;
+  border-bottom: 1px solid var(--dossier-rule);
 }
 
 .faq__item {
-  background: var(--feature-surface);
-  border: 1px solid var(--feature-border);
-  border-radius: var(--radius-2);
-  box-shadow: 0 2px 8px var(--feature-shadow);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.22s ease,
-    border-color 0.22s ease,
-    background 0.22s ease;
-  overflow: clip;
-  will-change: transform;
+  border-top: 1px solid var(--dossier-rule);
 }
 
 .faq__question {
@@ -40,7 +36,7 @@
   box-sizing: border-box;
   list-style: none;
   cursor: pointer;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-4) var(--space-7) var(--space-4) var(--space-3);
   min-height: 48px;
   display: flex;
   align-items: center;
@@ -60,76 +56,60 @@
   display: none;
 }
 
+/* The drawn plus becomes a minus while the answer is open. Both bars are
+   borders in the theme accent, so the indicator follows the active theme. */
+.faq__question::before,
 .faq__question::after {
-  content: "▾";
+  content: "";
   position: absolute;
   top: 50%;
-  right: var(--space-2);
-  display: block;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1f5fa8;
-  transform: translateY(-50%);
-  opacity: 1;
-  z-index: 2;
+  color: var(--feature-accent);
   pointer-events: none;
-  transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
-/* The item clips its overflow, so the ring is drawn inside the question. */
+.faq__question::before {
+  right: var(--space-4);
+  width: 14px;
+  margin-top: -1px;
+  border-top: 2px solid currentColor;
+}
+
+.faq__question::after {
+  right: calc(var(--space-4) + 6px);
+  height: 14px;
+  margin-top: -7px;
+  border-left: 2px solid currentColor;
+}
+
+/* The ring is drawn inside the question, so it stays within the entry and
+   clear of the rules above and below it. */
 .faq__question:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: calc(-1 * var(--focus-ring-width));
   border-radius: var(--radius-2);
 }
 
-.faq__item:hover .faq__question,
-.faq__item:focus-within .faq__question {
+.faq__question:is(:hover, :focus-visible) {
   color: var(--feature-accent);
 }
 
-.faq__item:hover .faq__question::after,
-.faq__item:focus-within .faq__question::after {
-  opacity: 1;
-}
-
+/* An open entry carries the accent on its rule as well as the minus. */
 .faq__item[open] {
-  border-color: color-mix(in srgb, var(--feature-accent) 45%, transparent);
-  box-shadow: 0 10px 22px var(--feature-shadow);
-  background: var(--feature-hover-bg);
+  border-top-color: var(--feature-accent);
 }
 
 .faq__item[open] .faq__question::after {
-  content: "▴";
+  visibility: hidden;
 }
 
 .faq__answer {
-  padding: var(--space-2) var(--space-4);
-  background: transparent;
-  border: 0;
-  color: var(--text-mute);
-  font-size: var(--fs-8);
-  letter-spacing: var(--ls-wide);
-  margin: 0  auto;
+  padding: 0 var(--space-3) var(--space-4);
+  color: var(--text-body);
+  font-size: 1rem;
+  line-height: var(--lh-body);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .faq__item:hover,
-  .faq__item:focus-within {
-    transform: translateY(-2px);
-    border-color: color-mix(in srgb, var(--feature-accent) 45%, transparent);
-    box-shadow: 0 8px 22px var(--feature-shadow);
-    background: var(--feature-hover-bg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .faq__item,
-  .faq__question::after {
-    transition: none;
-  }
+.faq__answer p {
+  max-width: 60ch;
+  margin: 0;
 }
