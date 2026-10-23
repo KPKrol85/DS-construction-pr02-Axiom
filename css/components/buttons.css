@@ -72,9 +72,7 @@
 }
 
 .btn-primary:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .btn-primary:active {
@@ -105,11 +103,6 @@ a.btn-primary:focus-visible {
   background: color-mix(in srgb, currentColor 10%, transparent);
 }
 
-.btn-secondary:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
-}
-
 /* btn-ghost */
 
 .btn-ghost {
@@ -132,9 +125,7 @@ a.btn-primary:focus-visible {
 }
 
 .btn-ghost:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .btn-ghost:active {

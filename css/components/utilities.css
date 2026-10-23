@@ -168,9 +168,11 @@ footer .footer__section li[aria-current="page"] {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
 }
 
+/* The control floats over light sections and the dark footer bar alike, so,
+   like the lightbox controls, it uses the overlay ring and band. */
 .scroll-top:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 4px;
+  --focus-ring-color: var(--focus-ring-overlay-color);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-overlay-band);
 }
 
 .scroll-top:active {
@@ -223,12 +225,6 @@ body.nav-open .scroll-top {
     color 0.22s ease;
   will-change: transform;
   pointer-events: auto;
-}
-
-:where(.features__item, .about__highlights > li, .interactive-card):not(.no-interaction) :is(a, button):focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
-  border-radius: 8px;
 }
 
 :where(.features__item, .about__highlights > li, .interactive-card):not(.no-interaction):hover {

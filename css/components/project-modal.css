@@ -47,11 +47,6 @@
   color: var(--text-link);
 }
 
-.project-modal__text a:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 2px;
-}
-
 .project-modal__links {
   margin: var(--space-2) 0 0;
   display: flex;
@@ -68,11 +63,6 @@
 .project-modal__links a:hover,
 .project-modal__links a:focus-visible {
   color: var(--text-link);
-}
-
-.project-modal__links a:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 2px;
 }
 
 .project-modal__actions {

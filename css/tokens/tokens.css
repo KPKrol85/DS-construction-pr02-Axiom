@@ -37,6 +37,17 @@
   --feature-shadow: color-mix(in srgb, var(--primary) 12%, transparent);
   --feature-hover-bg: color-mix(in srgb, var(--surface-1) 96%, var(--primary-400) 4%);
 
+  /* focus ring: the deepened accent keeps 3:1 or more on every light surface,
+     including the grey sections where --accent-600 alone does not */
+  --focus-ring-color: color-mix(in srgb, var(--accent-600) 75%, #000);
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  /* Controls floating over photographs or mixed surfaces pair a light ring
+     with a black band in the offset gap; 11:1 apart, one of the two keeps
+     3:1 or more against any colour beneath. */
+  --focus-ring-overlay-color: color-mix(in srgb, var(--accent-400) 70%, white);
+  --focus-ring-overlay-band: #000;
+
   /* typography */
   --fs-1: clamp(3rem, 2rem + 4vw, 4rem);
   --fs-2: clamp(2.2rem, 1.4rem + 3vw, 3.2rem);
@@ -122,6 +133,9 @@
   --feature-accent: var(--accent);
   --feature-shadow: color-mix(in srgb, var(--text-body) 10%, transparent);
   --feature-hover-bg: color-mix(in srgb, var(--surface-2) 94%, var(--feature-accent) 6%);
+
+  /* focus ring */
+  --focus-ring-color: var(--accent-400);
 }
 
 /* Each weight is split into the upstream Google Fonts "latin-ext" and "latin"

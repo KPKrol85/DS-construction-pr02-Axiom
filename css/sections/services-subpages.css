@@ -212,16 +212,6 @@
   margin: 0;
 }
 
-/* The darker accent keeps the focus ring at 3:1 or more on the light
-   surface. */
-.cta .btn:focus-visible {
-  outline-color: var(--accent-600);
-}
-
-:root[data-theme="dark"] body .cta .btn:focus-visible {
-  outline-color: var(--accent-400);
-}
-
 @media (min-width: 1024px) {
   .service-intro__inner {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);

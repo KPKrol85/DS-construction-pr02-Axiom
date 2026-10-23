@@ -65,9 +65,9 @@ body {
   color: var(--text-body);
 }
 
-:where(a, button, [role="button"], .btn):focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
+:where(a, button, input, select, textarea, summary, [role="button"], [tabindex]:not([tabindex="-1"]), .btn):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 body {

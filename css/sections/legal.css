@@ -56,11 +56,6 @@
   color: var(--text-link);
 }
 
-.legal__lead a:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 2px;
-}
-
 .legal__toc {
   max-width: 34rem;
   margin: var(--space-6) auto;
@@ -94,11 +89,6 @@
 .legal__toc a:hover,
 .legal__toc a:focus-visible {
   color: var(--text-link);
-}
-
-.legal__toc a:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 2px;
 }
 
 .legal__content :is(h2, h3) {
@@ -141,11 +131,6 @@
   color: var(--text-link);
 }
 
-.legal__back-link:focus-visible {
-  outline: 2px solid var(--accent-400);
-  outline-offset: 2px;
-}
-
 .legal__content p {
   margin: var(--space-4) 0;
   font-size: var(--fs-7);
@@ -184,11 +169,6 @@
   background: var(--surface-1);
   border: 1px solid var(--feature-border);
   border-radius: var(--radius-2);
-}
-
-.legal__table-wrap:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
 }
 
 .legal__table {
@@ -290,8 +270,6 @@
 .career__form input:focus-visible,
 .career__form textarea:focus-visible {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent);
-  outline: none;
 }
 
 .career__form .checkbox {

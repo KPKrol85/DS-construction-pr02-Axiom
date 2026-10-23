@@ -72,17 +72,6 @@
   border-color: color-mix(in srgb, var(--feature-accent) 60%, transparent);
 }
 
-/* A deepened accent keeps the ring at 3:1 or more on the grey light-theme
-   section, where --accent-600 alone does not. */
-.gallery__link:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent-600) 75%, #000);
-  outline-offset: 4px;
-}
-
-:root[data-theme="dark"] .gallery__link:focus-visible {
-  outline-color: var(--accent-400);
-}
-
 .gallery__caption {
   margin-top: var(--space-3);
   color: var(--text-body);
@@ -207,7 +196,6 @@
   background: color-mix(in srgb, #000 25%, transparent);
   color: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
-  outline-offset: 2px;
 }
 
 .lb__prev {
@@ -221,11 +209,6 @@
 .lb__prev:hover,
 .lb__next:hover {
   background: color-mix(in srgb, #000 65%, transparent);
-}
-
-.lb__prev:focus-visible,
-.lb__next:focus-visible {
-  outline: 2px solid var(--accent-400);
 }
 
 .lb:fullscreen .lb__prev,
@@ -261,7 +244,6 @@
   background: color-mix(in srgb, #000 25%, transparent);
   color: #fff;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
-  outline-offset: 2px;
   z-index: 10000;
 }
 
@@ -270,9 +252,15 @@
   background: color-mix(in srgb, #000 65%, transparent);
 }
 
+/* The lightbox looks the same in both themes and its controls sit over the
+   photograph, so they use the overlay ring and band, which stay distinct
+   from any part of the image beneath. */
+.lb__prev:focus-visible,
+.lb__next:focus-visible,
 .lb__close:focus-visible,
 .lb__fs:focus-visible {
-  outline: 2px solid var(--accent-400);
+  --focus-ring-color: var(--focus-ring-overlay-color);
+  box-shadow: 0 0 0 var(--focus-ring-offset) var(--focus-ring-overlay-band);
 }
 
 .lb__close {

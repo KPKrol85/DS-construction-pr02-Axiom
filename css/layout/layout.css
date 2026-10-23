@@ -123,11 +123,6 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
-.theme-toggle:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent-400) 70%, white);
-  outline-offset: 2px;
-}
-
 /* sun & moon */
 
 .theme-toggle__icon--sun,
@@ -176,6 +171,12 @@
   color: inherit;
   position: relative;
   z-index: 5;
+}
+
+/* `all: unset` above also clears the shared focus ring, so it is restored. */
+.nav-toggle:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* hambyurger */
@@ -306,7 +307,6 @@ html.js .site-nav.mobile-open {
   border-radius: var(--space-2);
   position: relative;
   font-size: var(--fs-7);
-  outline-offset: 3px;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
@@ -325,10 +325,6 @@ html.js .site-nav.mobile-open {
 
 .site-nav__link:hover {
   background: color-mix(in srgb, var(--primary) 12%, transparent);
-}
-
-.site-nav__link:focus-visible {
-  outline: 3px solid var(--accent);
 }
 
 .site-nav__item > .site-nav__link.active,
@@ -459,15 +455,12 @@ body.nav-open {
 footer {
   --footer-rule: color-mix(in srgb, var(--text-body) 22%, transparent);
   --footer-label: color-mix(in srgb, var(--text-body) 75%, transparent);
-  /* A deepened accent keeps focus rings at 3:1 or more on the grey footer. */
-  --footer-focus: color-mix(in srgb, var(--accent-600) 75%, #000);
   background: var(--footer-bg);
   border-top: 1px solid var(--feature-border);
   color: var(--text-body);
 }
 
 :root[data-theme="dark"] footer {
-  --footer-focus: var(--accent-400);
   background: #0a0a0a;
 }
 
@@ -486,6 +479,9 @@ footer {
   text-align: left;
   content-visibility: auto;
   contain-intrinsic-size: 800px;
+  /* Paint containment would otherwise clip the focus ring of links on the
+     column's outer edge; the margin leaves room for the whole ring. */
+  overflow-clip-margin: var(--space-2);
 }
 
 .footer__section {
@@ -590,11 +586,6 @@ footer {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-.footer__social-link:focus-visible {
-  outline: 2px solid var(--footer-focus);
-  outline-offset: 3px;
-}
-
 .footer__social-icon {
   width: 22px;
   height: 22px;
@@ -634,11 +625,6 @@ footer a:not(.footer__social-link)::after {
 footer a:not(.footer__social-link):hover::after,
 footer a:not(.footer__social-link):focus-visible::after {
   transform: scaleX(1);
-}
-
-footer a:not(.footer__social-link):focus-visible {
-  outline: 3px solid var(--footer-focus);
-  outline-offset: 3px;
 }
 
 footer a[href^="tel:"],

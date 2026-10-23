@@ -80,9 +80,10 @@
   transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
+/* The item clips its overflow, so the ring is drawn inside the question. */
 .faq__question:focus-visible {
-  outline: 3px solid var(--accent-400);
-  outline-offset: 3px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: calc(-1 * var(--focus-ring-width));
   border-radius: var(--radius-2);
 }
 

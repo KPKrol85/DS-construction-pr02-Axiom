@@ -9,7 +9,6 @@
 .contact-form__section {
   --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
   --field-border: color-mix(in srgb, var(--text-body) 55%, transparent);
-  --field-focus: var(--accent-600);
   --form-error: #b00020;
   --form-success: #136b33;
   --form-warn: #a04a12;
@@ -21,7 +20,6 @@
 }
 
 :root[data-theme="dark"] body .contact-form__section {
-  --field-focus: var(--accent-400);
   --form-error: #ff8a80;
   --form-success: #7ad894;
   --form-warn: var(--accent-400);
@@ -107,14 +105,6 @@
 
 :root[data-theme="dark"] body .contact-form select {
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
-}
-
-/* Fields, the consent link and the submit button share one accent ring; the
-   darker accent keeps it at 3:1 or more on the light surface. */
-.contact-form :is(input, textarea, select):focus-visible,
-.contact-form__section :is(a, button):focus-visible {
-  outline: 3px solid var(--field-focus);
-  outline-offset: 2px;
 }
 
 .is-invalid {
