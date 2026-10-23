@@ -1,0 +1,94 @@
+# Axiom — UI Improvements
+
+**Analysis date:** 2026-10-23
+**Project type:** Static multi-page marketing website for a fictional construction company (vanilla HTML, layered CSS, ES-module JavaScript, PWA), 15 maintained pages
+**Analysis mode:** Evidence-based UI improvement review
+**Focus:** Project-wide UI
+
+## Improvement overview
+
+The completed IMP-DESIGN-01–05 work established the Construction Dossier direction (flat, ruled, left-aligned compositions without elevation or hover lift) for the hero, About, service catalogue, service pages, galleries, contact passage and footer. Those areas are consistent and tokenised at the section level.
+
+The remaining opportunities sit at the edges of that work: home-page FAQ and testimonials and the legal document template still use the earlier elevated-card language; shared buttons keep lift-based hover states; focus rings are defined through many per-component recipes; and the surface tokens do not carry a stable meaning across themes, which forces per-section dark-theme remapping. Each proposal below extends or consolidates the existing system rather than replacing it.
+
+## Proposed improvements
+
+### IMP-UI-01 — Introduce theme-aware focus-ring tokens for all interactive elements
+
+- **Affected area:** Shared focus presentation across links, buttons, form fields, navigation, FAQ, legal pages, modal, lightbox and footer.
+- **Evidence:** `css/base/base.css:68-71`; `css/components/buttons.css:74-78`, `:108-111`, `:134-138`; `css/sections/services.css:125-133`; `css/sections/services-subpages.css:215-223`; `css/sections/gallery.css:75-84`, `:226-229`, `:273-276`; `css/sections/contact.css:9-30`, `:112-118`; `css/layout/layout.css:126-129`, `:330-332`, `:459-471`, `:593-596`, `:639-642`; `css/sections/faq.css:83-87`; `css/sections/legal.css:59-62`, `:99-102`, `:144-147`, `:189-192`, `:290-295`; `css/components/project-modal.css:50-53`, `:73-76`; `css/components/utilities.css:171-174`, `:228-232`
+- **Current state:** Focus rings use at least seven colour recipes (`--accent-400`, `--accent`, `--accent-600`, `color-mix(--accent-600 75%, #000)`, `color-mix(--accent-400 70%, white)`, `--field-focus`, `--footer-focus`), widths of 2px or 3px and offsets of 2px, 3px or 4px. Sections redesigned under IMP-DESIGN-03–05 override the ring locally, with comments stating a 3:1 target and that the base accent, and in the gallery even `--accent-600`, is insufficient on light grey surfaces. Components outside those sections (FAQ summaries, legal links and table wrapper, project modal links, theme toggle, About CTA, scroll-top) keep the base `--accent-400` ring.
+- **Proposed improvement:** Define focus-ring colour, width and offset as tokens in `css/tokens/tokens.css`, with light and dark values derived from the rings already validated in the gallery, footer and contact sections, and apply them through the shared base rule. Remove per-component colour overrides except where a fixed-dark context such as the lightbox needs its own documented value.
+- **Expected value:** One consistent, theme-correct focus treatment across all 15 pages, removal of duplicated overrides, and the project's existing 3:1 ring target applied to components that were outside the design-improvement scope.
+- **Implementation scope:** `css/tokens/tokens.css`, the base focus rule and the listed component focus declarations. Preserve focus order, focus-trap behaviour, `outline` (not `box-shadow`) as the visible indicator, the lightbox's fixed-dark styling and forced-colours compatibility.
+- **Acceptance criteria:** Each theme defines the ring once; every `:focus-visible` declaration in `css/` references the ring tokens or a documented context token; keyboard focus remains visible on every interactive element type at 320px and 1440px in light and dark themes; measured ring contrast against the adjacent surface is at least 3:1 for representative components in each section type.
+- **Impact:** High
+- **Effort:** Medium
+
+### IMP-UI-02 — Bring the home FAQ and testimonials into the Construction Dossier ruled register
+
+- **Affected area:** `index.html` FAQ (`#faq`) and testimonials (`#testimonial-cards`) sections.
+- **Evidence:** `css/sections/faq.css:24-36`, `:63-81`, `:99-117`, `:119-127`; `css/sections/testimonials.css:22-37`, `:50-61`; `css/components/utilities.css:197-205`; `index.html:602-631`, `:1118-1147`; reference pattern `css/sections/about.css:115-157`, `css/sections/services-subpages.css:128-169`
+- **Current state:** FAQ items are elevated cards (shadow, border, `--radius-2`, `will-change: transform`) that lift by 2px on hover or focus-within and signal the open state through a heavier shadow. The disclosure indicator is a text glyph (`▾`/`▴`) in a fixed `#1f5fa8` for both themes. Answers render at `--fs-8` (13.6px against 16px questions) and reference `--text-mute`, which is not defined. Testimonials are non-interactive cards with a shadow and a 5px hover lift, styled in both `utilities.css` and `testimonials.css`, capped at 320px wide, with attribution styled through the form namespace class `.form__client-info`. The changelog records that the Dossier work removed elevated cards and pointer affordances from non-interactive items elsewhere on the site.
+- **Proposed improvement:** Present FAQ entries as a ruled question register that shares the sections' `--dossier-rule` treatment: no elevation or hover lift, an open state shown by a theme-aware drawn indicator and accent, and answers at the body type scale using defined tokens. Present testimonials as flat, ruled quotation entries with no hover motion, styled in one stylesheet under a testimonials-scoped attribution class.
+- **Expected value:** The last two home-page sections match the visual language of the sections around them, non-interactive content no longer suggests interactivity, and FAQ answers become as readable as the rest of the page.
+- **Implementation scope:** `css/sections/faq.css`, `css/sections/testimonials.css`, the testimonial rules in `css/components/utilities.css` and the attribution class name in `index.html`. Preserve native `<details>`/`<summary>` behaviour, heading levels and IDs, `aria-labelledby` references, content and order, `u-hidden` reveal classes, FAQPage structured-data parity and reduced-motion behaviour.
+- **Acceptance criteria:** No FAQ or testimonial element changes `transform` or `box-shadow` on hover, focus or open; the disclosure indicator uses theme tokens and is visible in both themes; answer text uses defined tokens at body size; testimonial styles exist in a single stylesheet and no `.form__*` class remains in testimonial markup; every FAQ item toggles by keyboard with an unclipped focus ring; no horizontal overflow at 320px.
+- **Impact:** High
+- **Effort:** Medium
+
+### IMP-UI-03 — Consolidate button variants into a flat, token-driven state model
+
+- **Affected area:** Shared `.btn` component (24 `btn-primary` and 13 `btn-ghost` instances across the maintained pages, including the cookie dialog on every page) and page-level button overrides.
+- **Evidence:** `css/components/buttons.css:3-22`, `:51-72`, `:92-111`, `:115-153`; `css/sections/error.css:32-45`; `css/sections/services-subpages.css:118-126`; `css/sections/contact.css:249-253`; `css/sections/legal.css:318-321`; flat interactive reference `css/sections/services.css:107-123`, `css/sections/gallery.css:57-73`
+- **Current state:** The base button lifts 1px on hover, `btn-primary` lifts 2px while shifting its gradient, and `btn-ghost` lifts 2px with an added shadow, whereas the Dossier service and gallery links signal hover through colour, underline and border only. `btn-secondary` is defined but used by no page. The dark-theme ghost hover sets `color: var(--text-light)`, which is not defined. Utility pages override every button to a fixed 240px width, a 12px (`--fs-9-micro`) label and white text regardless of variant.
+- **Proposed improvement:** Define primary and ghost variants with hover, active and disabled states expressed through background, border and colour rather than translation or shadow, and a shared size scale (padding, minimum width, label size) owned by the component. Page contexts set layout only (width, alignment, spacing), and the unused secondary variant is either removed or given a documented use.
+- **Expected value:** Buttons follow the same restrained interaction language as the rest of the Dossier system, render at one consistent size on every page, and each variant controls its own colours in both themes.
+- **Implementation scope:** `css/components/buttons.css` and the layout-only overrides in `error.css`, `services-subpages.css`, `contact.css` and `legal.css`. Preserve labels, destinations, button types, the disabled careers button, cookie-accept behaviour, the primary variant's blue/orange identity and uppercase labelling.
+- **Acceptance criteria:** No `.btn` rule applies `transform` or `box-shadow` on hover or active; no page-level rule sets a button's text colour or label size; utility-page buttons render at the shared label size; the ghost variant's text is readable on its surface in both themes on `offline.html`, service pages and CTAs; every colour declaration in `buttons.css` resolves to a defined token; `btn-secondary` is either used or removed.
+- **Impact:** Medium
+- **Effort:** Medium
+
+### IMP-UI-04 — Define role-based section surface tokens with stable meaning across themes
+
+- **Affected area:** Design tokens and section backgrounds on the home, service, legal and utility pages and in the footer.
+- **Evidence:** `css/tokens/tokens.css:27-38`, `:113-124`; `css/sections/about.css:3-6`; `css/sections/services.css:1-10`; `css/sections/gallery.css:1-11`; `css/sections/services-subpages.css:1-7`, `:175-184`; `css/sections/contact.css:9-30`; `css/sections/faq.css:2-8`; `css/sections/testimonials.css:1-7`; `css/sections/legal.css:1-4`; `css/layout/layout.css:459-472`, `:660-672`
+- **Current state:** The light `--surface-1/2/3` tokens mix two colours at a combined 16%, 32% and 48%, so they compute to translucent colours (alpha 0.16, 0.32 and 0.48, confirmed in the browser); the dark values exceed 100% and compute opaque. Because the lightness order of surface-1 to surface-3 inverts between themes, home sections remap their surfaces in dark theme (services, gallery, contact and service CTAs), while the service intro, service details and legal sections do not, so the service-page intro/details lightness order flips between themes. The footer uses a hard-coded `#0a0a0a` in dark theme and the footer bar uses `#1a1a1a` with `#c8c8c8` text in both themes. The gallery's top rule references the undefined `--text-dark` and is not rendered, while sibling sections render theirs.
+- **Proposed improvement:** Introduce role-based surface tokens (for example page, section base, section alternate, section emphasis, footer and footer bar) defined per theme as opaque values that reproduce the currently rendered colours, and have every section reference a role instead of a numbered surface with theme-specific overrides. Section top rules use one shared rule token.
+- **Expected value:** A predictable section rhythm in both themes, no per-section dark-theme background overrides, correct defaults for future sections and nested surfaces that no longer depend on implicit `color-mix()` alpha behaviour.
+- **Implementation scope:** `css/tokens/tokens.css` and the background and top-rule declarations of the listed section and footer rules. Preserve rendered colours unless an adjustment is approved, text and focus contrast on each surface, the header's glass treatment and the lightbox's fixed-dark presentation.
+- **Acceptance criteria:** Section stylesheets contain no `[data-theme="dark"]` background overrides; all surface tokens compute to opaque colours in both themes; home and service pages follow the same documented alternation of surface roles in both themes; every section that declares a top rule renders it, including the gallery; computed backgrounds on `index.html`, one service page, one legal page and `404.html` match the current values in both themes or differ only by approved adjustments.
+- **Impact:** Medium
+- **Effort:** Medium
+
+### IMP-UI-05 — Recompose the legal document template as a flat Dossier document column
+
+- **Affected area:** Shared legal template on `legal/regulamin.html`, `legal/polityka-prywatnosci.html`, `legal/polityka-cookies.html`, `legal/certyfikaty.html` and `legal/kariera.html`.
+- **Evidence:** `css/sections/legal.css:1-47`, `:64-102`, `:121-147`, `:325-333`, `:351-357`, `:385-395`; `css/base/base.css:122-143`; `legal/regulamin.html:148-199`
+- **Current state:** Each document sits in an elevated card (`--bg-legal-card`, border, `--radius-2`, shadow and transitions) on a surface-1 section. The title carries a static copy of the shared section-title gradient-and-glow rule, the lead is centred, and the table of contents is a separately bordered box nested inside the card. Per-heading `↑` return links (17, 14 and 9 instances on the three policy documents) rest at 15% opacity and reach full opacity only on hover or focus, so touch users see them only in their faint resting state. Certificate subsections and cards are further bordered, rounded boxes.
+- **Proposed improvement:** Present legal documents as a flat, measured document column on the section surface: no elevated card, the table of contents as a ruled numbered register, the title using the shared section-title component instead of a duplicate rule, return links shown at a readable secondary emphasis at rest, and certificate entries ruled rather than nested in boxes while keeping the demonstration notice distinct.
+- **Expected value:** The five legal pages share the visual language of the rest of the site, long documents read as one continuous column with fewer nested containers, and return links are usable without hover.
+- **Implementation scope:** `css/sections/legal.css`, plus class reuse in the five legal pages only where needed to share the section-title component. Preserve all IDs, anchors and table-of-contents targets, table overflow containment and the focusable table wrapper, the disabled careers form, the certificate notice semantics, breadcrumbs, content and `noindex` metadata.
+- **Acceptance criteria:** Legal pages render without an elevated card or box-shadow at any width in either theme; the title rule is defined once in `css/`; table-of-contents entries and document content share one left edge from tablet width upwards; return links are visible at rest in both themes and keep their accessible names; legal tables still scroll inside their wrapper at 320px with no horizontal page overflow.
+- **Impact:** Medium
+- **Effort:** Medium
+
+## Selection summary
+
+These five proposals were selected because they address the only interface areas and shared mechanisms that the completed design work did not reach, and each extends an existing project pattern instead of introducing a new one.
+
+IMP-UI-01 and IMP-UI-04 are token-level changes; IMP-UI-02, IMP-UI-03 and IMP-UI-05 benefit from them but do not depend on them. Implementing IMP-UI-01 first avoids redefining focus styles in the later component work, and implementing IMP-UI-04 before IMP-UI-02 or IMP-UI-05 avoids restyling those sections twice. Each proposal can otherwise be implemented and verified independently.
+
+Primary-navigation hover and current-page presentation was also reviewed. It was not proposed because its main issue is the pointer-events defect listed below, which belongs in an audit rather than an optional improvement.
+
+## Analysis limitations
+
+The analysis was primarily static. Browser evidence was limited to computed-style queries in the built-in browser against a local static server for `offline.html`, `services/budowa-domow.html` and `index.html#faq`. The pane reported a zero-width viewport, so no screenshots, responsive rendering, hover, keyboard-focus or contrast measurements were performed, and no tests or builds were run.
+
+The following defects were observed and excluded from the proposals; they belong in an audit or a separate fix:
+
+- `css/sections/error.css:39-45` forces white text on all utility-page buttons; on `offline.html` in light theme the ghost "Spróbuj ponownie" button computes to white text on a transparent button over a near-white surface.
+- `css/components/utilities.css:25-30` sets `pointer-events: none` on every `a[aria-current="page"]`; on service pages this disables pointer activation of the "Usługi" navigation link, which points to `../index.html#uslugi` (confirmed by computed style).
+- `css/sections/legal.css:49-52` and `:164-169` style inline legal links in the body colour without underline, making them visually indistinguishable from the surrounding text (source-visible).
+- Undefined custom properties are referenced at `css/base/base.css:38`, `css/sections/gallery.css:4`, `css/sections/support.css:5` and `:9` (`--text-dark`, `--text-light`), `css/components/buttons.css:150` (`--text-light`), `css/sections/faq.css:113` (`--text-mute`) and `css/sections/error.css:4-5` (`--header-height`, falling back to 80px instead of the 56px `--header-h`).
+- `css/sections/faq.css:34` clips `.faq__item` overflow while `.faq__question` draws its focus outline 3px outside its box, which may clip the ring; this requires runtime confirmation.
