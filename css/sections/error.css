@@ -36,10 +36,10 @@
   gap: var(--space-3);
 }
 
+/* A shared 240px column; longer labels widen the button instead of wrapping,
+   and narrow screens cap it at the available width. */
 .error-page__actions .btn {
-  color: #fff;
-  width: 240px;
+  min-width: min(240px, 100%);
   margin: 0;
   box-sizing: border-box;
-  font-size: var(--fs-9-micro);
 }

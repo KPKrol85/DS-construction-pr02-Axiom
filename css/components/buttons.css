@@ -9,26 +9,33 @@
   border-radius: var(--radius-2);
   border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
   min-width: 160px;
+  text-align: center;
   text-decoration: none;
+  /* Set explicitly so <button> and <a> buttons share one typeface and height. */
+  font-family: inherit;
   font-weight: 600;
   font-size: var(--fs-7);
+  line-height: var(--lh-body);
   letter-spacing: var(--ls-wide);
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.btn:active {
-  transform: translateY(0);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .btn[disabled],
 .btn:disabled {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* Linked buttons keep their variant presentation: the global link hover
+   in utilities.css would otherwise recolour and fade them. */
+a.btn:hover,
+a.btn:focus-visible {
+  opacity: 1;
+  text-decoration: none;
 }
 
 .btn svg,
@@ -46,99 +53,66 @@
   margin-left: var(--space-1);
 }
 
-/* btn-primary */
+/* btn-primary: the blue/orange brand gradient. At rest it shows the blue
+   half; hover deepens the blue and warms the end to the full orange stop,
+   active deepens the blue further. States change colour, never position.
+   The transparent border keeps the shared size of the outlined variants. */
 
 .btn-primary {
-
+  --btn-primary-from: var(--primary-400);
+  --btn-primary-warm: color-mix(in srgb, var(--accent) 70%, var(--primary-600));
+  --btn-primary-to: color-mix(in srgb, var(--primary-400), var(--btn-primary-warm));
   text-transform: uppercase;
   color: #fff;
-  border: none;
-  background-size: 200% 100%;
-  background-position: 0 0;
-    background-image: linear-gradient(
-    90deg,
-    var(--primary-400),
-    color-mix(in srgb, var(--accent) 70%, var(--primary-600))
-  );
-  transition:
-    background-position 0.35s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-image: linear-gradient(90deg, var(--btn-primary-from), var(--btn-primary-to));
 }
 
 .btn-primary:hover {
-  background-position: 100% 0;
-  transform: translateY(-2px);
+  --btn-primary-from: var(--primary);
+  --btn-primary-to: var(--btn-primary-warm);
+}
+
+.btn-primary:active {
+  --btn-primary-from: var(--primary-600);
+  --btn-primary-to: var(--btn-primary-warm);
 }
 
 .btn-primary:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
-.btn-primary:active {
-  transform: translateY(0);
-}
-
 a.btn-primary:hover,
 a.btn-primary:focus-visible {
-  text-decoration: none;
   color: #fff;
 }
 
-/* btn-secondary */
-
-.btn-secondary {
-  background: transparent;
-  color: inherit;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    transform 0.15s ease,
-    background 0.2s ease,
-    box-shadow 0.15s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background: color-mix(in srgb, currentColor 10%, transparent);
-}
-
-/* btn-ghost */
+/* btn-ghost: outlined in the theme's feature accent (blue in light,
+   orange in dark); hover and active tint the fill and solidify the outline. */
 
 .btn-ghost {
   text-transform: uppercase;
-  background: transparent;
   color: var(--text-body);
-  border: 1px solid color-mix(in srgb, var(--primary) 60%, transparent);
-  transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    border-color 0.2s ease;
+  background-color: transparent;
+  border: 1px solid color-mix(in srgb, var(--feature-accent) 60%, transparent);
 }
 
 .btn-ghost:hover {
-  background: color-mix(in srgb, var(--primary) 8%, transparent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 12%, transparent);
+  background-color: color-mix(in srgb, var(--feature-accent) 8%, transparent);
+  border-color: var(--feature-accent);
+}
+
+.btn-ghost:active {
+  background-color: color-mix(in srgb, var(--feature-accent) 16%, transparent);
+  border-color: var(--feature-accent);
 }
 
 .btn-ghost:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
-.btn-ghost:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-:root[data-theme="dark"] body .btn-ghost {
-  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-}
-
-:root[data-theme="dark"] body .btn-ghost:hover {
-  color: var(--text-light);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 12%, transparent);
+a.btn-ghost:hover,
+a.btn-ghost:focus-visible {
+  color: var(--text-body);
 }
