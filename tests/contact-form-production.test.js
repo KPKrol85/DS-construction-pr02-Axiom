@@ -34,6 +34,10 @@ const FORM_FIXTURE = `
     <label for="message">Wiadomość</label>
     <textarea id="message" name="message" required maxlength="500" aria-describedby="messageCounter"></textarea>
     <div id="messageCounter" aria-live="polite">0/500</div>
+    <div id="messageDraft" class="form__draft" hidden>
+      <p id="messageDraftNotice">Przywrócono szkic wiadomości zapisany w tej przeglądarce.</p>
+      <button type="button" id="discardMessageDraft" class="btn btn-ghost form__draft-discard">Odrzuć szkic</button>
+    </div>
     <label for="consent"><input type="checkbox" id="consent" name="consent" required />Potwierdzam zapoznanie się z Polityką prywatności.</label>
     <p id="formNote">Pola powyżej są wymagane.</p>
     <fieldset data-recaptcha>
@@ -88,6 +92,7 @@ let submissionStates;
 beforeEach(() => {
   vi.useFakeTimers();
   localStorage.clear();
+  localStorage.setItem(CONTACT_FORM.messageStorageKey, VALUES.message);
   document.body.innerHTML = FORM_FIXTURE;
   form = document.querySelector("#contactForm");
   button = form.querySelector('button[type="submit"]');
@@ -115,7 +120,8 @@ beforeEach(() => {
   for (const [name, value] of Object.entries(VALUES)) {
     const field = form.elements.namedItem(name);
     field.value = value;
-    field.dispatchEvent(new Event("input", { bubbles: true }));
+    // Keep the restored message untouched until the scenario edits or submits it.
+    if (name !== "message") field.dispatchEvent(new Event("input", { bubbles: true }));
   }
   form.querySelector("#consent").checked = true;
 });
@@ -136,6 +142,8 @@ describe("production contact submission", () => {
     expect(globalThis.location.hostname).toBe("axiom.example");
     const focusedField = form.querySelector("#subject");
     focusedField.focus();
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
+    expect(form.querySelector("#message").getAttribute("aria-describedby")).toBe("messageCounter messageDraftNotice");
 
     submitForm(form);
 
@@ -157,6 +165,7 @@ describe("production contact submission", () => {
     expect(button.textContent).toBe("Wysyłanie…");
     expect(status.textContent).toBe("Wysyłanie…");
     expectPreservedDraft(form);
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
 
     submitForm(form);
     expect(submissionStates).toEqual([true, true]);
@@ -176,6 +185,8 @@ describe("production contact submission", () => {
     expect(form.elements.namedItem("form-name").value).toBe("contact");
     expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBeNull();
     expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    expect(form.querySelector("#message").getAttribute("aria-describedby")).toBe("messageCounter");
     expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(status.classList.contains("ok")).toBe(true);
     expect(status.getAttribute("role")).toBe("status");
@@ -350,6 +361,7 @@ describe("production contact submission", () => {
     expect(form.getAttribute("aria-busy")).toBe("true");
     expect(button.disabled).toBe(true);
     expectPreservedDraft(form);
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
     expect(requestSubmitMock).not.toHaveBeenCalled();
 
     if (failure === "network rejection") {
@@ -375,6 +387,7 @@ describe("production contact submission", () => {
     message.value = "Poprawiona wiadomość";
     message.dispatchEvent(new Event("input", { bubbles: true }));
     expect(message.value).toBe("Poprawiona wiadomość");
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
     await vi.advanceTimersByTimeAsync(6001);
     expect(status.textContent).toBe("Nie udało się wysłać przez ulepszony tryb. Wysyłamy formularz standardowo…");
     expect(status.classList.contains("err")).toBe(true);

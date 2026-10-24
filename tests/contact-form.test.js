@@ -41,6 +41,10 @@ const FORM_FIXTURE = `
       <label for="message">Wiadomość</label>
       <textarea id="message" name="message" rows="5" required maxlength="500" aria-describedby="messageCounter"></textarea>
       <div id="messageCounter" class="form__char-counter" aria-live="polite">0/500</div>
+      <div id="messageDraft" class="form__draft" hidden>
+        <p id="messageDraftNotice">Przywrócono szkic wiadomości zapisany w tej przeglądarce.</p>
+        <button type="button" id="discardMessageDraft" class="btn btn-ghost form__draft-discard">Odrzuć szkic</button>
+      </div>
     </div>
     <div class="form__group form__consent">
       <label class="form__consent-label" for="consent">
@@ -334,6 +338,105 @@ describe("contact form draft persistence", () => {
 
     expect(form.querySelector("#message").value).toBe("Wcześniejszy szkic");
     expect(form.querySelector("#messageCounter").textContent).toBe(`18/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
+    expect(form.querySelector("#messageDraftNotice").textContent).toBe("Przywrócono szkic wiadomości zapisany w tej przeglądarce.");
+    expect(form.querySelector("#discardMessageDraft").type).toBe("button");
+    expect(form.querySelector("#discardMessageDraft").textContent).toBe("Odrzuć szkic");
+    expect(form.querySelector("#message").getAttribute("aria-describedby")).toBe("messageCounter messageDraftNotice");
+    expect(document.activeElement).toBe(document.body);
+    expect(form.querySelector("#formStatus").textContent).toBe("");
+  });
+
+  it.each([null, ""])("keeps the notice hidden without a non-empty saved draft (%s), including on normal input", (saved) => {
+    if (saved !== null) localStorage.setItem(CONTACT_FORM.messageStorageKey, saved);
+    const form = mountForm();
+    const message = form.querySelector("#message");
+    const notice = form.querySelector("#messageDraft");
+    expect(notice.hidden).toBe(true);
+    expect(message.value).toBe("");
+    expect(message.getAttribute("aria-describedby")).toBe("messageCounter");
+
+    typeInto(message, "Nowa wiadomość");
+
+    expect(notice.hidden).toBe(true);
+    expect(message.getAttribute("aria-describedby")).toBe("messageCounter");
+    expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBe("Nowa wiadomość");
+  });
+
+  it("hides the notice on editing the restored message while preserving other descriptions and validation feedback", () => {
+    localStorage.setItem(CONTACT_FORM.messageStorageKey, "Wcześniejszy szkic");
+    const form = mountForm();
+    const message = form.querySelector("#message");
+    message.setAttribute("aria-describedby", `${message.getAttribute("aria-describedby")} formNote`);
+    submitForm(form);
+    const status = form.querySelector("#formStatus").textContent;
+    const summary = form.querySelector("#errorSummary").innerHTML;
+    typeInto(form.querySelector("#name"), "Jan Kowalski");
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
+
+    typeInto(message, "Poprawiony szkic");
+
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    expect(message.getAttribute("aria-describedby")).toBe("messageCounter formNote");
+    expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBe("Poprawiony szkic");
+    expect(form.querySelector("#messageCounter").textContent).toBe(`16/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#formStatus").textContent).toBe(status);
+    expect(form.querySelector("#errorSummary").innerHTML).toBe(summary);
+    expect(form.querySelector("#errorSummary").classList.contains("visually-hidden")).toBe(false);
+  });
+
+  it.each([false, true])("discards only the message, preserves feedback and focuses the textarea (removal denied: %s)", (removalDenied) => {
+    const saved = "x".repeat(CONTACT_FORM.maxMessageLength);
+    localStorage.setItem(CONTACT_FORM.messageStorageKey, saved);
+    localStorage.setItem("theme", "dark");
+    localStorage.setItem("project-info-seen", "true");
+    const form = mountForm();
+    fillValidForm(form);
+    const message = form.querySelector("#message");
+    message.value = saved;
+    form.querySelector("#phone").value = "+48 600 000 000";
+    form.querySelector("#email").value = "niepoprawny-email";
+    submitForm(form);
+    const otherValues = Array.from(new FormData(form).entries()).filter(([key]) => key !== "message");
+    const status = form.querySelector("#formStatus").textContent;
+    const summary = form.querySelector("#errorSummary").innerHTML;
+    const onSubmit = vi.fn();
+    const onInput = vi.fn();
+    form.addEventListener("submit", onSubmit);
+    form.addEventListener("input", onInput);
+    const reportValidity = vi.spyOn(form, "reportValidity");
+    const removeItem = vi.spyOn(Object.getPrototypeOf(localStorage), "removeItem");
+    if (removalDenied) removeItem.mockImplementation(() => { throw new Error("Storage removal denied"); });
+    const discard = form.querySelector("#discardMessageDraft");
+    discard.focus();
+
+    discard.click();
+
+    expect(message.value).toBe("");
+    expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#messageCounter").classList.contains("limit")).toBe(false);
+    expect(form.querySelector("#messageCounter").classList.contains("warn")).toBe(false);
+    expect(removeItem).toHaveBeenCalledExactlyOnceWith(CONTACT_FORM.messageStorageKey);
+    expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBe(removalDenied ? saved : null);
+    expect(localStorage.getItem("theme")).toBe("dark");
+    expect(localStorage.getItem("project-info-seen")).toBe("true");
+    expect(Array.from(new FormData(form).entries()).filter(([key]) => key !== "message")).toEqual(otherValues);
+    expect(form.querySelector("#consent").checked).toBe(true);
+    expect(document.activeElement).toBe(message);
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    expect(message.getAttribute("aria-describedby")).toBe("messageCounter");
+    expect(form.querySelector("#formStatus").textContent).toBe(status);
+    expect(form.querySelector("#errorSummary").innerHTML).toBe(summary);
+    expect(form.querySelector("#email").getAttribute("aria-invalid")).toBe("true");
+    expect(message.hasAttribute("aria-invalid")).toBe(false);
+    expect(reportValidity).not.toHaveBeenCalled();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onInput).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    typeInto(message, "Nowy szkic");
+    expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBe("Nowy szkic");
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
   });
 
   it("removes the draft after a successful local submission", async () => {
@@ -343,10 +446,12 @@ describe("contact form draft persistence", () => {
     fillValidForm(form);
     const status = form.querySelector("#formStatus");
     const submitBtn = form.querySelector('button[type="submit"]');
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
 
     const event = submitForm(form);
     expect(event.defaultPrevented).toBe(true);
     expect(form.getAttribute("aria-busy")).toBe("true");
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
 
     await vi.advanceTimersByTimeAsync(500);
 
@@ -354,15 +459,20 @@ describe("contact form draft persistence", () => {
     expect(form.getAttribute("aria-busy")).toBe("false");
     expect(form.querySelector("#message").value).toBe("");
     expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    expect(form.querySelector("#message").getAttribute("aria-describedby")).toBe("messageCounter");
     expect(status.classList.contains("ok")).toBe(true);
     expect(status.textContent.trim().length).toBeGreaterThan(0);
     expect(submitBtn.classList.contains("sent")).toBe(true);
     expect(fetchMock).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(16001);
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
   });
 });
 
 describe("contact form storage failures", () => {
-  it("initialises and keeps the message and counter usable when reading a draft throws", () => {
+  it("initialises, validates and submits when reading a draft throws", async () => {
+    vi.useFakeTimers();
     const getItem = vi.spyOn(Object.getPrototypeOf(localStorage), "getItem").mockImplementation(() => {
       throw new Error("Storage read denied");
     });
@@ -374,15 +484,26 @@ describe("contact form storage failures", () => {
     expect(getItem).toHaveBeenCalledExactlyOnceWith(CONTACT_FORM.messageStorageKey);
     expect(message.value).toBe("");
     expect(counter.textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(document.querySelector("#messageDraft").hidden).toBe(true);
+    expect(message.getAttribute("aria-describedby")).toBe("messageCounter");
 
     expect(() => typeInto(message, "Nowa wiadomość")).not.toThrow();
 
     expect(message.value).toBe("Nowa wiadomość");
     expect(counter.textContent).toBe(`${message.value.length}/${CONTACT_FORM.maxMessageLength}`);
+    const form = document.querySelector("#contactForm");
+    submitForm(form);
+    expect(form.querySelector("#name").getAttribute("aria-invalid")).toBe("true");
+    fillValidForm(form);
+    submitForm(form);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(form.querySelector("#formStatus").textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(document.querySelector("#messageDraft").hidden).toBe(true);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("keeps typed content and updates the counter when saving a draft throws", () => {
+  it("keeps typed content, validates and submits when saving a draft throws", async () => {
+    vi.useFakeTimers();
     const form = mountForm();
     const message = form.querySelector("#message");
     const counter = form.querySelector("#messageCounter");
@@ -397,6 +518,13 @@ describe("contact form storage failures", () => {
       expect(setItem).toHaveBeenLastCalledWith(CONTACT_FORM.messageStorageKey, value);
     }
     expect(setItem).toHaveBeenCalledTimes(2);
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    submitForm(form);
+    expect(form.querySelector("#name").getAttribute("aria-invalid")).toBe("true");
+    fillValidForm(form);
+    submitForm(form);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(form.querySelector("#formStatus").textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -427,6 +555,8 @@ describe("contact form storage failures", () => {
     });
     expect(form.querySelector("#consent").checked).toBe(false);
     expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
+    expect(form.querySelector("#messageDraft").hidden).toBe(true);
+    expect(form.querySelector("#message").getAttribute("aria-describedby")).toBe("messageCounter");
     expect(form.getAttribute("aria-busy")).toBe("false");
     expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(status.classList.contains("ok")).toBe(true);

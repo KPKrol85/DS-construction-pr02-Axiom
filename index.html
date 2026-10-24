@@ -1202,6 +1202,10 @@
                 spellcheck="true"
                 enterkeyhint="send"></textarea>
               <div id="messageCounter" class="form__char-counter" aria-live="polite">0/500</div>
+              <div id="messageDraft" class="form__draft" hidden>
+                <p id="messageDraftNotice">Przywrócono szkic wiadomości zapisany w tej przeglądarce.</p>
+                <button type="button" id="discardMessageDraft" class="btn btn-ghost form__draft-discard">Odrzuć szkic</button>
+              </div>
             </div>
             <div class="form__group form__consent">
               <label class="form__consent-label" for="consent">

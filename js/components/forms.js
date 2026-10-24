@@ -16,6 +16,8 @@ export const initContactForm = () => {
   const originalBtnText = submitBtn ? submitBtn.textContent : "Wyślij wiadomość";
   const msg = form.querySelector(SELECTORS.contactMessage);
   const counter = qs(SELECTORS.contactCounter);
+  const draftNotice = form.querySelector("#messageDraft");
+  const discardDraftBtn = form.querySelector("#discardMessageDraft");
   const a11ySummary = form.querySelector(SELECTORS.contactErrorSummary);
   const skipLink = form.querySelector(SELECTORS.contactSkipLink);
   if (skipLink) {
@@ -61,16 +63,34 @@ export const initContactForm = () => {
     counter.classList.toggle("warn", len >= CONTACT_FORM.maxMessageLength - 50 && len < CONTACT_FORM.maxMessageLength);
     counter.classList.toggle("limit", len >= CONTACT_FORM.maxMessageLength);
   }
+  const setDraftNotice = (visible) => {
+    if (!msg || !draftNotice) return;
+    draftNotice.hidden = !visible;
+    const descriptions = (msg.getAttribute("aria-describedby") || "").split(/\s+/).filter((id) => id && id !== "messageDraftNotice");
+    if (visible) descriptions.push("messageDraftNotice");
+    msg.setAttribute("aria-describedby", descriptions.join(" "));
+  };
   updateCounter();
   if (msg) {
     const savedMsg = safeGetItem(CONTACT_FORM.messageStorageKey);
     if (savedMsg) {
       msg.value = savedMsg;
       updateCounter();
+      setDraftNotice(true);
     }
     msg.addEventListener("input", () => {
+      setDraftNotice(false);
       safeSetItem(CONTACT_FORM.messageStorageKey, msg.value);
     });
+    if (discardDraftBtn) {
+      discardDraftBtn.addEventListener("click", () => {
+        msg.value = "";
+        safeRemoveItem(CONTACT_FORM.messageStorageKey);
+        updateCounter();
+        setDraftNotice(false);
+        msg.focus();
+      });
+    }
   }
 
   form.addEventListener("input", (e) => {
@@ -195,6 +215,7 @@ export const initContactForm = () => {
       form.reset();
       safeRemoveItem(CONTACT_FORM.messageStorageKey);
       updateCounter();
+      setDraftNotice(false);
       showStatus("Dziękujemy! Wiadomość została wysłana.", true);
       hasSuccessConfirmation = true;
       if (submitBtn) {

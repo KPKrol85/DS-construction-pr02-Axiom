@@ -33,13 +33,9 @@ The archived plan, changelog, audits and completed UI, design and quality report
 
 ### IMP-UX-03 — Explain restored message drafts and offer a fresh start
 
-- **Affected journey:** Returning to a partially written contact message.
-- **Evidence:** `js/components/forms.js:52-70`, `js/components/forms.js:173-176`; `index.html:1192-1204`; `js/core/config.js`, `CONTACT_FORM.messageStorageKey`; `legal/polityka-prywatnosci.html:281-301`.
-- **Current experience:** The message body is saved under `contactFormMessage` and restored during form initialization, with the character counter updated. The form provides no contextual restoration notice or dedicated discard action; visitors can edit or delete the restored text themselves. Other contact fields are not restored by this mechanism.
-- **Proposed improvement:** Show a brief Polish notice beside a restored message explaining that it came from this browser, with an explicit action to discard that draft and start with an empty message.
-- **Expected user value:** Returning visitors could recognize why text is already present and deliberately choose whether to continue it.
-- **Implementation scope:** Use `index.html`, `js/components/forms.js` and existing form styles. Retain the current storage key and safe-storage wrappers; store no additional personal fields or metadata. Discard affects only the message and its saved draft, preserving other entered values and the separate theme/project preferences.
-- **Acceptance criteria:** A non-empty stored draft produces the notice and an operable discard button on restoration. Discard clears the message, resets its counter, removes only its storage entry and leaves focus in the message field. With no saved draft, no restoration notice appears. Storage exceptions do not prevent editing or submission and do not produce an unsupported claim that persistent data was removed.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Restored messages now show a Polish notice and native discard button, with a textarea description removed on editing, discard or acknowledged success. Discard clears only the message and its existing storage entry, resets the counter and focuses the textarea; other fields, consent, feedback and form contracts are preserved, including safe handling of storage failures.
+- **Verification:** Focused contact-form suites passed (40/40), `qa:references` and `git diff --check` passed; Vitest required a writable temporary directory after sandbox EPERM. Isolated canonical sources passed Chrome checks at 320px for hidden/no-JS states, light/dark/system visibility and Tab/Enter discard/focus; screen readers, live Netlify delivery and post-build artifacts (no dist manifest) were not tested.
 - **Impact:** Medium
 - **Effort:** Small
 
