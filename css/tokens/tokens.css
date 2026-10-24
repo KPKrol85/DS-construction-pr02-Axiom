@@ -24,8 +24,27 @@
   --text-inverse: #ffffff;
   --text-link: var(--primary);
 
-  /* footer colors */
-  --footer-bg: var(--surface-2);
+  /* Section surfaces: opaque roles that keep one meaning in both themes, so
+     a section names its role and needs no dark-theme override.
+     - page: the canvas behind every section
+     - section: default content (About, testimonials, FAQ, service details)
+     - section-alt: a step lighter (service catalogue, contact, service CTA)
+     - section-emphasis: a step deeper (galleries)
+     - section-subtle: the step nearest the page (service introductions,
+       legal documents, utility pages)
+     - footer, footer-bar: the closing register and its attribution bar,
+       which stays dark in both themes
+     Light steps tint the page with body text, the opaque result of the
+     translucent --surface-1/2/3 layers that nested components keep. */
+  --surface-page: var(--bg-light);
+  --surface-section: color-mix(in srgb, var(--surface-page) 86%, var(--text-body));
+  --surface-section-alt: color-mix(in srgb, var(--surface-page) 92%, var(--text-body));
+  --surface-section-emphasis: color-mix(in srgb, var(--surface-page) 80%, var(--text-body));
+  --surface-section-subtle: color-mix(in srgb, var(--surface-page) 92%, var(--text-body));
+  --surface-footer: color-mix(in srgb, var(--surface-page) 86%, var(--text-body));
+  --surface-footer-bar: #1a1a1a;
+  /* top rule between sections, drawn over each section's own surface */
+  --section-rule: color-mix(in srgb, var(--text-body) 12%, transparent);
 
   /* Surface layers & component UI tokens */
   --surface-1: color-mix(in srgb, var(--bg-light) 8%, var(--text-body) 8%);
@@ -121,8 +140,13 @@
   --bg-modal: rgba(16, 22, 34, 0.85);
   --bg-legal-card: rgba(28, 28, 30, 0.92);
 
-  /* footer color */
-  --footer-bg: var(--surface-1);
+  /* section surfaces */
+  --surface-page: var(--bg-dark);
+  --surface-section: #2a2a2a;
+  --surface-section-alt: #353535;
+  --surface-section-emphasis: #1e1e1e;
+  --surface-section-subtle: #1e1e1e;
+  --surface-footer: #0a0a0a;
 
   /* Surface layers & component UI tokens */
   --surface-1: color-mix(in srgb, var(--bg-dark) 98%, var(--text-body) 6%);

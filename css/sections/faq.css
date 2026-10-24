@@ -1,7 +1,7 @@
 
 .faq {
-  background: var(--surface-2);
-  border-top: 1px solid var(--feature-border);
+  background: var(--surface-section);
+  border-top: 1px solid var(--section-rule);
   content-visibility: auto;
   contain-intrinsic-size: 1000px;
   text-align: center;

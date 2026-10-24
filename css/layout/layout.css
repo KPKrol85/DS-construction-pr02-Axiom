@@ -455,13 +455,9 @@ body.nav-open {
 footer {
   --footer-rule: color-mix(in srgb, var(--text-body) 22%, transparent);
   --footer-label: color-mix(in srgb, var(--text-body) 75%, transparent);
-  background: var(--footer-bg);
-  border-top: 1px solid var(--feature-border);
+  background: var(--surface-footer);
+  border-top: 1px solid var(--section-rule);
   color: var(--text-body);
-}
-
-:root[data-theme="dark"] footer {
-  background: #0a0a0a;
 }
 
 .footer__content,
@@ -647,7 +643,7 @@ footer a[href^="mailto:"]:hover {
   border-top: 1px solid color-mix(in srgb, var(--text-body) 15%, transparent);
   padding: var(--space-2) 0;
   text-align: left;
-  background: #1a1a1a;
+  background: var(--surface-footer-bar);
   content-visibility: auto;
   contain-intrinsic-size: 80px;
 }

@@ -1,12 +1,7 @@
 .services__section {
-  background: var(--surface-1);
-  border-top: 1px solid color-mix(in srgb, var(--text-body) 10%, transparent);
+  background: var(--surface-section-alt);
+  border-top: 1px solid var(--section-rule);
   text-align: center;
-}
-
-:root[data-theme="dark"] .services__section {
-  background: var(--surface-3);
-  border-top: 1px solid color-mix(in srgb, var(--text-inverse) 10%, transparent);
 }
 
 /* Construction Dossier service overview (IMP-DESIGN-03): six equal, ruled

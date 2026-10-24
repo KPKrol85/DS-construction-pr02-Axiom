@@ -12,8 +12,8 @@
   --form-error: #b00020;
   --form-success: #136b33;
   --form-warn: #a04a12;
-  background: var(--surface-1);
-  border-top: 1px solid var(--feature-border);
+  background: var(--surface-section-alt);
+  border-top: 1px solid var(--section-rule);
   text-align: center;
   content-visibility: auto;
   contain-intrinsic-size: 900px;
@@ -23,7 +23,6 @@
   --form-error: #ff8a80;
   --form-success: #7ad894;
   --form-warn: var(--accent-400);
-  background: var(--surface-3);
 }
 
 .contact-form__lead,

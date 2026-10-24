@@ -1,13 +1,9 @@
 .gallery {
   text-align: center;
-  background: var(--surface-3);
-  border-top: 1px solid color-mix(in srgb, var(--text-dark) 10%, transparent);
+  background: var(--surface-section-emphasis);
+  border-top: 1px solid var(--section-rule);
   content-visibility: visible;
   contain-intrinsic-size: auto;
-}
-
-:root[data-theme="dark"] body .gallery {
-  background: var(--surface-1);
 }
 
 .gallery__inner {

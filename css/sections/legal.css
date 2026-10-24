@@ -1,6 +1,6 @@
 .legal {
-  background: var(--surface-1);
-  border-top: 1px solid var(--feature-border);
+  background: var(--surface-section-subtle);
+  border-top: 1px solid var(--section-rule);
 }
 
 .legal__container {
