@@ -17,13 +17,9 @@ The archived plan, changelog, audits and completed UI, design and quality report
 
 ### IMP-UX-01 — Link the error summary to individual fields
 
-- **Affected journey:** Correcting several fields after enhanced contact-form validation.
-- **Evidence:** `index.html:1155-1157`; `js/components/forms.js:18-33`, `js/components/forms.js:128-145`; `tests/contact-form.test.js`, the error-summary tests.
-- **Current experience:** When the script generates an error summary, it lists invalid field labels as plain text, focuses the first invalid field and exposes a shortcut back to that first field. The remaining fields can be reached through normal form navigation.
-- **Proposed improvement:** Make each field named in the existing summary a direct link to that field, retaining the first-error shortcut.
-- **Expected user value:** Someone reviewing several errors could choose the field to correct without moving sequentially through the form.
-- **Implementation scope:** Restrict changes to summary construction and field-link focus handling in `js/components/forms.js`, with minimal form styling if needed. Preserve field IDs, validation rules, native validation, existing announcements, the keyboard shortcut and submission processing.
-- **Acceptance criteria:** When enhanced validation identifies multiple invalid fields, each summary entry has a meaningful Polish field name and targets the correct control. Pointer and keyboard activation focus that control without clearing any values. The first-error shortcut still works, and the summary is hidden when no invalid fields remain.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** The existing summary now builds safe, label-derived links to each invalid control in form order; activation focuses the control without navigation or value/checkbox changes. Scoped styles preserve underlines and theme colours, retain the shared focus ring and exclude hidden summary links from keyboard navigation; count messages, announcements, shortcuts, validation and submission contracts remain unchanged.
+- **Verification:** Contact-form tests passed (22/22), `qa:references` passed and `git diff --check` passed; release-artifact checks were skipped because the dist manifest was absent. An isolated canonical contact section passed a Chrome check at 320px for pointer/Enter focus, unchanged values/consent/history, both first-error shortcuts and light/dark link styling; screen readers and production delivery were not tested.
 - **Impact:** Medium
 - **Effort:** Small
 

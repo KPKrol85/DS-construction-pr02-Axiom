@@ -129,13 +129,24 @@ export const initContactForm = () => {
       e.preventDefault();
       const invalids = qsa(".is-invalid", form);
       if (a11ySummary) {
-        const labels = invalids.map((el) => {
-          const lab = el.id ? form.querySelector(`label[for="${el.id}"]`) : null;
-          return lab ? lab.textContent.trim() : el.name || el.id || "Pole";
-        });
         const n = invalids.length;
         const suf = n === 1 ? "błąd" : n >= 2 && n <= 4 ? "błędy" : "błędów";
-        a11ySummary.textContent = `Formularz zawiera ${n} ${suf}: ${labels.join(", ")}.`;
+        const content = document.createDocumentFragment();
+        content.append(`Formularz zawiera ${n} ${suf}: `);
+        invalids.forEach((el, index) => {
+          const label = el.labels?.[0]?.textContent.trim().replace(/\s+/g, " ");
+          const link = document.createElement("a");
+          link.textContent = label || el.getAttribute("aria-label") || el.name || el.id || "Pole";
+          link.setAttribute("href", `#${el.id}`);
+          link.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            el.focus();
+          });
+          if (index > 0) content.append(", ");
+          content.append(link);
+        });
+        content.append(".");
+        a11ySummary.replaceChildren(content);
         a11ySummary.classList.remove("visually-hidden");
       }
       if (skipLink) skipLink.classList.remove("visually-hidden");

@@ -54,6 +54,17 @@
   font-weight: 700;
 }
 
+.contact-form .form__error-summary a:any-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 1;
+}
+
+.form__error-summary.visually-hidden a {
+  visibility: hidden;
+}
+
 .contact-form .form__group {
   margin-bottom: var(--space-4);
 }

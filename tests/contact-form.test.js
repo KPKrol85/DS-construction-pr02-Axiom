@@ -153,7 +153,7 @@ describe("contact form validation", () => {
 });
 
 describe("contact form error summary", () => {
-  it("reveals the accessible summary and names every invalid field", () => {
+  it("reveals the accessible summary with a labelled link to every invalid field in form order", () => {
     const form = mountForm();
     const summary = form.querySelector("#errorSummary");
     const skipLink = form.querySelector("#skipToError");
@@ -163,12 +163,112 @@ describe("contact form error summary", () => {
 
     expect(summary.classList.contains("visually-hidden")).toBe(false);
     expect(skipLink.classList.contains("visually-hidden")).toBe(false);
+    expect(summary.getAttribute("role")).toBe("status");
+    expect(summary.getAttribute("aria-live")).toBe("assertive");
+    expect(summary.getAttribute("aria-atomic")).toBe("true");
     const invalidFields = Array.from(form.querySelectorAll(".is-invalid"));
-    expect(summary.textContent).toContain(String(invalidFields.length));
-    invalidFields.forEach((field) => {
+    const links = Array.from(summary.querySelectorAll("a"));
+    expect(links).toHaveLength(invalidFields.length);
+    expect(summary.textContent).toMatch(/^Formularz zawiera 6 błędów: /);
+    invalidFields.forEach((field, index) => {
       const label = form.querySelector(`label[for="${field.id}"]`);
-      expect(summary.textContent).toContain(label.textContent.trim());
+      expect(links[index].textContent).toBe(label.textContent.trim().replace(/\s+/g, " "));
+      expect(links[index].getAttribute("href")).toBe(`#${field.id}`);
+      expect(links[index].tabIndex).toBe(0);
+      expect(links[index].hasAttribute("role")).toBe(false);
     });
+  });
+
+  it.each([[1, "błąd"], [2, "błędy"], [4, "błędy"], [5, "błędów"]])("preserves the Polish count message for %i invalid fields", (count, suffix) => {
+    const form = mountForm();
+    fillValidForm(form);
+    CONTACT_FORM.requiredFields.slice(0, count).forEach((id) => {
+      form.querySelector(`#${id}`).value = "";
+    });
+
+    submitForm(form);
+
+    expect(form.querySelector("#errorSummary").textContent).toMatch(`Formularz zawiera ${count} ${suffix}: `);
+  });
+
+  it("focuses each linked control without navigation, validation, submission or value changes", () => {
+    const form = mountForm();
+    form.querySelector("#email").value = "jan(at)example.com";
+    form.querySelector("#phone").value = "niepoprawny telefon";
+    form.querySelector("#message").value = "x".repeat(CONTACT_FORM.maxMessageLength + 1);
+    submitForm(form);
+    const values = Array.from(new FormData(form).entries());
+    const invalidFields = Array.from(form.querySelectorAll(".is-invalid"));
+    const status = form.querySelector("#formStatus").textContent;
+    const url = location.href;
+    const onSubmit = vi.fn();
+    form.addEventListener("submit", onSubmit);
+
+    form.querySelectorAll("#errorSummary a").forEach((link, index) => {
+      link.focus();
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+      link.dispatchEvent(click);
+
+      expect(click.defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(invalidFields[index]);
+      expect(Array.from(new FormData(form).entries())).toEqual(values);
+      expect(form.querySelector("#consent").checked).toBe(false);
+      expect(invalidFields[index].getAttribute("aria-invalid")).toBe("true");
+    });
+    const consent = form.querySelector("#consent");
+    consent.checked = true;
+    form.querySelector('#errorSummary a[href="#consent"]').click();
+    expect(consent.checked).toBe(true);
+    expect(document.activeElement).toBe(consent);
+    expect(form.querySelector("#formStatus").textContent).toBe(status);
+    expect(location.href).toBe(url);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("uses implicit labels and renders label text safely", () => {
+    const form = mountForm();
+    const label = form.querySelector('label[for="email"]');
+    label.removeAttribute("for");
+    label.textContent = 'Adres <img src="x" onerror="alert(1)"> e-mail';
+    label.append(form.querySelector("#email"));
+
+    submitForm(form);
+
+    const link = form.querySelector('#errorSummary a[href="#email"]');
+    expect(link.textContent).toBe('Adres <img src="x" onerror="alert(1)"> e-mail');
+    expect(link.children).toHaveLength(0);
+  });
+
+  it("falls back to the accessible name or control name when a label is unavailable", () => {
+    const form = mountForm();
+    form.querySelector('label[for="email"]').remove();
+    form.querySelector("#email").setAttribute("aria-label", "Adres kontaktowy");
+    form.querySelector('label[for="subject"]').remove();
+
+    submitForm(form);
+
+    expect(form.querySelector('#errorSummary a[href="#email"]').textContent).toBe("Adres kontaktowy");
+    expect(form.querySelector('#errorSummary a[href="#subject"]').textContent).toBe("subject");
+  });
+
+  it("preserves initial focus and both shortcuts to the current first invalid field", () => {
+    const form = mountForm();
+    submitForm(form);
+    expect(document.activeElement).toBe(form.querySelector("#name"));
+    typeInto(form.querySelector("#name"), "Jan Kowalski");
+    form.querySelector("#message").focus();
+    form.querySelector("#skipToError").click();
+    expect(document.activeElement).toBe(form.querySelector("#email"));
+    form.querySelector("#message").focus();
+    const shortcut = new KeyboardEvent("keydown", {
+      key: "E", code: "KeyE", altKey: true, shiftKey: true, bubbles: true, cancelable: true,
+    });
+
+    document.activeElement.dispatchEvent(shortcut);
+
+    expect(shortcut.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(form.querySelector("#email"));
   });
 
   it("hides the summary again once no field is invalid", () => {
@@ -181,6 +281,10 @@ describe("contact form error summary", () => {
     fillValidForm(form);
     Array.from(form.querySelectorAll(".is-invalid")).forEach((field) => {
       field.dispatchEvent(new Event("input", { bubbles: true }));
+      if (form.querySelector(".is-invalid")) {
+        expect(summary.classList.contains("visually-hidden")).toBe(false);
+        expect(skipLink.classList.contains("visually-hidden")).toBe(false);
+      }
     });
 
     expect(summary.classList.contains("visually-hidden")).toBe(true);
