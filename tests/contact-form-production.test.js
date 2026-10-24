@@ -134,6 +134,8 @@ describe("production contact submission", () => {
     const request = deferred();
     fetchMock.mockReturnValueOnce(request.promise);
     expect(globalThis.location.hostname).toBe("axiom.example");
+    const focusedField = form.querySelector("#subject");
+    focusedField.focus();
 
     submitForm(form);
 
@@ -176,6 +178,9 @@ describe("production contact submission", () => {
     expect(form.querySelector("#messageCounter").textContent).toBe(`0/${CONTACT_FORM.maxMessageLength}`);
     expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(status.classList.contains("ok")).toBe(true);
+    expect(status.getAttribute("role")).toBe("status");
+    expect(status.getAttribute("aria-live")).toBe("polite");
+    expect(document.activeElement).toBe(focusedField);
     expect(button.classList.contains("sending")).toBe(false);
     expect(button.classList.contains("sent")).toBe(true);
     expect(button.textContent).toBe("Wysłano ✓");
@@ -192,8 +197,141 @@ describe("production contact submission", () => {
     await vi.advanceTimersByTimeAsync(1);
     expect(button.textContent).toBe("Wyślij wiadomość");
     expect(button.classList.contains("sent")).toBe(false);
-    expect(status.textContent).toBe("");
+    expect(button.disabled).toBe(false);
+    await vi.advanceTimersByTimeAsync(10000);
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(document.activeElement).toBe(focusedField);
+    form.querySelector("#email").focus();
+    form.querySelector("#email").dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+    window.dispatchEvent(new Event("scroll"));
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ["name", "Anna Nowak"],
+    ["email", "anna@example.com"],
+    ["phone", "+48 700 000 000"],
+    ["subject", "Nowa wycena"],
+    ["service", "remont"],
+    ["message", "Kolejna wiadomość"],
+    ["consent", true],
+  ])("clears only the retained success on input in %s and preserves subsequent edits", async (name, value) => {
+    const request = deferred();
+    fetchMock.mockReturnValueOnce(request.promise);
+    submitForm(form);
+    request.resolve({ ok: true });
+    await request.promise;
+    await vi.advanceTimersByTimeAsync(6001);
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(status.classList.contains("ok")).toBe(true);
+    const field = form.elements.namedItem(name);
+    if (name === "consent") field.checked = value;
+    else field.value = value;
+
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+
+    expect(status.textContent).toBe("");
+    expect(status.classList.contains("ok")).toBe(false);
+    expect(status.classList.contains("err")).toBe(false);
+    expect(name === "consent" ? field.checked : field.value).toBe(value);
+    const message = form.querySelector("#message");
+    for (const text of ["Nowy szkic", "Nowy szkic wiadomości"]) {
+      message.value = text;
+      message.dispatchEvent(new Event("input", { bubbles: true }));
+      expect(message.value).toBe(text);
+      expect(form.querySelector("#messageCounter").textContent).toBe(`${text.length}/${CONTACT_FORM.maxMessageLength}`);
+      expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBe(text);
+      expect(status.textContent).toBe("");
+    }
+    if (name !== "message") expect(name === "consent" ? field.checked : field.value).toBe(value);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves validation errors on input after a previous success", async () => {
+    const request = deferred();
+    fetchMock.mockReturnValueOnce(request.promise);
+    submitForm(form);
+    request.resolve({ ok: true });
+    await request.promise;
+    await vi.advanceTimersByTimeAsync(1200);
+
+    submitForm(form);
+    const error = "Potwierdź zapoznanie się z Polityką prywatności.";
+    expect(status.textContent).toBe(error);
+    const name = form.querySelector("#name");
+    expect(name.getAttribute("aria-invalid")).toBe("true");
+    name.value = "Anna Nowak";
+    name.dispatchEvent(new Event("input", { bubbles: true }));
+
+    expect(name.value).toBe("Anna Nowak");
+    expect(name.hasAttribute("aria-invalid")).toBe(false);
+    expect(form.querySelector("#email").getAttribute("aria-invalid")).toBe("true");
+    expect(form.querySelector("#errorSummary").classList.contains("visually-hidden")).toBe(false);
+    await vi.advanceTimersByTimeAsync(6000);
+    expect(status.textContent).toBe(error);
+    expect(status.classList.contains("err")).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps a subsequent pending request protected from both previous button timers and input", async () => {
+    const first = deferred();
+    const next = deferred();
+    fetchMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(next.promise);
+    submitForm(form);
+    first.resolve({ ok: true });
+    await first.promise;
+    // A submit event can also occur before the button's 1,200ms cooldown ends.
+    for (const [name, value] of Object.entries(VALUES)) form.elements.namedItem(name).value = value;
+    form.querySelector("#consent").checked = true;
+    submitForm(form);
+    const name = form.querySelector("#name");
+    name.value = "Anna Nowak";
+    name.dispatchEvent(new Event("input", { bubbles: true }));
+
+    for (const elapsed of [1200, 4801]) {
+      await vi.advanceTimersByTimeAsync(elapsed);
+      expect(form.getAttribute("aria-busy")).toBe("true");
+      expect(button.disabled).toBe(true);
+      expect(button.classList.contains("sending")).toBe(true);
+      expect(button.classList.contains("sent")).toBe(false);
+      expect(button.textContent).toBe("Wysyłanie…");
+      expect(status.textContent).toBe("Wysyłanie…");
+      submitForm(form);
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    }
+    next.resolve({ ok: true });
+    await next.promise;
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(button.textContent).toBe("Wysłano ✓");
+  });
+
+  it("gives a subsequent success its full button cooldown and label duration", async () => {
+    const first = deferred();
+    const next = deferred();
+    fetchMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(next.promise);
+    submitForm(form);
+    first.resolve({ ok: true });
+    await first.promise;
+    await vi.advanceTimersByTimeAsync(1200);
+    for (const [name, value] of Object.entries(VALUES)) form.elements.namedItem(name).value = value;
+    form.querySelector("#consent").checked = true;
+    submitForm(form);
+    next.resolve({ ok: true });
+    await next.promise;
+
+    await vi.advanceTimersByTimeAsync(1199);
+    expect(button.disabled).toBe(true);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(button.disabled).toBe(false);
+    await vi.advanceTimersByTimeAsync(4799);
+    expect(button.textContent).toBe("Wysłano ✓");
+    expect(button.classList.contains("sent")).toBe(true);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(button.textContent).toBe("Wyślij wiadomość");
+    expect(button.classList.contains("sent")).toBe(false);
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it.each(["network rejection", "non-OK response"])("preserves the draft and allows one native fallback after %s, then permits a retry", async (failure) => {
@@ -233,6 +371,16 @@ describe("production contact submission", () => {
     expect(button.textContent).toBe("Wyślij wiadomość");
     expect(status.classList.contains("err")).toBe(true);
     expect(status.textContent).toBe("Nie udało się wysłać przez ulepszony tryb. Wysyłamy formularz standardowo…");
+    const message = form.querySelector("#message");
+    message.value = "Poprawiona wiadomość";
+    message.dispatchEvent(new Event("input", { bubbles: true }));
+    expect(message.value).toBe("Poprawiona wiadomość");
+    await vi.advanceTimersByTimeAsync(6001);
+    expect(status.textContent).toBe("Nie udało się wysłać przez ulepszony tryb. Wysyłamy formularz standardowo…");
+    expect(status.classList.contains("err")).toBe(true);
+    expect(button.classList.contains("sent")).toBe(false);
+    message.value = VALUES.message;
+    message.dispatchEvent(new Event("input", { bubbles: true }));
     expect(errorMock).toHaveBeenCalledExactlyOnceWith(
       failure === "network rejection" ? networkError : expect.objectContaining({ message: "Netlify response not OK" }),
     );

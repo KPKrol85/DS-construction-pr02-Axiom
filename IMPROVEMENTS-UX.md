@@ -25,13 +25,9 @@ The archived plan, changelog, audits and completed UI, design and quality report
 
 ### IMP-UX-02 — Keep successful submission confirmation available
 
-- **Affected journey:** Understanding completion after an enhanced contact-form submission.
-- **Evidence:** `js/components/forms.js:163-192`; `index.html:1223-1225`; `success.html:114-124`; `tests/contact-form-production.test.js:133-197`.
-- **Current experience:** Following an acknowledged enhanced submission, the form resets and shows a success message and “Wysłano ✓” button state. A timer clears that message and restores the button label after six seconds. The native submission path instead has a dedicated confirmation page.
-- **Proposed improvement:** Retain the inline success confirmation until the visitor starts another message, independently of the button's temporary sent state.
-- **Expected user value:** A visitor who looks away briefly could still establish that the previous submission completed after returning to the reset form.
-- **Implementation scope:** Adjust only the inline status lifecycle in `js/components/forms.js`. Preserve acknowledged-success gating, form reset, draft removal, pending-request protection, button re-enabling, native fallback and `/success.html`; add no response-time promises or delivery claims beyond the existing acknowledgement.
-- **Acceptance criteria:** After simulated successful enhanced submission, confirmation remains visible beyond six seconds while the button returns to its normal usable state. Starting another message replaces the old confirmation appropriately. Validation and pending/failure messages remain usable; unsuccessful requests never display success. Focus is not moved merely to announce completion.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** The existing success confirmation persists until the next contact-control input, with unchanged polite announcements and no focus movement. Button timings remain 1,200ms/6,000ms, with prior timers cancelled before another enhanced submission; validation, reset, draft removal and native fallback contracts are preserved.
+- **Verification:** Focused contact-form tests passed (35/35) after relocating Vitest's temporary directory to resolve a sandbox EPERM; `qa:references` and `git diff --check` passed. Post-build checks were skipped because the dist manifest was absent; browser, screen-reader and live Netlify delivery testing were not performed.
 - **Impact:** Medium
 - **Effort:** Small
 

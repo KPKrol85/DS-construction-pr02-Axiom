@@ -10,6 +10,9 @@ export const initContactForm = () => {
   const submitBtn = form.querySelector('button[type="submit"], .btn[type="submit"], .btn-primary[type="submit"]');
   const supportsNativeValidation = typeof form.reportValidity === "function";
   let useNativeFallback = false;
+  let hasSuccessConfirmation = false;
+  let successEnableTimer;
+  let successResetTimer;
   const originalBtnText = submitBtn ? submitBtn.textContent : "Wyślij wiadomość";
   const msg = form.querySelector(SELECTORS.contactMessage);
   const counter = qs(SELECTORS.contactCounter);
@@ -43,9 +46,10 @@ export const initContactForm = () => {
     el.removeAttribute("aria-invalid");
   };
   const showStatus = (message, ok = false) => {
+    hasSuccessConfirmation = false;
     if (!statusBox) return;
-    statusBox.classList.toggle("ok", !!ok);
-    statusBox.classList.toggle("err", !ok);
+    statusBox.classList.toggle("ok", !!message && !!ok);
+    statusBox.classList.toggle("err", !!message && !ok);
     statusBox.textContent = message;
   };
 
@@ -71,7 +75,10 @@ export const initContactForm = () => {
 
   form.addEventListener("input", (e) => {
     const t = e.target;
-    if (t.matches("#name, #email, #subject, #service, #message, #phone, #consent")) clearInvalid(t);
+    if (t.matches("#name, #email, #subject, #service, #message, #phone, #consent")) {
+      if (hasSuccessConfirmation) showStatus("", true);
+      clearInvalid(t);
+    }
     if (t === msg) updateCounter();
     if (!qsa(".is-invalid", form).length) {
       if (a11ySummary) a11ySummary.classList.add("visually-hidden");
@@ -161,9 +168,12 @@ export const initContactForm = () => {
     }
 
     e.preventDefault();
+    clearTimeout(successEnableTimer);
+    clearTimeout(successResetTimer);
     form.setAttribute("aria-busy", "true");
     if (submitBtn) {
       submitBtn.disabled = true;
+      submitBtn.classList.remove("sent");
       submitBtn.classList.add("sending");
       submitBtn.textContent = "Wysyłanie…";
     }
@@ -186,15 +196,15 @@ export const initContactForm = () => {
       safeRemoveItem(CONTACT_FORM.messageStorageKey);
       updateCounter();
       showStatus("Dziękujemy! Wiadomość została wysłana.", true);
+      hasSuccessConfirmation = true;
       if (submitBtn) {
         submitBtn.classList.remove("sending");
         submitBtn.classList.add("sent");
         submitBtn.textContent = "Wysłano ✓";
-        setTimeout(() => {
+        successEnableTimer = setTimeout(() => {
           submitBtn.disabled = false;
         }, 1200);
-        setTimeout(() => {
-          showStatus("", true);
+        successResetTimer = setTimeout(() => {
           submitBtn.classList.remove("sent");
           submitBtn.textContent = originalBtnText;
         }, 6000);
