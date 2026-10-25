@@ -41,13 +41,9 @@ The archived plan, changelog, audits and completed UI, design and quality report
 
 ### IMP-UX-04 — Expose the lightbox's existing photograph position visually
 
-- **Affected journey:** Browsing photographs in the homepage and six service galleries.
-- **Evidence:** `js/components/lightbox.js:108-128`, `js/components/lightbox.js:174-199`, `js/components/lightbox.js:258-271`; `index.html:1106-1114`; `css/base/base.css:41-53`.
-- **Current experience:** The lightbox tracks the current image within its originating gallery, wraps previous/next navigation and announces “Zdjęcie X z N” in a visually hidden live region. Captions and navigation controls are present, but the position text is not visible.
-- **Proposed improvement:** Add a visible current-image/total indicator using the position already calculated by the lightbox.
-- **Expected user value:** Visitors could tell where they are in a gallery and recognize when navigation wraps to its beginning.
-- **Implementation scope:** Extend the shared lightbox rendering in `js/components/lightbox.js` and its canonical CSS; adjust canonical lightbox markup only if necessary. Preserve image order, alt-derived captions, live announcements, swipe and arrow navigation, focus trapping, fullscreen controls and focus return. No thumbnails, filters or new gallery model are needed.
-- **Acceptance criteria:** Opening any thumbnail displays its correct position within that gallery. Previous/next buttons, arrow keys and swipes update the indicator, including wraparound. Reopening another gallery resets the total correctly. The indicator remains readable without obscuring controls or captions at narrow widths and in fullscreen/immersive modes, with no duplicate live announcement.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** A single noninteractive, aria-hidden position indicator inside the fullscreen figure uses the existing gallery state and render lifecycle. Compact overlay styling preserves captions, controls, pointer gestures, focus behavior and the existing live announcement.
+- **Verification:** Focused lightbox tests passed (16/16), `qa:references` and `git diff --check` passed. Isolated canonical sources passed headless Chrome checks at 320px for navigation, wraparound, focus, light/dark/system themes, immersive fallback and native fullscreen, plus landscape layout at 568×320. Screen readers and post-build artifacts (no dist manifest) were not tested.
 - **Impact:** Medium
 - **Effort:** Small
 

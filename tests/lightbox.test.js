@@ -18,6 +18,7 @@ const GALLERY_ITEMS = [
   { href: "assets/img/realizacje/budowa-domu-05-1600x1067.jpg", alt: "Budowa domu" },
   { href: "assets/img/realizacje/poddasze-03-1600x1067.jpg", alt: "Adaptacja poddasza" },
 ];
+const SECOND_GALLERY_ITEMS = GALLERY_ITEMS.slice(0, 2);
 
 const galleryItemMarkup = (item) => `
   <figure class="gallery__item">
@@ -32,6 +33,11 @@ const GALLERY_FIXTURE = `
   <section class="gallery">
     <div class="gallery__container">
       ${GALLERY_ITEMS.map(galleryItemMarkup).join("")}
+    </div>
+  </section>
+  <section class="gallery">
+    <div class="gallery__container">
+      ${SECOND_GALLERY_ITEMS.map(galleryItemMarkup).join("")}
     </div>
   </section>
   <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="lightbox-title" aria-describedby="lightbox-caption" hidden tabindex="-1">
@@ -71,10 +77,10 @@ const mountGallery = ({ withStyles = false } = {}) => {
   return document.querySelector("#lightbox");
 };
 
-const galleryLinks = () => Array.from(document.querySelectorAll(".gallery__link"));
+const galleryLinks = (galleryIndex = 0) => Array.from(document.querySelectorAll(".gallery__container")[galleryIndex].querySelectorAll(".gallery__link"));
 
-const openFromGallery = (index) => {
-  const link = galleryLinks()[index];
+const openFromGallery = (index, galleryIndex = 0) => {
+  const link = galleryLinks(galleryIndex)[index];
   link.focus();
   link.click();
   return link;
@@ -133,8 +139,32 @@ describe("lightbox opening", () => {
     expect(lb.getAttribute("aria-hidden")).toBe("false");
     expect(document.body.classList.contains("lb-open")).toBe(true);
     expect(lb.querySelector(".lb__img").getAttribute("src")).toBe(GALLERY_ITEMS[1].href);
+    expect(lb.querySelector(".lb__img").alt).toBe(GALLERY_ITEMS[1].alt);
     expect(lb.querySelector(".lb__caption").textContent).toBe(GALLERY_ITEMS[1].alt);
     expect(lb.querySelector(".lb__caption").hidden).toBe(false);
+    expect(lb.querySelector(".lb__position").textContent).toBe("2 / 3");
+    expect(lb.querySelector('.sr-only[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 3");
+  });
+
+  it("shows the first position once inside the fullscreen figure without another announcement or focus target", () => {
+    const lb = mountGallery();
+
+    openFromGallery(0);
+
+    const position = lb.querySelector(".lb__position");
+    const liveRegion = lb.querySelector('.sr-only[aria-live="polite"]');
+    expect(position.textContent).toBe("1 / 3");
+    expect(lb.querySelectorAll(".lb__position")).toHaveLength(1);
+    expect(position.parentElement).toBe(lb.querySelector(".lb__figure"));
+    expect(position.getAttribute("aria-hidden")).toBe("true");
+    expect(position.matches("button, a, input, select, textarea, [tabindex], [role], [aria-live], [aria-atomic], [aria-relevant]")).toBe(false);
+    expect(position.tabIndex).toBe(-1);
+    expect(position).not.toBe(liveRegion);
+    expect(lb.querySelectorAll("[aria-live]")).toHaveLength(1);
+    expect(liveRegion.textContent).toBe("Zdjęcie 1 z 3");
+    expect(lb.getAttribute("aria-labelledby")).toBe("lightbox-title");
+    expect(lb.getAttribute("aria-describedby")).toBe("lightbox-caption");
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
   });
 
   it("moves focus into the lightbox when it opens", () => {
@@ -265,16 +295,27 @@ describe("lightbox keyboard navigation", () => {
     const img = lb.querySelector(".lb__img");
     const caption = lb.querySelector(".lb__caption");
     expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[0].href);
+    expect(lb.querySelector(".lb__position").textContent).toBe("1 / 3");
 
     pressKey("ArrowRight");
 
     expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[1].href);
     expect(caption.textContent).toBe(GALLERY_ITEMS[1].alt);
+    expect(lb.querySelector(".lb__position").textContent).toBe("2 / 3");
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 3");
 
     pressKey("ArrowRight");
 
     expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[2].href);
     expect(caption.textContent).toBe(GALLERY_ITEMS[2].alt);
+    expect(lb.querySelector(".lb__position").textContent).toBe("3 / 3");
+
+    pressKey("ArrowRight");
+
+    expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[0].href);
+    expect(lb.querySelector(".lb__position").textContent).toBe("1 / 3");
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 1 z 3");
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
   });
 
   it("goes back to the previous gallery item on ArrowLeft and wraps around", () => {
@@ -286,10 +327,14 @@ describe("lightbox keyboard navigation", () => {
     pressKey("ArrowLeft");
 
     expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[0].href);
+    expect(lb.querySelector(".lb__position").textContent).toBe("1 / 3");
 
     pressKey("ArrowLeft");
 
     expect(img.getAttribute("src")).toBe(GALLERY_ITEMS[GALLERY_ITEMS.length - 1].href);
+    expect(lb.querySelector(".lb__position").textContent).toBe("3 / 3");
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 3 z 3");
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
   });
 
   it("ignores arrow keys once the lightbox is closed", () => {
@@ -301,5 +346,104 @@ describe("lightbox keyboard navigation", () => {
     pressKey("ArrowRight");
 
     expect(img.hasAttribute("src")).toBe(false);
+  });
+});
+
+describe("lightbox position navigation", () => {
+  it("updates through next and previous buttons, including wraparound in both directions", () => {
+    const lb = mountGallery();
+    openFromGallery(0);
+    const position = lb.querySelector(".lb__position");
+    const nextBtn = lb.querySelector(".lb__next");
+    const prevBtn = lb.querySelector(".lb__prev");
+
+    nextBtn.click();
+    expect(position.textContent).toBe("2 / 3");
+
+    prevBtn.click();
+    expect(position.textContent).toBe("1 / 3");
+
+    prevBtn.click();
+    expect(position.textContent).toBe("3 / 3");
+
+    nextBtn.click();
+    expect(position.textContent).toBe("1 / 3");
+    expect(lb.querySelector(".lb__img").getAttribute("src")).toBe(GALLERY_ITEMS[0].href);
+    expect(lb.querySelector(".lb__img").alt).toBe(GALLERY_ITEMS[0].alt);
+    expect(lb.querySelector(".lb__caption").textContent).toBe(GALLERY_ITEMS[0].alt);
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 1 z 3");
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
+  });
+
+  it("updates on pointer swipes in both directions", () => {
+    const lb = mountGallery();
+    openFromGallery(0);
+    const figure = lb.querySelector(".lb__figure");
+    const position = lb.querySelector(".lb__position");
+    const swipe = (fromX, toX) => {
+      // MouseEvent supplies coordinates in jsdom, which has no PointerEvent.
+      for (const [type, clientX] of [["pointerdown", fromX], ["pointermove", toX], ["pointerup", toX]]) {
+        figure.dispatchEvent(new MouseEvent(type, { bubbles: true, clientX, clientY: 100 }));
+      }
+    };
+
+    swipe(200, 100);
+
+    expect(position.textContent).toBe("2 / 3");
+    expect(lb.querySelector(".lb__img").getAttribute("src")).toBe(GALLERY_ITEMS[1].href);
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 3");
+
+    swipe(100, 200);
+
+    expect(position.textContent).toBe("1 / 3");
+    expect(lb.querySelector(".lb__img").getAttribute("src")).toBe(GALLERY_ITEMS[0].href);
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 1 z 3");
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
+  });
+
+  it("uses each originating gallery's total and reuses the indicator after reopening", () => {
+    const lb = mountGallery();
+    const firstTrigger = openFromGallery(2);
+    const position = lb.querySelector(".lb__position");
+    expect(position.textContent).toBe("3 / 3");
+
+    lb.querySelector(".lb__close").click();
+    expect(document.activeElement).toBe(firstTrigger);
+    const secondTrigger = openFromGallery(1, 1);
+
+    expect(position.textContent).toBe("2 / 2");
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 2");
+    expect(lb.querySelectorAll(".lb__position")).toHaveLength(1);
+    expect(lb.querySelector(".lb__position")).toBe(position);
+
+    lb.querySelector(".lb__next").click();
+    expect(position.textContent).toBe("1 / 2");
+    expect(lb.querySelector(".lb__img").getAttribute("src")).toBe(SECOND_GALLERY_ITEMS[0].href);
+
+    lb.querySelector(".lb__close").click();
+    expect(document.activeElement).toBe(secondTrigger);
+    openFromGallery(1);
+
+    expect(position.textContent).toBe("2 / 3");
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 3");
+    expect(lb.querySelectorAll(".lb__position")).toHaveLength(1);
+    expect(lb.querySelectorAll("[aria-live]")).toHaveLength(1);
+    expect(document.activeElement).toBe(lb.querySelector(".lb__close"));
+  });
+
+  it("keeps the indicator in the figure while navigating in immersive fallback", () => {
+    const lb = mountGallery();
+    openFromGallery(0);
+    const figure = lb.querySelector(".lb__figure");
+    const position = lb.querySelector(".lb__position");
+
+    lb.querySelector(".lb__fs").click();
+    pressKey("ArrowRight");
+
+    expect(lb.classList.contains("is-immersive")).toBe(true);
+    expect(position.parentElement).toBe(figure);
+    expect(position.textContent).toBe("2 / 3");
+    expect(position.hidden).toBe(false);
+    expect(lb.querySelector('[aria-live="polite"]').textContent).toBe("Zdjęcie 2 z 3");
   });
 });

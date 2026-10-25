@@ -16,6 +16,7 @@ export const initLightbox = () => {
   let currentContainer = null;
   let prevBtn = null;
   let nextBtn = null;
+  let positionEl = null;
   let liveRegion = null;
   let fsBtn = null;
   let lastActive = null;
@@ -171,6 +172,12 @@ export const initLightbox = () => {
       });
       figureEl.appendChild(nextBtn);
     }
+    if (!positionEl) {
+      positionEl = document.createElement("span");
+      positionEl.className = "lb__position";
+      positionEl.setAttribute("aria-hidden", "true");
+      figureEl.appendChild(positionEl);
+    }
     if (!liveRegion) {
       liveRegion = document.createElement("div");
       liveRegion.className = "sr-only";
@@ -255,6 +262,7 @@ export const initLightbox = () => {
       captionEl.textContent = "";
       captionEl.hidden = true;
     }
+    if (positionEl) positionEl.textContent = `${currentIndex + 1} / ${items.length}`;
     announceSlide();
     preloadNeighbor(i);
   }
