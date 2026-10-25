@@ -69,9 +69,13 @@ export default defineConfig([
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
+        window: "readonly",
         document: "readonly",
+        FormData: "readonly",
+        location: "readonly",
         localStorage: "readonly",
         Event: "readonly",
+        MouseEvent: "readonly",
         KeyboardEvent: "readonly",
         HTMLElement: "readonly",
       },
