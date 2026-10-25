@@ -6,6 +6,8 @@
 - **Command:** `node tools/images/build-images.mjs`
 - **What it does:** Generuje warianty WebP i AVIF w `assets/img/_optimized/` wyłącznie dla źródeł i szerokości zadeklarowanych w `tools/images/build-images.mjs` na podstawie `srcset` utrzymywanych stron.
 - **When to use:** Po zmianach w źródłach obrazów przed buildem release.
+- **Selected source:** `npm run img:build -- --source=<relative-path>` generuje kompletny zestaw wariantów tylko jednego źródła, zachowując pozostałe pliki w `_optimized/` bez zmian. Ścieżka musi dokładnie odpowiadać jednemu kluczowi mapy `responsiveSources`, np. `npm run img:build -- --source=hero/hero-1920x1080.jpg`. Bez argumentów `npm run img:build` nadal przetwarza i sprawdza kompletność wszystkich zadeklarowanych źródeł.
+- **Arguments:** Puste lub nieznane źródło, nieobsługiwane argumenty, powtórzone selektory oraz połączenie `--source` z `--clean` są odrzucane przed zapisem lub usuwaniem plików. `--clean` musi występować samodzielnie; czyszczenie nadal wykonuje `npm run img:clean`.
 
 ### img:clean
 - **Command:** `node tools/images/build-images.mjs --clean`

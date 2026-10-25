@@ -31,13 +31,9 @@ The opportunities below improve environment reproducibility, control over existi
 
 ### IMP-WORKFLOW-03 — Regenerate variants for a selected image source
 
-- **Affected workflow:** Responsive image preparation after a localized asset change.
-- **Evidence:** `tools/images/build-images.mjs:11-49`, `tools/images/build-images.mjs:87-115` and `tools/images/build-images.mjs:145-202`; `docs/settings.md:5-13`; `README.md:257-262`. Read-only Git inspection confirms 164 tracked files under `assets/img/_optimized/`.
-- **Current workflow:** The generator declares 20 responsive sources and processes every eligible declared source on each normal run. It writes full-size and responsive WebP/AVIF outputs using the declared settings. Its only implemented argument behavior is full-directory cleaning; changing one photograph still uses the full generation pass.
-- **Proposed improvement:** Add an optional source selector restricted to the existing declaration map, allowing one photograph's complete variant set to be regenerated independently.
-- **Expected practical value:** Avoids re-encoding unrelated photographs during a localized content update and makes the intended generated-file footprint easier to review. No execution-time saving is quantified.
-- **Implementation scope:** Update the existing image script and its command reference. Preserve the default full run, source map, widths, formats, encoding settings, filenames and tracked-output policy. Selection must not clean the output directory or introduce incremental-cache state.
-- **Acceptance criteria:** Selecting one declared source writes only that source's existing variant set and leaves unrelated outputs untouched. Invalid selectors and incompatible cleaning arguments fail before writes; a missing selected source still fails. The default full run retains its existing completeness checks, and regenerated candidates satisfy `qa:references`.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added strict `--source=<relative-path>` selection for one declared source, reusing the existing processing logic and checking completeness within the selected scope. Default full generation, cleanup, source declarations, widths, encoding, output naming and npm scripts remain unchanged; the command reference documents selection and rejected argument combinations.
+- **Verification:** Isolated checks passed for hero/card selection (10/4 outputs), 20 invalid CLI cases, missing/invalid/undersized/non-file inputs, cleanup, full generation (20 sources/164 decoded variants), completeness failures and no upscaling; source reference checks passed after selective and full generation. Inventory, hash, size and modification-time comparisons confirmed unrelated outputs and all 164 original optimized files unchanged; lint, diff checks and final status/diff review passed. Cleanup required a rerun after releasing a Windows file lock; no browser audit or deployment was run.
 - **Impact:** Medium
 - **Effort:** Small
 

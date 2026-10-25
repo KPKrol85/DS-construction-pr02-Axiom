@@ -8,7 +8,6 @@ const rootDir = path.resolve(__dirname, "..", "..");
 const sourceRoot = path.join(rootDir, "assets", "img");
 const outputRoot = path.join(sourceRoot, "_optimized");
 
-const args = new Set(process.argv.slice(2));
 const skipDirs = new Set(["favicon", "icon", "logo", "shortcuts", "screenshots", "og", "_optimized"]);
 const rasterExts = new Set([".jpg", ".jpeg", ".png"]);
 const minProcessDimension = 420;
@@ -51,6 +50,31 @@ const responsiveSources = new Map([
 const webpOptions = { quality: 80, effort: 5 };
 const avifOptions = { quality: 45, effort: 4 };
 
+const getOptions = () => {
+  const args = process.argv.slice(2);
+  const usage = "Usage: npm run img:build -- [--source=<relative-path>] or npm run img:clean";
+
+  if (args.length === 0) return {};
+
+  if (args.length !== 1) {
+    throw new Error(`Unexpected argument combination. --source and --clean must each be used alone, without duplicates. ${usage}`);
+  }
+
+  const [arg] = args;
+  if (arg === "--clean") return { clean: true };
+
+  if (!arg.startsWith("--source=")) {
+    throw new Error(`Unknown argument "${arg}". ${usage}`);
+  }
+
+  const source = arg.slice("--source=".length);
+  if (!responsiveSources.has(source)) {
+    throw new Error(`Invalid source "${source}": expected an exact, non-empty key from responsiveSources. ${usage}`);
+  }
+
+  return { source };
+};
+
 const formatBytes = (bytes) => `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 
 const safeRel = (filePath) => path.relative(sourceRoot, filePath).split(path.sep).join("/");
@@ -84,14 +108,20 @@ const walk = async (dirPath) => {
   return files;
 };
 
-if (args.has("--clean")) {
-  await removeDir(outputRoot);
-  console.log(`[img:clean] Removed ${safeRel(outputRoot)}`);
-  process.exit(0);
-}
-
 const run = async () => {
-  const files = await walk(sourceRoot);
+  const { clean, source } = getOptions();
+
+  if (clean) {
+    await removeDir(outputRoot);
+    console.log(`[img:clean] Removed ${safeRel(outputRoot)}`);
+    return;
+  }
+
+  if (source) {
+    console.log(`[img:build] Selected source: ${source}`);
+  }
+
+  const files = source ? [path.join(sourceRoot, source)] : await walk(sourceRoot);
   const skipped = [];
   const processedSources = new Set();
   let processedCount = 0;
@@ -188,9 +218,9 @@ const run = async () => {
     });
   }
 
-  // A declared source that never produced output means a page still asks for
-  // variants this run did not write, so fail instead of shipping a gap.
-  const missingSources = [...responsiveSources.keys()].filter(
+  // Every declared source in this run's scope must produce its variants.
+  const expectedSources = source ? [source] : [...responsiveSources.keys()];
+  const missingSources = expectedSources.filter(
     (source) => !processedSources.has(source),
   );
 
