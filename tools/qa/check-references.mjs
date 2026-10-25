@@ -1,6 +1,8 @@
 // Static reference-integrity check (PH2-01) and release contract check (O-01).
 //
-// Two modes, in one run:
+// Scopes: --scope=auto (default), --scope=source, --scope=release.
+// Source checks always run; source skips generated output, release requires it,
+// and auto preserves manifest-based release detection.
 //
 //   Static (always): resolves every local reference declared by the maintained
 //   HTML pages, the stylesheets under css/, manifest.webmanifest, and the
@@ -10,16 +12,16 @@
 //   declares. Everything is read from the tracked sources, so this mode needs
 //   no build, no local server, and no browser.
 //
-//   Post-build (only when dist/build-manifest.json exists): verifies the real
+//   Post-build (unless source is selected, when dist/build-manifest.json exists): verifies the real
 //   generated deployment - the bundles on disk, the rewritten HTML, the source
 //   files the deployment publishes beside the bundles, the production service
 //   worker, and the generated dist/_headers - against the manifest that
-//   build:hash produced. Skipped, not failed, without a build.
+//   build:hash produced. Without a build, auto skips and release fails.
 //
 // Exit codes:
 //   0 - every checked local reference resolves and every contract holds
 //   1 - at least one unresolved reference or violated contract
-//   2 - the checker itself could not complete (read/parse failure)
+//   2 - invalid CLI usage or the checker could not complete (read/parse failure)
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -45,6 +47,31 @@ const cssDir = path.join(rootDir, "css");
 const distDir = path.join(rootDir, "dist");
 const manifestPath = path.join(rootDir, "manifest.webmanifest");
 const buildSwPath = path.join(rootDir, "tools", "sw", "build-sw.mjs");
+
+const getRequestedScope = () => {
+  const usage = "Usage: npm run qa:references -- [--scope=auto|--scope=source|--scope=release]";
+  let scope;
+
+  for (const arg of process.argv.slice(2)) {
+    if (!arg.startsWith("--scope=")) {
+      throw new Error(`Unknown argument "${arg}". ${usage}`);
+    }
+
+    const value = arg.slice("--scope=".length);
+
+    if (!["auto", "source", "release"].includes(value)) {
+      throw new Error(`Unsupported scope "${value}". ${usage}`);
+    }
+
+    if (scope !== undefined && scope !== value) {
+      throw new Error(`Conflicting scopes "${scope}" and "${value}". ${usage}`);
+    }
+
+    scope = value;
+  }
+
+  return scope ?? "auto";
+};
 
 // Generated output, dependencies, and build templates hold no maintained page
 // references: tools/templates/head.partial.html is a placeholder template, and
@@ -520,7 +547,8 @@ const staleProductionReferences = [
 const publishedSourceScripts = ["theme-init.js", "offline.js"];
 
 // Verifies the real generated deployment against the manifest build:hash wrote.
-// Returns false when there is no build to check, which is a skip, not a failure.
+// Returns false when there is no build to check; the selected scope decides
+// whether that is an automatic skip or a missing required release.
 const checkGeneratedRelease = async (state) => {
   const note = (source, reason) => state.contract.push({ source, reason });
 
@@ -689,89 +717,116 @@ const checkGeneratedRelease = async (state) => {
   return true;
 };
 
-const run = async () => {
+const run = async (scope) => {
   const state = { checked: 0, skipped: 0, findings: [], contract: [] };
+  let releaseSummary = scope === "source"
+    ? "Release validation skipped by --scope=source; generated artifacts were not inspected."
+    : "Release validation not run because source validation could not complete.";
 
-  const htmlFiles = await collectFiles(rootDir, ".html");
-  const cssFiles = await collectFiles(cssDir, ".css");
-
-  for (const file of htmlFiles) {
-    const label = relativeToRoot(file);
-    const html = await fs.readFile(file, "utf8");
-
-    await checkReferences(label, path.posix.dirname(label), extractHtmlReferences(html), state);
-  }
-
-  for (const file of cssFiles) {
-    const label = relativeToRoot(file);
-    const css = await fs.readFile(file, "utf8");
-
-    await checkReferences(label, path.posix.dirname(label), extractCssReferences(css), state);
-  }
-
-  const manifestLabel = relativeToRoot(manifestPath);
-  const manifestRaw = await fs.readFile(manifestPath, "utf8");
-
-  let manifest;
   try {
-    manifest = JSON.parse(manifestRaw);
-  } catch (error) {
-    throw new Error(`Could not parse ${manifestLabel}: ${error.message}`, {
-      cause: error,
-    });
-  }
+    const htmlFiles = await collectFiles(rootDir, ".html");
+    const cssFiles = await collectFiles(cssDir, ".css");
 
-  await checkReferences(manifestLabel, ".", extractManifestReferences(manifest), state);
+    for (const file of htmlFiles) {
+      const label = relativeToRoot(file);
+      const html = await fs.readFile(file, "utf8");
 
-  const precacheReferences = await collectPrecacheReferences(manifest);
-  await checkReferences(relativeToRoot(buildSwPath), ".", precacheReferences, state);
-
-  await checkBundleContract(state);
-  const postBuildChecked = await checkGeneratedRelease(state);
-
-  const scope = [`${htmlFiles.length} HTML pages`, `${cssFiles.length} CSS files`, manifestLabel, `${precacheReferences.length} precache entries`].join(", ");
-  const summary = `Checked ${state.checked} local references across ${scope} (${state.skipped} external or in-page references ignored).`;
-  const releaseSummary = postBuildChecked
-    ? `Verified the generated release in dist/ against dist/${MANIFEST_FILENAME}.`
-    : `No dist/${MANIFEST_FILENAME} present, so the post-build release checks were skipped. Run \`npm run build\` to include them.`;
-
-  if (state.findings.length > 0) {
-    state.findings.sort((a, b) => a.source.localeCompare(b.source) || a.value.localeCompare(b.value) || a.kind.localeCompare(b.kind));
-
-    console.error(`Unresolved local references (${state.findings.length}):`);
-
-    for (const finding of state.findings) {
-      console.error(`  ${finding.source} [${finding.kind}] ${finding.value} -> ${finding.target} (${finding.reason})`);
+      await checkReferences(label, path.posix.dirname(label), extractHtmlReferences(html), state);
     }
-  }
 
-  if (state.contract.length > 0) {
-    state.contract.sort((a, b) => a.source.localeCompare(b.source) || a.reason.localeCompare(b.reason));
+    for (const file of cssFiles) {
+      const label = relativeToRoot(file);
+      const css = await fs.readFile(file, "utf8");
 
-    console.error(`Bundle contract violations (${state.contract.length}):`);
-
-    for (const violation of state.contract) {
-      console.error(`  ${violation.source}: ${violation.reason}`);
+      await checkReferences(label, path.posix.dirname(label), extractCssReferences(css), state);
     }
+
+    const manifestLabel = relativeToRoot(manifestPath);
+    const manifestRaw = await fs.readFile(manifestPath, "utf8");
+
+    let manifest;
+    try {
+      manifest = JSON.parse(manifestRaw);
+    } catch (error) {
+      throw new Error(`Could not parse ${manifestLabel}: ${error.message}`, {
+        cause: error,
+      });
+    }
+
+    await checkReferences(manifestLabel, ".", extractManifestReferences(manifest), state);
+
+    const precacheReferences = await collectPrecacheReferences(manifest);
+    await checkReferences(relativeToRoot(buildSwPath), ".", precacheReferences, state);
+
+    await checkBundleContract(state);
+    if (scope !== "source") {
+      releaseSummary = "Release validation started but could not complete.";
+      const sourceContractCount = state.contract.length;
+      const postBuildChecked = await checkGeneratedRelease(state);
+
+      if (postBuildChecked) {
+        releaseSummary = state.contract.length > sourceContractCount
+          ? `Release validation executed against dist/${MANIFEST_FILENAME} and failed; see contract violations.`
+          : `Verified the generated release in dist/ against dist/${MANIFEST_FILENAME}.`;
+      } else if (scope === "release") {
+        state.contract.push({
+          source: `dist/${MANIFEST_FILENAME}`,
+          reason: "required by --scope=release but unavailable. Run `npm run build` before checking the release.",
+        });
+        releaseSummary = `Release validation required but unavailable: no dist/${MANIFEST_FILENAME} accessible.`;
+      } else {
+        releaseSummary = `No dist/${MANIFEST_FILENAME} present, so the post-build release checks were skipped in auto scope. Run \`npm run build\` to include them.`;
+      }
+    }
+
+    const sources = [`${htmlFiles.length} HTML pages`, `${cssFiles.length} CSS files`, manifestLabel, `${precacheReferences.length} precache entries`].join(", ");
+    const summary = `Checked ${state.checked} local references across ${sources} (${state.skipped} external or in-page references ignored).`;
+
+    if (state.findings.length > 0) {
+      state.findings.sort((a, b) => a.source.localeCompare(b.source) || a.value.localeCompare(b.value) || a.kind.localeCompare(b.kind));
+
+      console.error(`Unresolved local references (${state.findings.length}):`);
+
+      for (const finding of state.findings) {
+        console.error(`  ${finding.source} [${finding.kind}] ${finding.value} -> ${finding.target} (${finding.reason})`);
+      }
+    }
+
+    if (state.contract.length > 0) {
+      state.contract.sort((a, b) => a.source.localeCompare(b.source) || a.reason.localeCompare(b.reason));
+
+      console.error(`Bundle contract violations (${state.contract.length}):`);
+
+      for (const violation of state.contract) {
+        console.error(`  ${violation.source}: ${violation.reason}`);
+      }
+    }
+
+    if (state.findings.length > 0 || state.contract.length > 0) {
+      console.error(summary);
+
+      return 1;
+    }
+
+    console.log(summary);
+    console.log("All local references resolved and the bundle contract holds.");
+
+    return 0;
+  } finally {
+    console.log(releaseSummary);
   }
-
-  if (state.findings.length > 0 || state.contract.length > 0) {
-    console.error(summary);
-    console.error(releaseSummary);
-
-    return 1;
-  }
-
-  console.log(summary);
-  console.log(releaseSummary);
-  console.log("All local references resolved and the bundle contract holds.");
-
-  return 0;
 };
 
+let selectedScope;
 try {
-  process.exitCode = await run();
+  selectedScope = getRequestedScope();
+  console.log(`Reference check scope: ${selectedScope}.`);
+  process.exitCode = await run(selectedScope);
 } catch (error) {
+  if (selectedScope === undefined) {
+    console.error("Reference check scope: invalid CLI selection.");
+    console.error("Release validation not run because CLI usage is invalid.");
+  }
   console.error(`Reference integrity check failed: ${error.message}`);
   process.exitCode = 2;
 }

@@ -23,13 +23,9 @@ The opportunities below improve environment reproducibility, control over existi
 
 ### IMP-WORKFLOW-02 — Make reference-check scope explicit
 
-- **Affected workflow:** Source validation and production artifact verification.
-- **Evidence:** `package.json:50`; `tools/qa/check-references.mjs:3-22`, `tools/qa/check-references.mjs:524-539` and `tools/qa/check-references.mjs:724-736`; `docs/settings.md:85-88`.
-- **Current workflow:** `qa:references` always checks maintained sources and automatically adds release checks when `dist/build-manifest.json` exists. Without that manifest it reports the release stage as skipped. Its verification scope therefore depends on local artifact state; there is no explicit source-only or required-release selection.
-- **Proposed improvement:** Add explicit scope selection to the existing checker: source-only verification and source verification with a required generated release. Retain automatic selection as the existing default.
-- **Expected practical value:** Lets maintainers choose the relevant verification scope without changing local build artifacts, and makes a deliberate release check distinguish missing inputs from successful artifact verification.
-- **Implementation scope:** Extend the existing checker and its usage documentation, reusing all current validators. Preserve default behavior, bundle/header contracts, read-only execution and existing failure classifications; add no umbrella runner or browser tooling.
-- **Acceptance criteria:** Default invocation retains its current behavior. Source-only selection checks all existing source contracts regardless of `dist/`. Required-release selection fails clearly without the necessary artifacts and executes all existing release checks when they are available. Every result identifies the selected scope, and no mode writes files.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added documented `auto`, `source` and `release` scope selection, preserving default automatic detection and all existing validators. Every run reports its scope and release outcome; missing required releases fail with code `1`, while invalid CLI usage fails with code `2`.
+- **Verification:** Focused CLI scenarios passed for absent and built releases, source selection with zero generated-file probes, invalid arguments and injected source/release/read failures with expected codes `0`/`1`/`2`; the release fixture came from a successful isolated `npm run build`. Read-only checks confirmed unchanged file hashes, sizes, modification times and fixture file inventory; `npm run lint`, `git diff --check` and final diff/status review passed. No browser audit or deployment was run.
 - **Impact:** Medium
 - **Effort:** Medium
 
