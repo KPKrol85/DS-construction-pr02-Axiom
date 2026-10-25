@@ -4,9 +4,38 @@ import { qs } from "../utils/dom.js";
 export const initNavigation = () => {
   const btn = qs(SELECTORS.navToggle);
   const nav = qs(SELECTORS.primaryNav);
-  if (!btn || !nav) return;
+  if (!btn || !nav || typeof window.matchMedia !== "function") return;
   const header = btn.closest("header");
   const mql = window.matchMedia("(max-width: 899px)");
+  const sectionEntries = ["o-nas", "uslugi", "galeria", "faq", "kontakt"].map((id) => ({
+    link: nav.querySelector(`.site-nav__link[href="#${id}"]`),
+    section: document.getElementById(id),
+  }));
+  const tracksSections =
+    header?.matches(".site-header") &&
+    typeof window.requestAnimationFrame === "function" &&
+    typeof window.getComputedStyle === "function" &&
+    sectionEntries.every(({ link, section }) => link && section?.matches("main section"));
+  let currentSectionLink = null;
+  const syncCurrentSection = () => {
+    if (!tracksSections) return;
+    // Native anchors can leave a small gap below the header. Use one reading
+    // line for all sections, including that existing scroll-margin allowance.
+    const readingPosition =
+      Math.max(
+        0,
+        header.getBoundingClientRect().bottom,
+        ...sectionEntries.map(({ section }) => parseFloat(window.getComputedStyle(section).scrollMarginTop) || 0)
+      ) + 1;
+    const nextLink = sectionEntries.find(({ section }) => {
+      const { top, bottom } = section.getBoundingClientRect();
+      return top <= readingPosition && bottom > readingPosition;
+    })?.link || null;
+    if (nextLink === currentSectionLink) return;
+    currentSectionLink?.removeAttribute("data-current-section");
+    nextLink?.setAttribute("data-current-section", "true");
+    currentSectionLink = nextLink;
+  };
   if (!btn.hasAttribute("aria-expanded")) btn.setAttribute("aria-expanded", "false");
   let lastTrigger = null;
   let syncFrame = 0;
@@ -20,11 +49,16 @@ export const initNavigation = () => {
     document.documentElement.style.setProperty("--mobile-nav-top", `${topOffset}px`);
     document.documentElement.style.setProperty("--mobile-nav-max-height", `${maxHeight}px`);
   };
-  const queueSyncMobileNavPosition = () => {
+  const queueSyncNavigation = () => {
+    if (typeof window.requestAnimationFrame !== "function") {
+      syncMobileNavPosition();
+      return;
+    }
     if (syncFrame) return;
     syncFrame = window.requestAnimationFrame(() => {
       syncFrame = 0;
       syncMobileNavPosition();
+      syncCurrentSection();
     });
   };
   const applyDesktopState = () => {
@@ -83,11 +117,23 @@ export const initNavigation = () => {
   window.addEventListener(
     "scroll",
     () => {
-      if (nav.classList.contains("mobile-open")) queueSyncMobileNavPosition();
+      if (tracksSections || nav.classList.contains("mobile-open")) queueSyncNavigation();
     },
     { passive: true }
   );
-  window.addEventListener("resize", queueSyncMobileNavPosition, { passive: true });
+  window.addEventListener("resize", queueSyncNavigation, { passive: true });
+  if (tracksSections) {
+    window.addEventListener("pageshow", queueSyncNavigation);
+    window.addEventListener("hashchange", queueSyncNavigation);
+    window.addEventListener("load", queueSyncNavigation, { once: true });
+    header.addEventListener("transitionend", queueSyncNavigation);
+    if (typeof window.ResizeObserver === "function") {
+      const resizeObserver = new window.ResizeObserver(queueSyncNavigation);
+      resizeObserver.observe(header);
+      sectionEntries.forEach(({ section }) => resizeObserver.observe(section));
+    }
+    queueSyncNavigation();
+  }
   nav.addEventListener("click", (e) => {
     const link = e.target.closest("a[href], area[href]");
     if (link && mql.matches) closeMenu();
@@ -115,6 +161,7 @@ export const initNavigation = () => {
     } else {
       applyDesktopState();
     }
+    if (tracksSections) queueSyncNavigation();
   };
   if (mql.addEventListener) mql.addEventListener("change", onChange);
   else if (mql.addListener) mql.addListener(onChange);

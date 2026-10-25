@@ -337,6 +337,16 @@ html.js .site-nav.mobile-open {
   background: color-mix(in srgb, var(--text-inverse) 8%, transparent);
 }
 
+.site-nav__link[data-current-section="true"]::before {
+  content: "";
+  position: absolute;
+  inset-inline: var(--space-4);
+  bottom: var(--space-1);
+  height: 2px;
+  background: var(--text-link);
+  pointer-events: none;
+}
+
 /* Keep sticky header stable on mobile while the fixed nav drawer is open. */
 body.nav-open {
   overflow: visible;

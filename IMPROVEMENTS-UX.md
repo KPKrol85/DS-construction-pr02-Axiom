@@ -49,13 +49,9 @@ The archived plan, changelog, audits and completed UI, design and quality report
 
 ### IMP-UX-05 — Indicate the current homepage section in navigation
 
-- **Affected journey:** Moving through the long homepage using anchors or scrolling.
-- **Evidence:** `index.html:283-291`; `js/components/navigation.js:4-123`; `css/layout/layout.css:325-338`; `js/sections/hero.js`, `initHeroReveal` (its observer controls content reveal, not navigation state).
-- **Current experience:** The homepage navigation links to five content sections and marks “Strona Główna” as the current page. The navigation script manages opening, closing and breakpoint state; it does not indicate which homepage section is currently being read. Section headings and working anchor destinations already provide orientation.
-- **Proposed improvement:** Supplement the existing page indicator with a current-section marker for the homepage's section links, synchronized with scrolling and anchor navigation.
-- **Expected user value:** Visitors could identify their position among the existing homepage sections before choosing their next destination, including when reopening the mobile menu.
-- **Implementation scope:** Limit enhancement to homepage section tracking in `js/components/navigation.js` and shared navigation styling. Keep `aria-current="page"` and all destinations unchanged; use a separate section-state marker rather than overwriting page identity. Preserve mobile-menu focus, dismissal and scroll behavior, service-page navigation, theme support and static navigation when JavaScript or observation APIs are unavailable.
-- **Acceptance criteria:** On the homepage, the section at the reading position below the sticky header has one distinguishable marker in desktop navigation and the opened mobile menu. Direct fragment entry, anchor activation and manual scrolling update it consistently; the hero/top position has no section marker. Page-current semantics remain intact, service/legal pages receive no homepage scroll state, and tracking never changes focus, scroll position, URL or browser history.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Homepage navigation now underlines at most one section link using `data-current-section`, based on section bounds, the sticky header's actual bottom edge and existing anchor offsets; hero, testimonials and footer reading positions have no marker. Tracking preserves page-current semantics, destinations, native navigation and mobile-menu interactions, including updates while collapsed.
+- **Verification:** Focused navigation tests passed (29/29), scoped ESLint, `qa:references` and `git diff --check` passed. Headless Chrome checks at 1280px and 320px covered scrolling, anchors, menu interactions, breakpoints and light/dark/system themes using intercepted canonical files because loopback networking was blocked. Screen readers and release artifacts (no dist manifest) were not tested.
 - **Impact:** Medium
 - **Effort:** Medium
 
