@@ -108,11 +108,15 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 
 Projekt używa npm (`package-lock.json`, `lockfileVersion` 3). Zależności są potrzebne wyłącznie do buildu, podglądu i audytów — same strony działają bez nich.
 
+Obsługiwany zakres Node.js: `^22.22.2` (od `22.22.2` do wersji poniżej `23.0.0`), zadeklarowany w `package.json`. Zweryfikowane środowisko: Node.js `22.23.3` i npm `10.9.9` na Windows x64.
+
+Aby odtworzyć zależności z zatwierdzonego lockfile, uruchom:
+
 ```bash
-npm install
+npm ci
 ```
 
-Repozytorium nie deklaruje wymaganej wersji Node.js (brak `engines`, `.nvmrc` i `.node-version`).
+Polecenia `npm install` używaj przy celowym dodawaniu lub aktualizowaniu zależności; sprawdź wtedy zmiany w `package.json` i `package-lock.json`.
 
 ### Development lokalny
 
@@ -383,11 +387,15 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 
 The project uses npm (`package-lock.json`, `lockfileVersion` 3). Dependencies are required only for the build, preview, and audits — the pages themselves run without them.
 
+Supported Node.js range: `^22.22.2` (from `22.22.2` up to, but excluding, `23.0.0`), declared in `package.json`. Verified environment: Node.js `22.23.3` and npm `10.9.9` on Windows x64.
+
+To reproduce dependencies from the committed lockfile, run:
+
 ```bash
-npm install
+npm ci
 ```
 
-The repository does not declare a required Node.js version (no `engines`, `.nvmrc`, or `.node-version`).
+Use `npm install` for intentional dependency additions or updates; review the resulting changes to `package.json` and `package-lock.json`.
 
 ### Local Development
 

@@ -15,13 +15,9 @@ The opportunities below improve environment reproducibility, control over existi
 
 ### IMP-WORKFLOW-01 — Declare a reproducible Node/npm setup
 
-- **Affected workflow:** Dependency installation and local tooling setup.
-- **Evidence:** `README.md:107-115` and `README.md:382-390`; `package.json:17-54`; `package-lock.json:4-28` and `package-lock.json:7601-7632`.
-- **Current workflow:** Both installation sections prescribe `npm install` and explicitly note the absence of a project Node requirement. A committed npm lockfile exists, and locked tools declare runtime constraints; for example, jsdom 30.0.1 specifies its supported Node ranges. The repository does not identify a verified Node/npm baseline for the complete toolchain.
-- **Proposed improvement:** Declare a supported Node range derived from the locked dependency graph, record one verified Node/npm pair, and document `npm ci` for reproducing an existing checkout. Distinguish that operation from intentional dependency updates.
-- **Expected practical value:** Makes initial setup repeatable and lets maintainers choose a compatible runtime before invoking build or test tools.
-- **Implementation scope:** Limit changes to runtime metadata in `package.json`, corresponding root lockfile metadata if needed, and the existing PL/EN installation sections. Preserve dependency versions, npm, all commands and the build sequence; introduce no runtime manager or installation wrapper.
-- **Acceptance criteria:** The declared baseline satisfies the locked packages' applicable runtime requirements. A clean setup using the recorded Node/npm pair completes `npm ci` without dependency or lockfile drift, and existing lint plus a focused DOM test run succeed. Instructions clearly separate reproduction from dependency maintenance.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Declared Node.js `^22.22.2` in the package and root lockfile metadata; both README installation sections record the verified Node.js `22.23.3` / npm `10.9.9` Windows x64 baseline and distinguish reproducible `npm ci` installation from intentional dependency maintenance with `npm install`. Dependency versions, integrity data, scripts and the build workflow remain unchanged.
+- **Verification:** The declared range and baseline satisfy all 611 locked Node engine requirements; prior isolated `npm ci` evidence remains valid for the unchanged dependency graph and recorded no lockfile drift. `npm run lint` and navigation Vitest tests (29/29) passed; Vitest required a rerun outside the sandbox after a temporary-file `EPERM` error. `git diff --check` and final status/diff review passed; no build or browser audit was run.
 - **Impact:** Medium
 - **Effort:** Small
 
