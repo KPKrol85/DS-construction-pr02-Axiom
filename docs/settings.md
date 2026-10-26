@@ -1,5 +1,7 @@
 # settings.md
 
+Jedyny szczegółowy opis skryptów npm projektu: polecenia, wymagania wstępne i kolejność wykonania, tryby opcjonalne oraz kontrakty plików źródłowych i generowanych. Wykonywalnym źródłem prawdy pozostają `package.json` i skrypty w `tools/`. Każdą zmianę zachowania komendy lub jej kontraktu wyjściowego opisz w tym pliku; `README.md` utrzymuje wyłącznie skrócone przepisy z odnośnikami do tej dokumentacji.
+
 ## package.json scripts
 
 ### img:build
@@ -11,12 +13,12 @@
 
 ### img:clean
 - **Command:** `node tools/images/build-images.mjs --clean`
-- **What it does:** Czyści wygenerowane artefakty obrazów.
+- **What it does:** Usuwa cały katalog `assets/img/_optimized/` z wygenerowanymi wariantami; źródłowe obrazy pozostają bez zmian. Warianty są śledzone w repozytorium, więc po czyszczeniu odtwórz je przez `npm run img:build` bez argumentów.
 - **When to use:** Gdy chcesz wykonać pełny, czysty przebieg generowania obrazów.
 
 ### build:clean
 - **Command:** `node tools/release/clean-dist.mjs`
-- **What it does:** Usuwa katalog `dist`.
+- **What it does:** Usuwa katalog `dist` i tworzy go na nowo jako pusty.
 - **When to use:** Na początku pełnego procesu build.
 
 ### build:css
@@ -37,21 +39,22 @@
 ### build:hash
 - **Command:** `node tools/release/build-hash.mjs`
 - **What it does:** Liczy SHA-256 z finalnych zminifikowanych bajtów obu pośrednich bundli, skraca skrót do 16 znaków szesnastkowych i zmienia ich nazwy na `style.<hash>.min.css` oraz `script.<hash>.min.js` w katalogu głównym `dist`; zapisuje `dist/build-manifest.json`, który jest źródłem finalnych nazw dla `build:sw`, `build:dist` i QA.
-- **When to use:** Po `build:css` i `build:js`, przed `build:sw`; zwykle jako część `build`.
+- **When to use:** Po `build:css` i `build:js`, przed `build:sw:production`; zwykle jako część `build`.
+- **Failure behavior:** Brak pośredniego bundla albo pozostawiony obok niego bundel z wcześniejszego builda przerywa krok błędem; pełny `npm run build` zaczyna od `build:clean`, więc do `build:hash` trafia dokładnie jeden bundel każdego typu.
 
 ### build:sw
 - **Command:** `node tools/sw/build-sw.mjs`
-- **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny, niezmieniony) i `dist/sw.js` (profil produkcyjny, który precache’uje dokładne nazwy bundli odczytane z `dist/build-manifest.json`), każdy z własną listą pre-cache i własną rewizją.
-- **When to use:** Tylko gdy oba profile mają zostać odświeżone jednocześnie; wymaga wcześniejszego `build:hash` dla profilu produkcyjnego.
+- **What it does:** Generuje z `sw.template.js` oba Service Workery: `sw.js` w katalogu głównym (profil lokalny, niezmieniony) i `dist/sw.js` (profil produkcyjny, który precache’uje dokładne nazwy bundli odczytane z `dist/build-manifest.json`), każdy z własną listą pre-cache i własną rewizją. Nie jest krokiem `build`, który używa `build:sw:production`.
+- **When to use:** Tylko gdy oba profile mają zostać odświeżone jednocześnie; wymaga wcześniejszego `build:hash` dla profilu produkcyjnego. Bez poprawnego `dist/build-manifest.json` kończy się błędem przed zapisem któregokolwiek pliku, także lokalnego `sw.js`.
 
 ### build:sw:local
 - **Command:** `node tools/sw/build-sw.mjs --profile=local`
-- **What it does:** Generuje wyłącznie lokalny `sw.js` w katalogu głównym, bez wymagania `dist/build-manifest.json`.
-- **When to use:** Jawnie przed lokalnymi testami PWA uruchamianymi przez `npm run serve`.
+- **What it does:** Generuje wyłącznie lokalny `sw.js` w katalogu głównym, bez wymagania `dist/build-manifest.json`. Wygenerowany plik jest śledzony w repozytorium i nie jest edytowany ręcznie.
+- **When to use:** Po zmianach w `sw.template.js` oraz jawnie przed lokalnymi testami PWA uruchamianymi przez `npm run serve`.
 
 ### build:sw:production
 - **Command:** `node tools/sw/build-sw.mjs --profile=production`
-- **What it does:** Generuje wyłącznie produkcyjny `dist/sw.js` z nazwami bundli odczytanymi z `dist/build-manifest.json`; nie zapisuje głównego `sw.js`.
+- **What it does:** Generuje wyłącznie produkcyjny `dist/sw.js` z nazwami bundli odczytanymi z `dist/build-manifest.json`; nie zapisuje głównego `sw.js`. Brakujący, nieaktualny lub nieprawidłowy manifest przerywa krok błędem.
 - **When to use:** Po `build:hash`, przed `build:dist`; standardowo jako część `build`.
 
 ### build:dist
@@ -61,8 +64,9 @@
 
 ### build
 - **Command:** `npm run build:clean && npm run build:css && npm run build:js && npm run build:hash && npm run build:sw:production && npm run build:dist`
-- **What it does:** Uruchamia pełny pipeline produkcyjny od czyszczenia do złożenia `dist`.
-- **When to use:** Standardowa komenda przed wdrożeniem.
+- **What it does:** Uruchamia pełny pipeline produkcyjny od czyszczenia do złożenia `dist`. Kroki są połączone `&&`, więc błąd dowolnego kroku zatrzymuje pipeline.
+- **Output:** Kompletne wydanie w `dist/`: bundle `style.<hash>.min.css` i `script.<hash>.min.js`, `build-manifest.json` z ich finalnymi nazwami, produkcyjny `sw.js`, `_headers` z dokładnymi regułami cache obu bundli oraz kopie `assets/`, `services/`, `legal/` i plików z katalogu głównego (`index.html`, `404.html`, `offline.html`, `success.html`, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, `LICENSE`). Kanoniczne drzewa `css/` i `js/` nie są kopiowane w całości: warstwy CSS i graf modułów `js/main.js` trafiają do produkcji wyłącznie jako bundle adresowane treścią, a pod `dist/js/` trafiają tylko dwa skrypty ładowane bezpośrednio przez strony — `js/theme-init.js` i `js/offline.js`. Katalog `dist/` powstaje lokalnie, nie jest przechowywany w repozytorium i nie jest edytowany ręcznie.
+- **When to use:** Standardowa komenda przed wdrożeniem; następnie sprawdź wydanie przez `npm run qa:references -- --scope=release` i obejrzyj je przez `npm run serve:dist`.
 
 ### serve
 - **Command:** `http-server -c-1 -p 8080`
@@ -71,18 +75,20 @@
 
 ### serve:dist
 - **Command:** `http-server dist -c-1 -p 8080`
-- **What it does:** Serwuje tylko artefakty z katalogu `dist`.
-- **When to use:** Weryfikacja finalnego pakietu produkcyjnego.
+- **What it does:** Serwuje tylko artefakty z katalogu `dist` na porcie 8080 z wyłączonym cache.
+- **When to use:** Weryfikacja finalnego pakietu produkcyjnego po `npm run build`.
 
 ### qa:lighthouse
 - **Command:** `node tools/qa/run-lighthouse.mjs`
-- **What it does:** Uruchamia Lighthouse CI collect dla zdefiniowanych URL i zapisuje raporty do `reports/lighthouse`.
+- **What it does:** Uruchamia Lighthouse CI collect dla `http://localhost:8080/`, `/services/budowa-domow.html` i `/legal/regulamin.html` oraz zapisuje raporty do `reports/lighthouse`.
 - **When to use:** Audyt jakości (performance/SEO/a11y/best practices) przed release.
+- **Local server:** Skrypt sam startuje i po zakończeniu zatrzymuje własny `http-server` dla katalogu roboczego (źródeł, nie `dist/`) na porcie 8080, więc nie wymaga osobno uruchomionego `npm run serve`. Gdy port 8080 jest zajęty, przebieg kończy się czytelnym błędem bez ponownego użycia ani zatrzymania cudzego procesu. Niepowodzenie audytu lub serwera kończy polecenie kodem `1`.
 
 ### qa:a11y
 - **Command:** `node tools/qa/run-pa11y.mjs`
-- **What it does:** Uruchamia pa11y dla wskazanych URL i zapisuje raporty JSON do `reports/pa11y`.
+- **What it does:** Uruchamia pa11y dla tych samych trzech adresów co `qa:lighthouse` i zapisuje raporty JSON do `reports/pa11y` (`index.json`, `budowa-domow.json`, `regulamin.json`).
 - **When to use:** Kontrola dostępności przed publikacją.
+- **Local server:** Ten sam kontrakt lokalnego serwera QA co w `qa:lighthouse`.
 
 ### qa:references
 - **Command:** `node tools/qa/check-references.mjs`
@@ -93,7 +99,7 @@
 
 ### qa
 - **Command:** `npm run qa:lighthouse && npm run qa:a11y`
-- **What it does:** Odpala komplet QA (Lighthouse + pa11y).
+- **What it does:** Odpala komplet QA (Lighthouse + pa11y); `qa:a11y` uruchamia się tylko po udanym `qa:lighthouse`.
 - **When to use:** Jako quality gate przed wdrożeniem.
 
 ### build:head
@@ -108,5 +114,5 @@
 
 ### test
 - **Command:** `vitest run`
-- **What it does:** Uruchamia 33 skupione testy Vitest w środowisku jsdom w 4 plikach (`tests/contact-form.test.js`, `tests/lightbox.test.js`, `tests/navigation.test.js`, `tests/cookies.test.js`) pokrywających zachowanie formularza kontaktowego, lightboxa, nawigacji i modala informacji o projekcie/cookies; nie wymaga serwera ani przeglądarki.
-- **When to use:** Po zmianach w `js/components/forms.js`, `js/components/lightbox.js`, `js/components/navigation.js`, `js/components/cookies.js`, `js/utils/a11y.js` lub powiązanej konfiguracji, przed commitem i przed release.
+- **What it does:** Uruchamia wszystkie pliki `tests/**/*.test.js` zgodnie ze wzorcem `include` w `vitest.config.mjs`; domyślnym środowiskiem jest jsdom, a testy dokumentów Service Workera i odwołań dostępności w HTML deklarują środowisko `node`. Skupione testy obejmują formularz kontaktowy (także wysyłkę produkcyjną z zamockowanym `fetch`), lightbox, nawigację, modal informacji o projekcie/cookies, motyw i jego wczesną inicjalizację, wrappery `js/utils/storage.js`, obsługę dokumentów w `sw.template.js` oraz odwołania dostępności w utrzymywanych stronach HTML; nie wymagają serwera ani przeglądarki.
+- **When to use:** Po zmianach w `js/`, `sw.template.js`, utrzymywanych stronach HTML, `tests/` lub powiązanej konfiguracji, przed commitem i przed release.

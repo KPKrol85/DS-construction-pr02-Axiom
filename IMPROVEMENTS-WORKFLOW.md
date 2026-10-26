@@ -47,13 +47,9 @@ The opportunities below improve environment reproducibility, control over existi
 
 ### IMP-WORKFLOW-05 — Maintain one detailed npm-command reference
 
-- **Affected workflow:** Keeping development instructions synchronized with package scripts.
-- **Evidence:** `README.md:125-188`, `README.md:400-463` and `README.md:257-263`; `docs/settings.md:3-108`; `package.json:33-54`.
-- **Current workflow:** Detailed command behavior, generated-output descriptions and validation instructions are maintained in both README language sections and again in `docs/settings.md`. The README already designates a script reference, but still repeats substantial operational detail. A command-contract change can require equivalent prose changes in three locations.
-- **Proposed improvement:** Make the existing `docs/settings.md` the sole detailed command reference. Keep concise, task-oriented installation, source-preview, build and verification recipes in both README languages, linking to that reference for granular behavior and prerequisites.
-- **Expected practical value:** Reduces repeated manual synchronization while retaining an accessible bilingual entry point and the existing documentation files.
-- **Implementation scope:** Consolidate only overlapping command-reference and maintenance passages in `README.md` and `docs/settings.md`. Keep executable truth in `package.json` and the referenced scripts. Preserve source/generated ownership, hosting instructions and the established changelog policy; add no new documentation file or generator.
-- **Acceptance criteria:** Every existing npm script remains discoverable in the detailed reference. Both README languages retain usable quick-start recipes and links to the correct reference sections. Detailed prerequisites and output contracts have one prose owner, with a brief instruction to update it when those contracts change. No executable command changes are required.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** `docs/settings.md` is now the sole detailed npm-command reference, with a maintenance rule keeping `package.json` and `tools/` as executable truth; it covers all 21 scripts and owns the `dist/` output, service-worker profile, QA-server and test-scope contracts. Both README languages keep parallel `npm ci`, preview, build/release-check, focused-check and audit recipes linking to reference sections, with corrected `docs/settings.md` paths and the `build:sw:production` pipeline step. Hosting, source/generated ownership, changelog policy and historical verification statements are preserved.
+- **Verification:** A read-only script confirmed 21/21 scripts documented in `package.json` order with matching commands, all 44 local README links and 12 distinct `docs/settings.md` anchors resolving, no root `settings.md` or plain `build:sw` pipeline references, and both README build sequences matching `package.json`; changed command claims were checked against `tools/` sources. README test-suite descriptions were statically matched to the 9 files in `tests/`; `git diff --check` and final status/diff review passed, while no build, generator, test, lint, browser audit or deployment was run.
 - **Impact:** Medium
 - **Effort:** Small
 
