@@ -39,13 +39,9 @@ The opportunities below improve environment reproducibility, control over existi
 
 ### IMP-WORKFLOW-04 — Preview HTML head regeneration before writing pages
 
-- **Affected workflow:** Applying metadata and shared head-template changes.
-- **Evidence:** `tools/html/build-head.mjs:9-16`, `tools/html/build-head.mjs:81-92` and `tools/html/build-head.mjs:95-122`; `docs/settings.md:95-98`.
-- **Current workflow:** `build:head` reads the template and metadata, then renders and writes every listed HTML page in one loop. It preserves inline JSON-LD and the theme initializer, but has no read-only preview mode and writes pages even when their rendered bytes are unchanged. Maintainers inspect the resulting diff after generation.
-- **Proposed improvement:** Provide a read-only preview/check mode using the same renderer, showing which pages would change before applying regeneration. Prepare all rendered results before the write phase and write only changed pages when applying them.
-- **Expected practical value:** Makes the scope of a metadata update reviewable before mutation and avoids unnecessary writes during an unchanged generation pass.
-- **Implementation scope:** Limit work to the existing generator and its usage description. Preserve the template/metadata ownership, default generated content, page line endings, retained inline scripts and all content outside `<head>`; create no parallel renderer or generated-file hand-editing procedure.
-- **Acceptance criteria:** Previewing a controlled metadata change identifies affected pages without writing files. Applying generation produces the previewed heads, and a subsequent preview reports no differences. Invalid metadata is reported before page writes. Inline JSON-LD, the early theme initializer and content outside `<head>` remain intact.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** Added strict `--preview` selection and a shared preflight that validates and renders all declared pages before any HTML write; both modes report ordered change counts, and apply writes only changed pages. Documented both npm commands while preserving the existing renderer, metadata/template ownership, retained scripts, page line endings and content outside `<head>`.
+- **Verification:** Isolated 15-page checks passed across 53 instrumented runs: metadata/template changes, selective writes, no-op stability, LF/CRLF and script preservation, plus 22 invalid-input runs and 10 rejected CLI cases with expected codes `0`/`1`; rendered outputs matched the previous generator byte-for-byte. Npm preview/apply checks, SHA-256 and modification-time comparisons, lint, diff checks and final status/diff review passed; 660 protected worktree files remained unchanged, and no production build, browser audit or deployment was run.
 - **Impact:** Medium
 - **Effort:** Small
 

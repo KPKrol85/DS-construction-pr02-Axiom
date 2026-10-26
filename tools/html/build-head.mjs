@@ -12,8 +12,18 @@ const metaPath = path.join(projectRoot, "tools/templates/pages.meta.json");
 const siteOrigin = "https://ds-construction-pr02-axiom.netlify.app";
 const defaultOgImage = "/assets/img/og/og-1200x630.jpg";
 
+const args = process.argv.slice(2);
+if (args.length > 1 || (args.length === 1 && args[0] !== "--preview")) {
+  console.error(`Invalid arguments: ${args.join(" ")}. Usage: node tools/html/build-head.mjs [--preview]`);
+  process.exit(1);
+}
+const preview = args.length === 1;
+
 const template = fs.readFileSync(templatePath, "utf8").trimEnd();
 const pageMeta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+if (!pageMeta || typeof pageMeta !== "object" || Array.isArray(pageMeta)) {
+  throw new Error("Page metadata must be an object keyed by HTML page paths");
+}
 
 const escapeAttr = (value) => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
@@ -92,7 +102,12 @@ const extractHeadExtras = (headInner) => {
   return extras;
 };
 
-for (const [filePath, meta] of Object.entries(pageMeta)) {
+// Validate and render every page before allowing any HTML writes.
+const preparedPages = Object.entries(pageMeta).map(([filePath, meta]) => {
+  if (!meta || typeof meta !== "object" || Array.isArray(meta)) {
+    throw new Error(`Invalid metadata object for ${filePath}`);
+  }
+
   if (meta.canonical !== meta.og_url) {
     throw new Error(`canonical and og_url mismatch for ${filePath}`);
   }
@@ -100,9 +115,10 @@ for (const [filePath, meta] of Object.entries(pageMeta)) {
   const absolutePath = path.join(projectRoot, filePath);
   const html = fs.readFileSync(absolutePath, "utf8");
   const headMatch = html.match(/<head>([\s\S]*?)<\/head>/i);
+  const headTags = html.match(/<\/?head\b[^>]*>/gi) ?? [];
 
-  if (!headMatch) {
-    throw new Error(`Could not find <head>...</head> in ${filePath}`);
+  if (!headMatch || headTags.length !== 2) {
+    throw new Error(`Expected exactly one valid <head>...</head> in ${filePath}`);
   }
 
   const currentHeadInner = headMatch[1];
@@ -117,6 +133,20 @@ for (const [filePath, meta] of Object.entries(pageMeta)) {
 
   const updatedHtml = html.replace(headMatch[0], `<head>${nextHeadInner}</head>`);
 
-  fs.writeFileSync(absolutePath, updatedHtml, "utf8");
-  console.log(`Updated head: ${filePath}`);
+  return { filePath, absolutePath, updatedHtml, changed: updatedHtml !== html };
+});
+
+const changedCount = preparedPages.filter((page) => page.changed).length;
+const unchangedCount = preparedPages.length - changedCount;
+
+for (const { filePath, absolutePath, updatedHtml, changed } of preparedPages) {
+  if (!preview && changed) {
+    fs.writeFileSync(absolutePath, updatedHtml, "utf8");
+  }
+  console.log(`${changed ? "CHANGED" : "UNCHANGED"}: ${filePath}`);
 }
+
+console.log(
+  `${preview ? "Preview" : "Apply"}: ${changedCount} changed, ${unchangedCount} unchanged; ` +
+    (preview ? "no files written." : `${changedCount} files written.`)
+);

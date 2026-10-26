@@ -97,9 +97,9 @@
 - **When to use:** Jako quality gate przed wdrożeniem.
 
 ### build:head
-- **Command:** `node tools/html/build-head.mjs`
-- **What it does:** Aktualizuje sekcje `<head>` stron HTML na podstawie szablonu i metadanych.
-- **When to use:** Po zmianach globalnych SEO/meta/head.
+- **Commands:** `npm run build:head -- --preview` (podgląd) oraz `npm run build:head` (zapis); uruchamiają `node tools/html/build-head.mjs` odpowiednio z `--preview` lub bez argumentów.
+- **What it does:** Oba tryby najpierw odczytują i walidują metadane oraz sekcje `<head>` wszystkich zadeklarowanych stron i przygotowują ich pełną treść tym samym rendererem. Błąd danych wejściowych lub renderowania przerywa pracę przed pierwszym zapisem HTML. Podgląd wyłącznie raportuje `CHANGED`/`UNCHANGED` dla każdej strony i liczbę zmian, bez zapisywania plików; wykryte różnice nie powodują błędu. Tryb zapisu aktualizuje tylko strony o zmienionej treści i podaje liczby stron zmienionych oraz niezmienionych. Zachowane są szablon i metadane jako źródła generowanej sekcji, skrypty JSON-LD i inicjalizacji motywu, końce linii każdej strony oraz treść poza `<head>`.
+- **When to use:** Po zmianach globalnych SEO/meta/head: najpierw sprawdź zakres przez `--preview`, następnie zastosuj zmiany bez argumentów. Kolejny podgląd powinien wykazać zero zmian; ponowny zapis bez różnic nie modyfikuje plików ani ich czasów modyfikacji. Nieznane, powtórzone i nieobsługiwane argumenty kończą polecenie błędem przed zapisem.
 
 ### lint
 - **Command:** `eslint js tools tests sw.template.js vitest.config.mjs`
