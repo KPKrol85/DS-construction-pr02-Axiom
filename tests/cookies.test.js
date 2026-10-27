@@ -3,7 +3,7 @@
 // The suite drives the real module through a minimal copy of the production
 // project-information modal and asserts focus, storage, cookie and body state.
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { initCookieBanner } from "../js/components/cookies.js";
 import { COOKIE_BANNER } from "../js/core/config.js";
@@ -29,6 +29,8 @@ const COOKIE_FIXTURE = `
 `;
 
 let animationFrames;
+
+const originalOffsetParent = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "offsetParent");
 
 const clearConsentCookie = () => {
   document.cookie = `${COOKIE_BANNER.cookieName}=; Max-Age=0; path=/`;
@@ -56,6 +58,27 @@ const pressKey = (key, init = {}) => {
   document.activeElement.dispatchEvent(event);
   return event;
 };
+
+beforeAll(() => {
+  // jsdom performs no layout, so every element reports offsetParent === null.
+  // js/utils/a11y.js uses that property to drop non-rendered elements, so the
+  // focus trap would otherwise be built from an empty list. This stub reports
+  // the layout parent for rendered elements and null inside a [hidden] or
+  // display: none subtree, as a browser does.
+  Object.defineProperty(HTMLElement.prototype, "offsetParent", {
+    configurable: true,
+    get() {
+      for (let node = this; node instanceof HTMLElement; node = node.parentElement) {
+        if (node.hasAttribute("hidden") || document.defaultView.getComputedStyle(node).display === "none") return null;
+      }
+      return this.parentElement;
+    },
+  });
+});
+
+afterAll(() => {
+  if (originalOffsetParent) Object.defineProperty(HTMLElement.prototype, "offsetParent", originalOffsetParent);
+});
 
 beforeEach(() => {
   localStorage.clear();
@@ -123,6 +146,20 @@ describe("cookie modal keyboard behavior", () => {
 
     expect(shiftTabEvent.defaultPrevented).toBe(true);
     expect(document.activeElement).toBe(acceptButton);
+  });
+
+  it("prevents Tab once the modal no longer contains a focusable element", () => {
+    const { banner } = mountCookieBanner();
+    flushAnimationFrames();
+    const modalContent = banner.querySelector(".project-modal__content");
+    banner.querySelectorAll("a[href], button").forEach((el) => el.remove());
+    modalContent.focus();
+
+    const event = pressKey("Tab");
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(modalContent);
+    expect(banner.isConnected).toBe(true);
   });
 
   it("prevents Escape without dismissing the modal", () => {

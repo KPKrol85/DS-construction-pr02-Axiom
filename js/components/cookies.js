@@ -1,4 +1,5 @@
 import { COOKIE_BANNER, SELECTORS } from "../core/config.js";
+import { getFocusableElements, handleFocusTrap } from "../utils/a11y.js";
 import { qs } from "../utils/dom.js";
 import { safeGetItem, safeSetItem } from "../utils/storage.js";
 
@@ -40,28 +41,14 @@ export const initCookieBanner = () => {
 
     if (event.key !== "Tab") return;
 
-    const focusable = banner.querySelectorAll(
-      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
+    const focusable = getFocusableElements(banner);
 
     if (!focusable.length) {
       event.preventDefault();
       return;
     }
 
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+    handleFocusTrap(event, focusable);
   }
 
   banner.addEventListener("keydown", trapFocus);

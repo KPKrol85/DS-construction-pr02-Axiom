@@ -31,13 +31,9 @@ The remaining opportunities are local duplications inside otherwise sound struct
 
 ### IMP-TECH-03 — Use the shared focus utilities in the project-information modal
 
-- **Affected area:** Focus-trap ownership (`js/components/cookies.js`, `js/utils/a11y.js`).
-- **Evidence:** `js/components/cookies.js:35-65`; `js/utils/a11y.js:1-17`; `js/components/lightbox.js:3`; `js/components/lightbox.js:48-53`; `js/components/lightbox.js:355-357`; `tests/lightbox.test.js:96-115`.
-- **Current implementation:** The lightbox builds its focus trap from the shared `getFocusableElements` and `handleFocusTrap` utilities. The project-information/cookie modal implements its own Tab wrapping with a second, differently written focusable-element selector and without the rendered-element filter. The project therefore maintains two definitions of what is focusable and two first/last wrapping implementations.
-- **Proposed improvement:** Make `cookies.js` collect focusable elements and wrap Tab through `js/utils/a11y.js`, keeping only modal-specific behaviour in the component: blocked Escape, recomputation on each keydown and initial focus.
-- **Expected engineering value:** One focusable-element definition and one wrapping rule serve both dialogs, so a correction or extension of the selector applies to both focus traps.
-- **Implementation scope:** `js/components/cookies.js`; `js/utils/a11y.js` only if the modal's current behaviour of preventing Tab when nothing is focusable must be preserved explicitly; `tests/cookies.test.js` may adopt the `offsetParent` layout emulation already used by `tests/lightbox.test.js`, because jsdom performs no layout. Preserve focus order, blocked Escape, initial focus, scroll locking, consent persistence and focus return. No markup changes.
-- **Acceptance criteria:** `cookies.js` declares no focusable selector and no first/last wrapping logic of its own; both dialogs import the same utilities; all existing cookie-modal and lightbox assertions pass without being removed or relaxed; `npm run lint` passes.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** `cookies.js` now recomputes the modal's focusable elements on each Tab keydown with the shared `getFocusableElements()` and delegates wrapping to `handleFocusTrap()`, the same utilities the lightbox imports; its own selector and first/last wrapping logic are removed. Blocked Escape, the local Tab prevention when no control is focusable, initial focus, scroll locking, consent persistence and focus return stay in the component; `js/utils/a11y.js` and the markup are unchanged.
+- **Verification:** `tests/cookies.test.js` adopts the `offsetParent` layout emulation from `tests/lightbox.test.js` (restored after the suite) and adds an empty-focusable-list Tab regression test, which also passes against the original implementation; no existing assertion was changed. The cookie and lightbox suites passed (25/25), as did the full `npm test` run (136/136), `npm run lint` and `git diff --check`; no manual browser check was performed.
 - **Impact:** Medium
 - **Effort:** Small
 
