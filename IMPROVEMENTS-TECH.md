@@ -23,13 +23,9 @@ The remaining opportunities are local duplications inside otherwise sound struct
 
 ### IMP-TECH-02 — Apply navigation menu state through one state function
 
-- **Affected area:** Mobile navigation component (`js/components/navigation.js`).
-- **Evidence:** `js/components/navigation.js:64-112`; `js/components/navigation.js:157-169`.
-- **Current implementation:** `applyDesktopState`, `applyMobileCollapsed`, `closeMenu` and `openMenu` each write the same state set: the `mobile-open` and `active` classes, `aria-expanded`, the Polish `aria-label`, `inert`, `aria-hidden`, the `nav-open` body class and the outside-pointer listener. The first three differ only in the `inert` and `aria-hidden` values and in focus return, and the label `"Otwórz menu"` is written in three places.
-- **Proposed improvement:** Introduce one internal function that applies the complete menu state for the three states the component supports (desktop, mobile collapsed, mobile open), with `openMenu` and `closeMenu` adding only their position sync, trigger tracking and focus behaviour.
-- **Expected engineering value:** Each class, ARIA, `inert` and scroll-lock contract is defined once, so a change to the menu contract cannot be applied to one transition and missed in another.
-- **Implementation scope:** `js/components/navigation.js` only, inside `initNavigation`. Preserve the attribute values of each state, the Polish labels, focus movement and return with `preventScroll`, Escape and outside-pointer handling, breakpoint synchronisation, current-section tracking and the fallbacks for missing browser APIs. No CSS, markup or test changes are expected.
-- **Acceptance criteria:** The class, ARIA, `inert`, `aria-hidden`, body-class and outside-listener writes occur in one function used by all four transitions; each menu label string is declared once; `tests/navigation.test.js` passes without modification; `npm run lint` passes.
+- **Status:** COMPLETED — implemented and verified.
+- **Result:** A private `applyMenuState()` inside `initNavigation` now applies the complete `desktop`, `collapsed` and `open` state (classes, `aria-expanded`, the Polish `aria-label`, `inert`, `aria-hidden`, the `nav-open` body class and the outside-pointer listener), replacing the `lock`/`unlock` helpers and declaring each menu label once. `applyDesktopState`, `applyMobileCollapsed`, `closeMenu` and `openMenu` delegate to it; position sync, trigger tracking, focus movement and focus return with `preventScroll` stay in `openMenu`/`closeMenu`, with all attribute values unchanged.
+- **Verification:** `tests/navigation.test.js` passed unmodified (29/29) before and after the change, and `npm run lint` and `git diff --check` passed. Dependencies resolved from the main checkout's `node_modules`; no manual browser check or full `npm test` run was performed.
 - **Impact:** Medium
 - **Effort:** Small
 

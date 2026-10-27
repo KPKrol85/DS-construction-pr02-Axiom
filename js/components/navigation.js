@@ -39,8 +39,6 @@ export const initNavigation = () => {
   if (!btn.hasAttribute("aria-expanded")) btn.setAttribute("aria-expanded", "false");
   let lastTrigger = null;
   let syncFrame = 0;
-  const unlock = () => document.body.classList.remove("nav-open");
-  const lock = () => document.body.classList.add("nav-open");
   const syncMobileNavPosition = () => {
     if (!header || !mql.matches) return;
     const headerBottom = Math.ceil(header.getBoundingClientRect().bottom);
@@ -61,53 +59,36 @@ export const initNavigation = () => {
       syncCurrentSection();
     });
   };
-  const applyDesktopState = () => {
-    nav.classList.remove("mobile-open");
-    btn.classList.remove("active");
-    btn.setAttribute("aria-expanded", "false");
-    btn.setAttribute("aria-label", "Otwórz menu");
-    nav.toggleAttribute("inert", false);
-    nav.setAttribute("aria-hidden", "false");
-    unlock();
-    removeOutsideClick();
+  // Menu states: "desktop" (visible, toggle inactive), "collapsed" (mobile,
+  // hidden and inert) and "open" (mobile, interactive and scroll-locked).
+  const applyMenuState = (state) => {
+    const open = state === "open";
+    const hidden = state === "collapsed";
+    nav.classList.toggle("mobile-open", open);
+    btn.classList.toggle("active", open);
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
+    nav.toggleAttribute("inert", hidden);
+    nav.setAttribute("aria-hidden", String(hidden));
+    document.body.classList.toggle("nav-open", open);
+    if (open) addOutsideClick();
+    else removeOutsideClick();
   };
-  const applyMobileCollapsed = () => {
-    nav.classList.remove("mobile-open");
-    btn.classList.remove("active");
-    btn.setAttribute("aria-expanded", "false");
-    btn.setAttribute("aria-label", "Otwórz menu");
-    nav.toggleAttribute("inert", true);
-    nav.setAttribute("aria-hidden", "true");
-    unlock();
-    removeOutsideClick();
-  };
+  const applyDesktopState = () => applyMenuState("desktop");
+  const applyMobileCollapsed = () => applyMenuState("collapsed");
   const closeMenu = () => {
-    nav.classList.remove("mobile-open");
-    btn.classList.remove("active");
-    btn.setAttribute("aria-expanded", "false");
-    btn.setAttribute("aria-label", "Otwórz menu");
-    nav.toggleAttribute("inert", true);
-    nav.setAttribute("aria-hidden", "true");
-    unlock();
+    applyMenuState("collapsed");
     (lastTrigger || btn).focus({ preventScroll: true });
     lastTrigger = null;
-    removeOutsideClick();
   };
   const openMenu = () => {
     syncMobileNavPosition();
-    nav.classList.add("mobile-open");
-    btn.classList.add("active");
-    btn.setAttribute("aria-expanded", "true");
-    btn.setAttribute("aria-label", "Zamknij menu");
-    nav.toggleAttribute("inert", false);
-    nav.setAttribute("aria-hidden", "false");
-    lock();
+    applyMenuState("open");
     lastTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : btn;
     const firstLink = nav.querySelector(".site-nav__link");
     if (firstLink && typeof firstLink.focus === "function") {
       firstLink.focus({ preventScroll: true });
     }
-    addOutsideClick();
   };
   const toggleMenu = () => (nav.classList.contains("mobile-open") ? closeMenu() : openMenu());
   btn.addEventListener("click", toggleMenu);
