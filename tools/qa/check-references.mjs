@@ -6,7 +6,7 @@
 //
 //   Static (always): resolves every local reference declared by the maintained
 //   HTML pages, the stylesheets under css/, manifest.webmanifest, and the
-//   static production precache definition owned by tools/sw/build-sw.mjs, and
+//   static production precache definition owned by tools/sw/precache.mjs, and
 //   verifies the content-hashed bundle contract that cannot be checked by
 //   resolving a path - who owns the names, and what the canonical _headers
 //   declares. Everything is read from the tracked sources, so this mode needs
@@ -41,12 +41,15 @@ import {
   parseProductionName,
   readBundleManifest,
 } from "../release/bundle-names.mjs";
+// The precache declarations are imported on the same terms: unlike the
+// generator that renders them, tools/sw/precache.mjs only declares.
+import { BASE_PRECACHE, manifestIconUrls } from "../sw/precache.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const cssDir = path.join(rootDir, "css");
 const distDir = path.join(rootDir, "dist");
 const manifestPath = path.join(rootDir, "manifest.webmanifest");
-const buildSwPath = path.join(rootDir, "tools", "sw", "build-sw.mjs");
+const precachePath = path.join(rootDir, "tools", "sw", "precache.mjs");
 
 const getRequestedScope = () => {
   const usage = "Usage: npm run qa:references -- [--scope=auto|--scope=source|--scope=release]";
@@ -99,6 +102,11 @@ const expectedBundles = [
 // Scripts that consume production bundle names. They must read them from the
 // shared contract, never build or hardcode one of their own.
 const bundleNameConsumers = ["tools/sw/build-sw.mjs", "tools/release/build-dist.mjs"];
+
+// Declarations that list deployment URLs without consuming bundle names. They
+// have no reason to import the shared contract, but must not spell a production
+// bundle name of their own either.
+const bundleNameFreeDeclarations = ["tools/sw/precache.mjs"];
 
 // The fixed production URLs the pre-O-01 contract used. No consumer may still
 // declare one: nothing is served under those paths any more. The bare filenames
@@ -260,54 +268,22 @@ const extractManifestReferences = (manifest) => {
   return references;
 };
 
-// Reads the static production precache list straight out of
-// tools/sw/build-sw.mjs so the production definition stays the single source of
-// truth. Both generated service workers come from that builder's profiles -
-// dist/sw.js from this list, the root sw.js from the local profile, whose
-// entries every maintained page already references - so reading an output here
-// would only check the generator against itself.
+// The static production precache list, taken from the same declarations
+// tools/sw/build-sw.mjs renders the service workers from, so the production
+// definition stays the single source of truth. Both generated service workers
+// come from those declarations - dist/sw.js from this list, the root sw.js from
+// the local one, whose entries every maintained page already references - so
+// reading an output here would only check the generator against itself.
 //
 // Only the fixed URLs appear in this declaration. The content-hashed bundle
 // URLs are appended per build from the manifest, and checkGeneratedRelease
-// verifies those against the deployment that actually produced them.
-const readBasePrecache = async () => {
-  const source = await fs.readFile(buildSwPath, "utf8");
-  const match = source.match(/const BASE_PRECACHE\s*=\s*(\[[\s\S]*?\])\s*;/);
-
-  if (!match) {
-    throw new Error(`Could not locate BASE_PRECACHE in ${relativeToRoot(buildSwPath)}`);
-  }
-
-  let entries;
-  try {
-    entries = JSON.parse(match[1].replace(/,(\s*])$/, "$1"));
-  } catch (error) {
-    throw new Error(`Could not parse BASE_PRECACHE in ${relativeToRoot(buildSwPath)}: ${error.message}`, { cause: error });
-  }
-
-  if (!Array.isArray(entries) || entries.some((entry) => typeof entry !== "string")) {
-    throw new Error(`BASE_PRECACHE in ${relativeToRoot(buildSwPath)} is not a list of strings`);
-  }
-
-  return entries;
-};
-
-// Mirrors the manifest icon derivation in tools/sw/build-sw.mjs, which appends
-// the manifest icons to BASE_PRECACHE.
-const collectPrecacheReferences = async (manifest) => {
-  const basePrecache = await readBasePrecache();
-  const references = basePrecache.map((value) => ({ kind: "BASE_PRECACHE", value }));
-  const icons = Array.isArray(manifest.icons) ? manifest.icons : [];
-
-  for (const icon of icons) {
-    if (typeof icon?.src !== "string" || !icon.src) continue;
-
-    const value = icon.src.startsWith("/") ? icon.src : `/${icon.src}`;
-    references.push({ kind: "manifest icons", value });
-  }
-
-  return references;
-};
+// verifies those against the deployment that actually produced them. Every
+// declared manifest icon is resolved, including one the generator would skip
+// because its file is missing.
+const collectPrecacheReferences = (manifest) => [
+  ...BASE_PRECACHE.map((value) => ({ kind: "BASE_PRECACHE", value })),
+  ...manifestIconUrls(manifest).map((value) => ({ kind: "manifest icons", value })),
+];
 
 // Every string literal in a builder, with comments removed, so an output path
 // that survives only in prose cannot satisfy the contract.
@@ -343,6 +319,23 @@ const readToolSource = async (relativePath) => {
 // and what the canonical deployment headers promise.
 const checkBundleContract = async (state) => {
   const note = (source, reason) => state.contract.push({ source, reason });
+
+  // No script may spell a production bundle name the manifest owns.
+  const checkBundleNameLiterals = (file, source) => {
+    const literals = collectStringLiterals(source);
+
+    for (const literal of literals) {
+      if (productionNameLiteral.test(literal)) {
+        note(file, `hardcodes the content-hashed production filename "${literal}"`);
+      }
+    }
+
+    for (const obsolete of obsoleteProductionUrls) {
+      if (literals.has(obsolete)) {
+        note(file, `still declares the obsolete production URL "${obsolete}"`);
+      }
+    }
+  };
 
   // The shared module still declares exactly the two bundles everything assumes.
   if (BUNDLES.length !== expectedBundles.length) {
@@ -394,19 +387,18 @@ const checkBundleContract = async (state) => {
       note(consumer, "does not import the shared contract tools/release/bundle-names.mjs");
     }
 
-    const literals = collectStringLiterals(source);
+    checkBundleNameLiterals(consumer, source);
+  }
 
-    for (const literal of literals) {
-      if (productionNameLiteral.test(literal)) {
-        note(consumer, `hardcodes the content-hashed production filename "${literal}"`);
-      }
+  for (const declaration of bundleNameFreeDeclarations) {
+    const source = await readToolSource(declaration);
+
+    if (source === null) {
+      note(declaration, "declaration module is missing");
+      continue;
     }
 
-    for (const obsolete of obsoleteProductionUrls) {
-      if (literals.has(obsolete)) {
-        note(consumer, `still declares the obsolete production URL "${obsolete}"`);
-      }
-    }
+    checkBundleNameLiterals(declaration, source);
   }
 
   // The canonical deployment headers: exactly one marker block, and no
@@ -755,8 +747,8 @@ const run = async (scope) => {
 
     await checkReferences(manifestLabel, ".", extractManifestReferences(manifest), state);
 
-    const precacheReferences = await collectPrecacheReferences(manifest);
-    await checkReferences(relativeToRoot(buildSwPath), ".", precacheReferences, state);
+    const precacheReferences = collectPrecacheReferences(manifest);
+    await checkReferences(relativeToRoot(precachePath), ".", precacheReferences, state);
 
     await checkBundleContract(state);
     if (scope !== "source") {

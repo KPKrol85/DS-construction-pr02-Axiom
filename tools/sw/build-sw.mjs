@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { BUNDLES, readBundleManifest } from "../release/bundle-names.mjs";
+import { BASE_PRECACHE, LOCAL_PRECACHE, manifestIconUrls } from "./precache.mjs";
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, "dist");
@@ -29,38 +30,6 @@ const getRequestedProfileNames = () => {
 
   return [profileName];
 };
-
-// Production precache base: the fixed URLs served from the deployment root that
-// build:dist assembles. Kept as a flat array of string literals because
-// tools/qa/check-references.mjs reads this declaration to validate the
-// production contract without running a build.
-//
-// The production CSS and JavaScript bundles are deliberately absent: their URLs
-// carry a content hash and are read from dist/build-manifest.json per build, so
-// this file never constructs or hardcodes one.
-const BASE_PRECACHE = [
-  "/",
-  "/offline.html",
-  "/js/offline.js",
-  "/js/theme-init.js",
-  "/manifest.webmanifest",
-];
-
-// Local precache base: the URLs served from the repository root by
-// `npm run serve`. The production bundles do not exist there; all 15
-// maintained HTML pages load css/main.css, js/main.js, and js/theme-init.js
-// directly, while offline.html additionally loads js/offline.js for recovery.
-// Those are the files a locally installed service worker can precache. The
-// remaining entries are shared with the production profile.
-const LOCAL_PRECACHE = [
-  "/",
-  "/offline.html",
-  "/css/main.css",
-  "/js/main.js",
-  "/js/offline.js",
-  "/js/theme-init.js",
-  "/manifest.webmanifest",
-];
 
 // sw.template.js is the only hand-edited service worker source. Every service
 // worker in the repository is rendered from it by the single render step below;
@@ -166,12 +135,9 @@ const buildRevision = async (profile) => {
 const getManifestIcons = async () => {
   const manifestRaw = await fs.readFile(WEB_MANIFEST_PATH, "utf8");
   const manifest = JSON.parse(manifestRaw);
-  const icons = Array.isArray(manifest.icons) ? manifest.icons : [];
 
   const existingIconUrls = [];
-  for (const icon of icons) {
-    if (!icon?.src || typeof icon.src !== "string") continue;
-    const iconUrl = icon.src.startsWith("/") ? icon.src : `/${icon.src}`;
+  for (const iconUrl of manifestIconUrls(manifest)) {
     const iconFilePath = path.join(ROOT, iconUrl.replace(/^\//, ""));
 
     try {
