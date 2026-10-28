@@ -47,7 +47,7 @@ const renderHead = (filePath, meta) => {
     "{{ROBOTS}}": meta.robots ?? "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
     "{{OG_TITLE}}": ogTitle,
     "{{OG_DESCRIPTION}}": ogDescription,
-    "{{OG_URL}}": meta.og_url,
+    "{{OG_URL}}": meta.canonical,
     "{{OG_IMAGE}}": ogImage,
     "{{OG_IMAGE_ALT}}": meta.og_image_alt,
     "{{TWITTER_TITLE}}": twitterTitle,
@@ -106,10 +106,6 @@ const extractHeadExtras = (headInner) => {
 const preparedPages = Object.entries(pageMeta).map(([filePath, meta]) => {
   if (!meta || typeof meta !== "object" || Array.isArray(meta)) {
     throw new Error(`Invalid metadata object for ${filePath}`);
-  }
-
-  if (meta.canonical !== meta.og_url) {
-    throw new Error(`canonical and og_url mismatch for ${filePath}`);
   }
 
   const absolutePath = path.join(projectRoot, filePath);
