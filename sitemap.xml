@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ds-construction-pr02-axiom.netlify.app/</loc>
     <lastmod>2025-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/services/budowa-domow.html</loc>
-    <lastmod>2025-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/services/remonty-mieszkan.html</loc>
-    <lastmod>2025-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://ds-construction-pr02-axiom.netlify.app/services/adaptacje-poddaszy.html</loc>
@@ -28,7 +13,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/services/wykonczenia-wnetrz.html</loc>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/services/budowa-domow.html</loc>
+    <lastmod>2025-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/services/instalacje-elektryczne.html</loc>
     <lastmod>2025-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -40,20 +31,31 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/services/instalacje-elektryczne.html</loc>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/services/remonty-mieszkan.html</loc>
     <lastmod>2025-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/polityka-prywatnosci.html</loc>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/services/wykonczenia-wnetrz.html</loc>
+    <lastmod>2025-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/kariera.html</loc>
+    <lastmod>2025-10-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/polityka-cookies.html</loc>
     <lastmod>2025-10-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/polityka-cookies.html</loc>
+    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/polityka-prywatnosci.html</loc>
     <lastmod>2025-10-22</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -64,11 +66,4 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
-  <url>
-    <loc>https://ds-construction-pr02-axiom.netlify.app/legal/kariera.html</loc>
-    <lastmod>2025-10-22</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
 </urlset>

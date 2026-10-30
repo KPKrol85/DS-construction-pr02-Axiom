@@ -5,7 +5,10 @@
     "canonical": "/",
     "og_description": "Kompleksowe remonty i wykończenia wnętrz, budowa domów oraz adaptacje poddaszy. Terminowo, solidnie i z gwarancją jakości.",
     "og_image_alt": "Axiom Construction - usługi budowlano-remontowe i realizacje",
-    "twitter_description": "Remonty, budowa domów i wykończenia wnętrz. Sprawdź ofertę, realizacje i skontaktuj się z Axiom Construction."
+    "twitter_description": "Remonty, budowa domów i wykończenia wnętrz. Sprawdź ofertę, realizacje i skontaktuj się z Axiom Construction.",
+    "lastmod": "2025-10-22",
+    "changefreq": "weekly",
+    "priority": "1.0"
   },
   "success.html": {
     "title": "Dziękujemy za kontakt — Axiom Construction",
@@ -37,7 +40,10 @@
     "canonical": "/services/adaptacje-poddaszy.html",
     "og_title": "Adaptacje poddaszy - Axiom Construction",
     "og_image_alt": "Axiom Construction - adaptacje poddaszy",
-    "twitter_title": "Adaptacje poddaszy — Axiom Construction"
+    "twitter_title": "Adaptacje poddaszy — Axiom Construction",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "services/budowa-domow.html": {
     "title": "Budowa domów — Axiom Construction",
@@ -45,7 +51,10 @@
     "canonical": "/services/budowa-domow.html",
     "og_title": "Budowa domów - Axiom Construction",
     "og_image_alt": "Axiom Construction — budowa domów",
-    "twitter_image_alt": "Axiom Construction - budowa domów"
+    "twitter_image_alt": "Axiom Construction - budowa domów",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "services/instalacje-elektryczne.html": {
     "title": "Instalacje elektryczne — Axiom Construction",
@@ -53,20 +62,29 @@
     "canonical": "/services/instalacje-elektryczne.html",
     "og_title": "Instalacje elektryczne - Axiom Construction",
     "og_image_alt": "Axiom Construction — instalacje elektryczne",
-    "twitter_image_alt": "Axiom Construction - instalacje elektryczne"
+    "twitter_image_alt": "Axiom Construction - instalacje elektryczne",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "services/instalacje-sanitarne.html": {
     "title": "Instalacje sanitarne — Axiom Construction",
     "description": "Instalacje sanitarne Axiom Construction: wod.-kan., ogrzewanie i przyłącza. Dobór rozwiązań, montaż, serwis i dokumentacja.",
     "canonical": "/services/instalacje-sanitarne.html",
     "og_image_alt": "Axiom Construction — instalacje sanitarne",
-    "twitter_image_alt": "Axiom Construction - instalacje sanitarne"
+    "twitter_image_alt": "Axiom Construction - instalacje sanitarne",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "services/remonty-mieszkan.html": {
     "title": "Remonty mieszkań — Axiom Construction",
     "description": "Remonty mieszkań od Axiom Construction: plan prac, wykończenia, instalacje i koordynacja ekip. Terminowo, z gwarancją i wyceną.",
     "canonical": "/services/remonty-mieszkan.html",
-    "og_image_alt": "Axiom Construction - remonty mieszkań"
+    "og_image_alt": "Axiom Construction - remonty mieszkań",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "services/wykonczenia-wnetrz.html": {
     "title": "Wykończenia wnętrz — Axiom Construction",
@@ -74,7 +92,10 @@
     "canonical": "/services/wykonczenia-wnetrz.html",
     "og_title": "Wykończenia wnętrz - Axiom Construction",
     "og_image_alt": "Axiom Construction - wykończenia wnętrz",
-    "twitter_image_alt": "Axiom Construction — wykończenia wnętrz"
+    "twitter_image_alt": "Axiom Construction — wykończenia wnętrz",
+    "lastmod": "2025-10-22",
+    "changefreq": "monthly",
+    "priority": "0.8"
   },
   "legal/certyfikaty.html": {
     "title": "Certyfikaty i kwalifikacje — demo | Axiom Construction",
@@ -88,7 +109,10 @@
     "description": "Kariera w Axiom Construction: aktualne rekrutacje, wymagania, benefity i ścieżki rozwoju w zespołach budowlanych i technicznych.",
     "canonical": "/legal/kariera.html",
     "og_image_alt": "Axiom Construction — kariera",
-    "twitter_title": "Kariera - Axiom Construction"
+    "twitter_title": "Kariera - Axiom Construction",
+    "lastmod": "2025-10-22",
+    "changefreq": "yearly",
+    "priority": "0.4"
   },
   "legal/polityka-cookies.html": {
     "title": "Polityka cookies — Axiom Construction",
@@ -96,13 +120,19 @@
     "canonical": "/legal/polityka-cookies.html",
     "og_image_alt": "Axiom Construction - polityka cookies",
     "twitter_title": "Polityka cookies - Axiom Construction",
-    "twitter_image_alt": "Axiom Construction — polityka cookies"
+    "twitter_image_alt": "Axiom Construction — polityka cookies",
+    "lastmod": "2025-10-22",
+    "changefreq": "yearly",
+    "priority": "0.5"
   },
   "legal/polityka-prywatnosci.html": {
     "title": "Polityka prywatności - Axiom Construction",
     "description": "Polityka prywatności Axiom Construction: zakres i cele przetwarzania danych, prawa użytkowników oraz kontakt w sprawach ochrony danych.",
     "canonical": "/legal/polityka-prywatnosci.html",
-    "og_image_alt": "Axiom Construction - polityka prywatności"
+    "og_image_alt": "Axiom Construction - polityka prywatności",
+    "lastmod": "2025-10-22",
+    "changefreq": "yearly",
+    "priority": "0.5"
   },
   "legal/regulamin.html": {
     "title": "Regulamin serwisu — Axiom Construction",
@@ -110,6 +140,9 @@
     "canonical": "/legal/regulamin.html",
     "og_title": "Regulamin serwisu - Axiom Construction",
     "og_image_alt": "Axiom Construction — regulamin serwisu",
-    "twitter_image_alt": "Axiom Construction - regulamin serwisu"
+    "twitter_image_alt": "Axiom Construction - regulamin serwisu",
+    "lastmod": "2025-10-22",
+    "changefreq": "yearly",
+    "priority": "0.5"
   }
 }

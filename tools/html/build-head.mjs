@@ -8,9 +8,11 @@ const projectRoot = path.resolve(__dirname, "../..");
 
 const templatePath = path.join(projectRoot, "tools/templates/head.partial.html");
 const metaPath = path.join(projectRoot, "tools/templates/pages.meta.json");
+const sitemapPath = path.join(projectRoot, "sitemap.xml");
 // Page metadata uses root-relative paths resolved against this public origin.
 const siteOrigin = "https://ds-construction-pr02-axiom.netlify.app";
 const defaultOgImage = "/assets/img/og/og-1200x630.jpg";
+const defaultRobots = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
 
 const args = process.argv.slice(2);
 if (args.length > 1 || (args.length === 1 && args[0] !== "--preview")) {
@@ -44,7 +46,7 @@ const renderHead = (filePath, meta) => {
     "{{TITLE}}": meta.title,
     "{{DESCRIPTION}}": meta.description,
     "{{CANONICAL}}": meta.canonical,
-    "{{ROBOTS}}": meta.robots ?? "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+    "{{ROBOTS}}": meta.robots ?? defaultRobots,
     "{{OG_TITLE}}": ogTitle,
     "{{OG_DESCRIPTION}}": ogDescription,
     "{{OG_URL}}": meta.canonical,
@@ -102,6 +104,51 @@ const extractHeadExtras = (headInner) => {
   return extras;
 };
 
+const escapeXml = (value) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+
+// Directives are compared whole, so only `noindex` (or `none`, which implies it) excludes a page;
+// `index` or `max-snippet:-1` never match by substring.
+const isIndexable = (meta) => {
+  const directives = (meta.robots ?? defaultRobots).split(",").map((directive) => directive.trim().toLowerCase());
+  return !directives.includes("noindex") && !directives.includes("none");
+};
+
+const isCalendarDate = (value) => {
+  const time = Date.parse(`${value}T00:00:00Z`);
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(time) && new Date(time).toISOString().startsWith(value);
+};
+
+// Sitemap fields in protocol order. Values stay strings, so a priority keeps its declared form such as "1.0".
+const sitemapFields = {
+  lastmod: isCalendarDate,
+  changefreq: (value) => ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"].includes(value),
+  priority: (value) => /^(?:0(?:\.\d+)?|1(?:\.0+)?)$/.test(value)
+};
+
+const renderSitemapUrl = (filePath, meta) => {
+  const loc = new URL(meta.canonical, siteOrigin);
+  if (loc.origin !== siteOrigin) {
+    throw new Error(`Sitemap URL for ${filePath} must use ${siteOrigin}`);
+  }
+
+  const fields = Object.entries(sitemapFields).map(([field, isValid]) => {
+    const value = meta[field];
+    if (typeof value !== "string" || !isValid(value)) {
+      throw new Error(`Missing or invalid sitemap value for ${field} in ${filePath}`);
+    }
+
+    return `    <${field}>${escapeXml(value)}</${field}>`;
+  });
+
+  return ["  <url>", `    <loc>${escapeXml(loc.href)}</loc>`, ...fields, "  </url>"].join("\n");
+};
+
 // Validate and render every page before allowing any HTML writes.
 const preparedPages = Object.entries(pageMeta).map(([filePath, meta]) => {
   if (!meta || typeof meta !== "object" || Array.isArray(meta)) {
@@ -129,15 +176,37 @@ const preparedPages = Object.entries(pageMeta).map(([filePath, meta]) => {
 
   const updatedHtml = html.replace(headMatch[0], `<head>${nextHeadInner}</head>`);
 
-  return { filePath, absolutePath, updatedHtml, changed: updatedHtml !== html };
+  return { filePath, absolutePath, content: updatedHtml, changed: updatedHtml !== html };
 });
 
-const changedCount = preparedPages.filter((page) => page.changed).length;
-const unchangedCount = preparedPages.length - changedCount;
+// The sitemap lists every indexable page under its canonical URL, in metadata order, and is
+// validated and rendered with the pages, so a sitemap error also prevents every write.
+const sitemapUrls = Object.entries(pageMeta)
+  .filter(([, meta]) => isIndexable(meta))
+  .map(([filePath, meta]) => renderSitemapUrl(filePath, meta));
+const updatedSitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...sitemapUrls,
+  "</urlset>\n"
+].join("\n");
+const currentSitemap = fs.existsSync(sitemapPath) ? fs.readFileSync(sitemapPath, "utf8") : null;
 
-for (const { filePath, absolutePath, updatedHtml, changed } of preparedPages) {
+const outputs = [
+  ...preparedPages,
+  {
+    filePath: "sitemap.xml",
+    absolutePath: sitemapPath,
+    content: updatedSitemap,
+    changed: updatedSitemap !== currentSitemap
+  }
+];
+const changedCount = outputs.filter((output) => output.changed).length;
+const unchangedCount = outputs.length - changedCount;
+
+for (const { filePath, absolutePath, content, changed } of outputs) {
   if (!preview && changed) {
-    fs.writeFileSync(absolutePath, updatedHtml, "utf8");
+    fs.writeFileSync(absolutePath, content, "utf8");
   }
   console.log(`${changed ? "CHANGED" : "UNCHANGED"}: ${filePath}`);
 }
