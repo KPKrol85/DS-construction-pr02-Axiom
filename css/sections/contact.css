@@ -234,7 +234,8 @@
   overflow: hidden;
 }
 
-/* The verification widget and the submit button keep the column's left edge. */
+/* The verification widget keeps the column's left edge; the submit button is
+   centred in the form. */
 .form__captcha-wrap {
   display: flex;
   justify-content: flex-start;
@@ -266,5 +267,5 @@ fieldset.form__group.form__captcha-wrap {
 .contact-form button[type="submit"],
 .contact-form .btn[type="submit"] {
   display: block;
-  margin: var(--space-5) 0 0;
+  margin: var(--space-5) auto 0;
 }

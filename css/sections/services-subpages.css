@@ -182,7 +182,8 @@
 
 /* Closing passage (IMP-DESIGN-05): the same surface and measured,
    left-aligned column as the home contact section — a quiet note, a
-   sectional rule, then the two existing actions at their natural width. */
+   sectional rule, then the two existing actions centred at their natural
+   width. */
 
 .cta {
   --dossier-rule: color-mix(in srgb, var(--text-body) 30%, transparent);
@@ -212,7 +213,7 @@
   border-top: 1px solid var(--dossier-rule);
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: var(--space-4);
 }
 
