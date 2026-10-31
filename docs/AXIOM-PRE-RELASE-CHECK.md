@@ -44,14 +44,14 @@
 
 ## 4. PWA — Screenshots
 
-- [ ] Sprawdzono, czy manifest zawiera sekcję `screenshots`.
-- [ ] Zweryfikowano wszystkie istniejące zrzuty ekranu.
-- [ ] Screenshoty przedstawiają aktualny wygląd Axiom.
-- [ ] Zweryfikowano proporcje, rozdzielczość i format plików.
-- [ ] Sprawdzono poprawność ścieżek do obrazów.
-- [ ] W razie potrzeby przygotowano nowe screenshoty mobilne.
-- [ ] W razie potrzeby przygotowano nowe screenshoty desktopowe.
-- [ ] Po ewentualnej wymianie zweryfikowano manifest ponownie.
+- [x] Sprawdzono, czy manifest zawiera sekcję `screenshots`.
+- [x] Zweryfikowano wszystkie istniejące zrzuty ekranu.
+- [x] Screenshoty przedstawiają aktualny wygląd Axiom.
+- [x] Zweryfikowano proporcje, rozdzielczość i format plików.
+- [x] Sprawdzono poprawność ścieżek do obrazów.
+- [x] W razie potrzeby przygotowano nowe screenshoty mobilne.
+- [x] W razie potrzeby przygotowano nowe screenshoty desktopowe.
+- [x] Po ewentualnej wymianie zweryfikowano manifest ponownie.
 - [ ] Sprawdzono aktualność osobnych screenshotów portfolio, jeśli istnieją.
 
 ## 5. PWA — Service Worker i Offline

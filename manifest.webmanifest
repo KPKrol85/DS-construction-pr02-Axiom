@@ -98,14 +98,14 @@
   "screenshots": [
     {
       "src": "/assets/img/screenshots/mobile.jpg",
-      "sizes": "720x1280",
+      "sizes": "1080x1920",
       "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Strona główna Axiom Construction — widok mobilny"
     },
     {
       "src": "/assets/img/screenshots/desktop.jpg",
-      "sizes": "1280x720",
+      "sizes": "1920x1080",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "Strona główna Axiom Construction — widok desktopowy"
