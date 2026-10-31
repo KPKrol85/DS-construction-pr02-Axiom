@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Axiom Construction - firma budowlano-remontowa",
+  "name": "Axiom Construction — Budownictwo i remonty",
   "short_name": "Axiom Construction",
-  "description": "Axiom Construction: oferta, realizacje, opinie i formularz kontaktowy. Projekt i kod: KP_Code.",
+  "description": "Demonstracyjna strona fikcyjnej marki budowlanej Axiom Construction — projekt portfolio KP_Code Digital Studio.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -52,9 +52,9 @@
 
   "shortcuts": [
     {
-      "name": "Oferta",
-      "short_name": "Oferta",
-      "description": "Przejdź do sekcji Oferta na stronie głównej",
+      "name": "Usługi",
+      "short_name": "Usługi",
+      "description": "Poznaj zakres usług prezentowanych w projekcie Axiom.",
       "url": "/#uslugi",
       "icons": [
         {
@@ -66,9 +66,9 @@
       ]
     },
     {
-      "name": "Dokumenty",
-      "short_name": "Legal",
-      "description": "Zobacz regulamin i politykę prywatności",
+      "name": "Regulamin",
+      "short_name": "Regulamin",
+      "description": "Przejdź do regulaminu strony.",
       "url": "/legal/regulamin.html",
       "icons": [
         {
@@ -80,9 +80,9 @@
       ]
     },
     {
-      "name": "Kontakt",
+      "name": "Kontakt z autorem",
       "short_name": "Kontakt",
-      "description": "Otwórz sekcję kontaktową z formularzem wyceny",
+      "description": "Przejdź do formularza kontaktowego KP_Code Digital Studio.",
       "url": "/#kontakt",
       "icons": [
         {
@@ -101,14 +101,14 @@
       "sizes": "720x1280",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Strona główna — widok mobilny"
+      "label": "Strona główna Axiom Construction — widok mobilny"
     },
     {
       "src": "/assets/img/screenshots/desktop.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "Strona główna — widok desktopowy"
+      "label": "Strona główna Axiom Construction — widok desktopowy"
     }
   ]
 }
