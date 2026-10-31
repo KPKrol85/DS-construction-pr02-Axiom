@@ -11,15 +11,15 @@
 
 ## 1. GitHub Actions — CI
 
-- [ ] Workflow CI jest poprawnie wykrywany przez GitHub.
-- [ ] Automatyczne uruchamianie po `push` do `main` działa.
-- [ ] `npm ci` przechodzi na GitHub Actions.
-- [ ] ESLint kończy się sukcesem.
-- [ ] Wszystkie testy Vitest przechodzą.
-- [ ] Kontrola referencji źródłowych przechodzi.
-- [ ] Produkcyjny build kończy się sukcesem.
-- [ ] Kontrola referencji produkcyjnych przechodzi.
-- [ ] Cały workflow ma status **SUCCESS**.
+- [x] Workflow CI jest poprawnie wykrywany przez GitHub.
+- [x] Automatyczne uruchamianie po `push` do `main` działa.
+- [x] `npm ci` przechodzi na GitHub Actions.
+- [x] ESLint kończy się sukcesem.
+- [x] Wszystkie testy Vitest przechodzą.
+- [x] Kontrola referencji źródłowych przechodzi.
+- [x] Produkcyjny build kończy się sukcesem.
+- [x] Kontrola referencji produkcyjnych przechodzi.
+- [x] Cały workflow ma status **SUCCESS**.
 
 ## 2. PWA — Manifest
 
