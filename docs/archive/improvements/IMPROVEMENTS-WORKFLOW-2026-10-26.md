@@ -7,11 +7,11 @@
 
 ## Overview
 
-Five workflow improvements were completed to strengthen environment reproducibility, validation control, asset generation and documentation maintenance.
+Five approved workflow improvements strengthened environment reproducibility, validation control, asset generation and documentation maintenance. No implementation tasks remained open in this review.
 
 The changes introduced an explicit Node.js baseline, selectable reference-validation scopes, targeted image regeneration, read-only HTML head previews and a single detailed npm-command reference.
 
-The existing architecture, build pipeline, source/generated-file ownership, deployment configuration and application behavior were preserved. No new dependencies or development frameworks were introduced.
+The existing architecture, build pipeline, source/generated-file ownership, deployment configuration and application behavior were preserved. No dependencies or development frameworks were added, and no dependencies were updated.
 
 ## Completed improvements
 
@@ -27,7 +27,7 @@ The existing architecture, build pipeline, source/generated-file ownership, depl
 
 - **Status:** COMPLETED — implemented and verified.
 - **Result:** Added `auto`, `source` and `release` scopes to `qa:references`, preserving automatic detection as the default. Introduced explicit scope reporting and distinct exit codes for validation failures (`1`) and invalid arguments or execution errors (`2`).
-- **Verification:** Focused CLI scenarios covered missing and generated releases, invalid arguments, injected failures and read-only execution. An isolated production build provided the release fixture. ESLint and `git diff --check` passed; no browser audit or deployment was performed.
+- **Verification:** Focused CLI scenarios covered missing and generated releases, invalid arguments, injected failures and read-only execution, using an isolated production build as the release fixture. ESLint and `git diff --check` passed; no browser audit or deployment was performed.
 - **Impact:** Medium
 - **Effort:** Medium
 
@@ -35,44 +35,29 @@ The existing architecture, build pipeline, source/generated-file ownership, depl
 
 - **Status:** COMPLETED — implemented and verified.
 - **Result:** Added strict `--source=<relative-path>` selection for regenerating one declared image's complete WebP/AVIF variant set. Preserved full generation, cleanup, source declarations, encoding settings, output naming and completeness checks.
-- **Verification:** Isolated tests confirmed 10 hero and 4 service-card variants, full generation of 164 variants from 20 sources, rejection of 20 invalid CLI cases and successful source-reference checks. Hash, size and modification-time comparisons confirmed all 164 original optimized assets remained unchanged. ESLint and diff checks passed.
+- **Verification:** Isolated tests confirmed 10 hero and 4 service-card variants, full generation of 164 variants from 20 sources, rejection of 20 invalid CLI cases and successful source-reference checks. Hash, size and modification-time comparisons confirmed that all 164 original optimized assets remained unchanged; ESLint and diff checks passed.
 - **Impact:** Medium
 - **Effort:** Small
 
 ### IMP-WORKFLOW-04 — Preview HTML head regeneration before writing pages
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** Added read-only `--preview` and preflight validation across all declared HTML pages. Apply mode writes only changed pages while preserving existing rendering, metadata ownership, JSON-LD, theme initialization, line endings and content outside `<head>`.
-- **Verification:** Isolated 15-page verification covered 53 instrumented runs, including invalid inputs, CLI rejection, selective writes and no-op stability. Generated HTML matched the previous renderer byte-for-byte; SHA-256 and modification-time checks confirmed write isolation. ESLint and diff checks passed; 660 protected worktree files remained unchanged.
+- **Result:** Added read-only `--preview` and preflight validation across all declared HTML pages. Apply mode wrote only changed pages while preserving existing rendering, metadata ownership, JSON-LD, theme initialization, line endings and content outside `<head>`.
+- **Verification:** Isolated 15-page verification covered 53 instrumented runs, including invalid inputs, CLI rejection, selective writes and no-op stability. Generated HTML matched the previous renderer byte-for-byte, and SHA-256 and modification-time checks confirmed write isolation. ESLint and diff checks passed; 660 protected worktree files remained unchanged.
 - **Impact:** Medium
 - **Effort:** Small
 
 ### IMP-WORKFLOW-05 — Maintain one detailed npm-command reference
 
 - **Status:** COMPLETED — implemented and verified.
-- **Result:** Consolidated detailed npm-command documentation in `docs/settings.md`, preserving `package.json` and implementation scripts as executable truth. Both README languages retain concise workflows with corrected links, production build ordering and descriptions of all nine Vitest test files.
-- **Verification:** Read-only checks confirmed coverage of all 21 npm scripts, 44 valid local README links and 12 reference anchors. Build sequences matched `package.json`, and test descriptions were checked against current sources. `git diff --check` passed; no runtime tests, build or browser audits were performed for this documentation-only improvement.
+- **Result:** Consolidated detailed npm-command documentation in `docs/settings.md`, preserving `package.json` and implementation scripts as executable truth. Both README languages retained concise workflows with corrected links, production build ordering and descriptions of all nine Vitest test files.
+- **Verification:** Read-only checks confirmed coverage of all 21 npm scripts, 44 valid local README links and 12 reference anchors; build sequences matched `package.json`, and test descriptions were checked against the then-current sources. `git diff --check` passed; no runtime tests, build or browser audits were performed for this documentation-only improvement.
 - **Impact:** Medium
 - **Effort:** Small
 
-## Completion summary
-
-- **Completed:** 5/5 improvements.
-- **Impact:** Medium across all five items.
-- **Effort:** Four Small, one Medium.
-- **Architecture:** Preserved.
-- **Dependencies:** No additions or updates.
-
-All approved workflow improvements are closed. No implementation tasks remain open in this review.
-
 ## Verification limitations
 
-Verification was scoped to each improvement rather than performed as one combined release regression.
-
-Generator and CLI checks used isolated fixtures where appropriate. An isolated production build verified release-reference behavior during IMP-WORKFLOW-02, but no final combined production-build verification was performed.
-
-Selected checks required reruns after Windows filesystem or sandbox restrictions. Successful reruns are reflected in the individual verification records.
-
-No comprehensive browser regression, deployment or live-hosting verification was performed. No execution-time or productivity improvements were quantitatively measured.
-
-**Final status:** COMPLETED — archived workflow improvement review.
+- Verification was scoped to each improvement rather than performed as one combined release regression.
+- Generator and CLI checks used isolated fixtures where appropriate. An isolated production build verified release-reference behavior during IMP-WORKFLOW-02, but no final combined production-build verification was performed.
+- Selected checks required reruns after Windows filesystem or sandbox restrictions; the successful reruns are reflected in the individual verification records.
+- No comprehensive browser regression, deployment or live-hosting verification was performed. No execution-time or productivity improvements were quantitatively measured.

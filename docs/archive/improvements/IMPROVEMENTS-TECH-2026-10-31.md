@@ -1,17 +1,15 @@
 # Axiom — Technical Improvements
 
 **Analysis date:** 2026-10-26
-**Completed:** 2026-10-30
-**Status:** COMPLETED — all five selected improvements implemented and verified.
+**Completion date:** 2026-10-30
+**Status:** COMPLETED — 5/5 selected improvements implemented and verified.
 **Scope:** Project-wide technical implementation.
 
 ## Overview
 
-Five technical improvements were completed across Axiom, covering service-worker precache ownership, navigation state management, shared focus utilities, metadata generation and sitemap maintenance.
+Five selected technical improvements addressed service-worker precache ownership, navigation state management, shared focus utilities, metadata generation and sitemap maintenance.
 
-The changes reduced duplicated logic and configuration while preserving existing application behavior, accessibility contracts, service-worker profiles and production output.
-
-No new dependencies, frontend framework or architectural layer were introduced.
+The changes reduced duplicated logic and configuration while preserving existing application behavior, accessibility contracts, service-worker profiles and production output. No new dependencies, frontend framework or architectural layer were introduced.
 
 ## Completed improvements
 
@@ -27,7 +25,7 @@ No new dependencies, frontend framework or architectural layer were introduced.
 
 - **Status:** COMPLETED — implemented and verified.
 - **Result:** Centralized desktop, collapsed and open navigation states in `applyMenuState()`. Preserved ARIA attributes, inert state, scroll locking, focus management and outside-pointer dismissal.
-- **Verification:** Navigation tests passed before and after implementation (29/29). ESLint and `git diff --check` passed; no manual browser verification or full test suite was performed for this improvement.
+- **Verification:** Navigation tests (29/29) passed before and after implementation; ESLint and `git diff --check` passed. No manual browser verification or full test-suite run was performed for this improvement.
 - **Impact:** Medium
 - **Effort:** Small
 
@@ -35,7 +33,7 @@ No new dependencies, frontend framework or architectural layer were introduced.
 
 - **Status:** COMPLETED — implemented and verified.
 - **Result:** Replaced duplicated modal focus-trapping logic with shared accessibility utilities. Preserved keyboard behavior, scroll locking, initial focus and focus restoration.
-- **Verification:** Cookie-modal and lightbox tests passed (25/25), including regression coverage for an empty focusable-element list. The full test suite (136/136), ESLint and `git diff --check` passed; no manual browser verification was performed.
+- **Verification:** Cookie-modal and lightbox tests (25/25) passed, including regression coverage for an empty focusable-element list. The full test suite (136/136), ESLint and `git diff --check` passed; no manual browser verification was performed.
 - **Impact:** Medium
 - **Effort:** Small
 
@@ -51,7 +49,7 @@ No new dependencies, frontend framework or architectural layer were introduced.
 
 - **Status:** COMPLETED — implemented and verified.
 - **Result:** Integrated sitemap generation into `build-head.mjs`, using canonical URLs and effective robots directives from `pages.meta.json`. Added metadata validation and XML escaping while preserving sitemap content, deterministic generation and existing build contracts.
-- **Verification:** Generated XML reproduced the original 11 indexable URLs and metadata. Idempotence, indexing-policy and invalid-input fixtures passed alongside source reference checks, the full test suite (136/136), ESLint and `git diff --check`; no production build was performed for this improvement.
+- **Verification:** Generated XML reproduced the original 11 indexable URLs and metadata. Idempotence, indexing-policy and invalid-input fixtures, source reference checks, the full test suite (136/136), ESLint and `git diff --check` passed; no production build was performed for this improvement.
 - **Impact:** Medium
 - **Effort:** Medium
 
@@ -69,10 +67,11 @@ These observations were not selected for implementation and were not established
 
 ## Verification limitations
 
-The initial analysis relied primarily on static source inspection and Git history. Its source reference check passed, while dependency-based tests and browser audits were not performed during that analysis.
+- The initial analysis relied primarily on static source inspection and Git history. Its source reference check passed; dependency-based tests and browser audits were not performed during that analysis.
+- Verification results under individual improvements reflect checks executed during implementation. Browser coverage and production-build verification differed between improvements, as recorded above.
 
-Verification results under individual improvements reflect checks executed during implementation. Browser coverage and production-build verification differed between improvements, as recorded above.
+## Archival notes
 
-IMP-TECH-03 documents a completed historical improvement. The project-information modal and its associated tests were subsequently removed as part of the KP_Code Digital Studio demonstration content and contact standard.
+IMP-TECH-03 records a completed historical improvement. The project-information modal and its associated tests were subsequently removed as part of the KP_Code Digital Studio demonstration content and contact standard.
 
-No additional tests were performed solely to prepare this archive. The archived report preserves implementation history; current repository files remain authoritative for future development.
+No additional tests were performed solely to prepare this archive. The report preserves implementation history; current repository files remain authoritative for future development.
