@@ -15,7 +15,6 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - Przełącznik motywu jasny/ciemny z zapisem wyboru oraz inicjalizacją motywu przed pierwszym renderem (`js/theme-init.js` na każdej stronie).
 - Lightbox galerii z pułapką fokusu, obsługą klawiatury, regionem `aria-live` i powrotem fokusu do elementu wywołującego.
 - Formularz kontaktowy: walidacja po stronie klienta (5 pól wymaganych, limit 500 znaków), licznik znaków, podsumowanie błędów ze skrótem do pierwszego błędnego pola, honeypot oraz integracja z Netlify Forms i reCAPTCHA (`data-netlify`, `data-netlify-recaptcha`, przekierowanie na `success.html`).
-- Baner cookies w formie modala z pułapką fokusu; zgoda zapisywana w `localStorage` i w ciasteczku.
 - Sekcja FAQ oparta na natywnych elementach `<details>` i `<summary>`.
 - Kompaktowy nagłówek po przewinięciu oraz przycisk „powrót na górę” wyłączany atrybutem `inert`, gdy jest ukryty.
 - Ujawnianie sekcji przez `IntersectionObserver` z fallbackiem dla przeglądarek bez tego API.
@@ -44,7 +43,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 - `lighthouse` 12.8.2 i `@lhci/cli` 0.15.1 — audyty Lighthouse
 - `pa11y` 8.0.0 — automatyczne audyty dostępności
 - `eslint` 10.9.1 — statyczna analiza JavaScriptu (`npm run lint`)
-- `vitest` 4.1.11 i `jsdom` 30.0.1 — skupione testy komponentów DOM (formularz kontaktowy, lightbox, nawigacja, modal informacji o projekcie/cookies, motyw), bezpiecznego dostępu do `localStorage`, obsługi dokumentów w Service Workerze i odwołań dostępności w stronach HTML (`npm test`)
+- `vitest` 4.1.11 i `jsdom` 30.0.1 — skupione testy komponentów DOM (formularz kontaktowy, lightbox, nawigacja, motyw), bezpiecznego dostępu do `localStorage`, obsługi dokumentów w Service Workerze i odwołań dostępności w stronach HTML (`npm test`)
 
 ### Architektura
 
@@ -70,7 +69,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │   ├── main.js                 # punkt wejścia (ES Modules)
 │   ├── theme-init.js           # inicjalizacja motywu przed renderem
 │   ├── core/                   # init, config, rejestracja Service Workera
-│   ├── components/             # nawigacja, motyw, lightbox, formularz, cookies
+│   ├── components/             # nawigacja, motyw, lightbox, formularz
 │   ├── sections/               # logika sekcji strony
 │   └── utils/                  # dom, a11y, storage
 ├── assets/                     # fonty, obrazy, favicony, ikony certyfikatów
@@ -162,13 +161,12 @@ npm run qa:references
 - [`npm run lint`](docs/settings.md#lint) uruchamia ESLint dla kodu przeglądarkowego, narzędzi, testów, źródła Service Workera i konfiguracji Vitest.
 - [`npm run qa:references`](docs/settings.md#qareferences) sprawdza odwołania lokalne i kontrakt bundli produkcyjnych, a po buildzie także wygenerowane wydanie; nierozwiązane odwołanie lub naruszony kontrakt kończy przebieg kodem różnym od zera.
 
-Zestaw obejmuje 9 plików w `tests/`:
+Zestaw obejmuje 8 plików w `tests/`:
 
 - `contact-form.test.js` — formularz kontaktowy: walidacja pól wymaganych i adresu e-mail, dostępne podsumowanie błędów z odnośnikami do błędnych pól, limit 500 znaków wiadomości, wersja robocza pod kluczem `contactFormMessage` (zapis, odtworzenie, komunikat, odrzucenie i usunięcie po udanym wysłaniu) oraz działanie przy błędach `localStorage`.
 - `contact-form-production.test.js` — produkcyjna wysyłka formularza z atrapą `fetch`: jednokrotne wysłanie zakodowanych pól, czyszczenie formularza i wersji roboczej dopiero po potwierdzeniu, blokada ponownego wysłania w trakcie żądania oraz zachowanie wersji roboczej i natywny fallback po błędzie sieci lub odpowiedzi innej niż OK.
 - `lightbox.test.js` — lightbox: otwarcie i przeniesienie fokusu, pułapka fokusu obejmująca dynamicznie tworzone przyciski nawigacji, zamknięcie (także z trybu pełnoekranowego i przez Escape) z powrotem fokusu do elementu otwierającego, nawigacja klawiszami `ArrowRight` i `ArrowLeft`, przyciskami i gestem przesunięcia oraz wskaźnik pozycji w galerii.
 - `navigation.test.js` — nawigacja: stan zwinięty i otwarty na urządzeniach mobilnych, synchronizacja ARIA/`inert`/klas i blokady przewijania, przeniesienie i powrót fokusu, zamknięcie przez Escape, aktywację linku i wskaźnik poza menu, synchronizacja po zmianie breakpointu oraz oznaczanie bieżącej sekcji strony głównej, także bez opcjonalnych API przeglądarki.
-- `cookies.test.js` — modal informacji o projekcie/cookies: obsługa zapisanej zgody, blokada przewijania, fokus początkowy i jego pułapka, zablokowany Escape bez zamykania, zapis zgody w `localStorage` i ciasteczku, przywrócenie przewijania i fokusu oraz działanie przy błędach `localStorage`.
 - `theme.test.js` — motyw: wczesna inicjalizacja z `js/theme-init.js` i przełącznik motywu — zachowanie zapisanego wyboru, podążanie za motywem systemowym w nowszym i starszym API zapytań medialnych bez zapisu wyboru oraz ręczne przełączanie z synchronizacją kontrolek i zapisem.
 - `storage.test.js` — wrappery `js/utils/storage.js`: odczyt zwraca `null`, a zapis i usuwanie nie przekazują wyjątków, gdy `localStorage` zgłasza błąd.
 - `service-worker-documents.test.js` — obsługa dokumentów w `sw.template.js` (środowisko `node`): zapis odpowiedzi HTTP 200 w cache HTML bieżącej rewizji, zwracanie innych odpowiedzi bez zapisu oraz kolejność fallbacków po błędzie sieci (żądany dokument, `offline.html`, `index.html`).
@@ -200,7 +198,7 @@ Zaimplementowane mechanizmy:
 
 - skip link do treści głównej (`#main`) i sekcje opisane atrybutami `aria-labelledby`,
 - synchronizacja `aria-expanded` i `aria-pressed` w nawigacji mobilnej oraz przełączniku motywu,
-- pułapka fokusu i powrót fokusu do elementu wywołującego w lightboxie oraz modalu cookies,
+- pułapka fokusu i powrót fokusu do elementu wywołującego w lightboxie,
 - `inert` na ukrytym przycisku „powrót na górę”,
 - walidacja formularza z komunikatami błędów, podsumowaniem błędów i skrótem do pierwszego błędnego pola,
 - region `aria-live` w lightboxie,
@@ -213,7 +211,7 @@ Repozytorium nie zawiera wyników audytu potwierdzających zgodność z konkretn
 
 - `title`, `meta description`, `canonical` i `meta robots` na każdej stronie; strony pomocnicze `404.html`, `offline.html` i `success.html` mają `noindex, follow`, pozostałe strony `index, follow`.
 - Metadane Open Graph i Twitter wraz z obrazami w `assets/img/og/`.
-- Dane strukturalne JSON-LD osadzone inline w HTML — jedyne źródło danych strukturalnych w repozytorium: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, `WebSite` na stronie głównej oraz `WebPage` i `BreadcrumbList` na podstronach.
+- Dane strukturalne JSON-LD osadzone inline w HTML — jedyne źródło danych strukturalnych w repozytorium: `Person` (autor projektu), `Service`, `FAQPage`, `ImageGallery`, `WebSite` na stronie głównej oraz `WebPage` i `BreadcrumbList` na podstronach.
 - `robots.txt` ze wskazaniem sitemapy oraz `sitemap.xml` z 12 adresami.
 - Sekcje `<head>` utrzymywane skryptem `npm run build:head`.
 
@@ -245,9 +243,7 @@ Projekt nie ma backendu, kont użytkowników ani bazy danych. Treści są statyc
 Stan przechowywany w przeglądarce:
 
 - `localStorage` `theme` — wybrany motyw,
-- `localStorage` `cookie-consent-v1` — zgoda cookies wraz ze znacznikiem czasu,
-- `localStorage` `contactFormMessage` — robocza treść wiadomości z formularza, usuwana po udanej wysyłce,
-- ciasteczko `cookie_consent` — `max-age` 15768000 sekund, `SameSite=Lax`.
+- `localStorage` `contactFormMessage` — robocza treść wiadomości z formularza, usuwana po udanej wysyłce.
 
 Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), więc brak dostępu do magazynu nie przerywa działania strony. Dane formularza są wysyłane do Netlify Forms.
 
@@ -287,7 +283,6 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - Light/dark theme toggle with a persisted choice and theme initialization before first paint (`js/theme-init.js` on every page).
 - Gallery lightbox with a focus trap, keyboard support, an `aria-live` region, and focus return to the triggering element.
 - Contact form: client-side validation (5 required fields, 500-character limit), character counter, error summary with a shortcut to the first invalid field, honeypot, and Netlify Forms with reCAPTCHA integration (`data-netlify`, `data-netlify-recaptcha`, redirect to `success.html`).
-- Cookie banner implemented as a modal with a focus trap; consent stored in `localStorage` and in a cookie.
 - FAQ section built on native `<details>` and `<summary>` elements.
 - Compact header after scrolling and a back-to-top button disabled with `inert` while hidden.
 - Section reveal through `IntersectionObserver` with a fallback for browsers without the API.
@@ -316,7 +311,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 - `lighthouse` 12.8.2 and `@lhci/cli` 0.15.1 — Lighthouse audits
 - `pa11y` 8.0.0 — automated accessibility audits
 - `eslint` 10.9.1 — JavaScript static analysis (`npm run lint`)
-- `vitest` 4.1.11 and `jsdom` 30.0.1 — focused tests for the DOM components (contact form, lightbox, navigation, project-information/cookie modal, theme), safe `localStorage` access, service worker document handling, and accessibility references in the HTML pages (`npm test`)
+- `vitest` 4.1.11 and `jsdom` 30.0.1 — focused tests for the DOM components (contact form, lightbox, navigation, theme), safe `localStorage` access, service worker document handling, and accessibility references in the HTML pages (`npm test`)
 
 ### Architecture
 
@@ -342,7 +337,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │   ├── main.js                 # entry point (ES Modules)
 │   ├── theme-init.js           # theme initialization before first paint
 │   ├── core/                   # init, config, service worker registration
-│   ├── components/             # navigation, theme, lightbox, form, cookies
+│   ├── components/             # navigation, theme, lightbox, form
 │   ├── sections/               # page section logic
 │   └── utils/                  # dom, a11y, storage
 ├── assets/                     # fonts, images, favicons, certificate icons
@@ -434,13 +429,12 @@ npm run qa:references
 - [`npm run lint`](docs/settings.md#lint) runs ESLint for the browser code, tooling, tests, the service worker source, and the Vitest configuration.
 - [`npm run qa:references`](docs/settings.md#qareferences) checks local references and the production bundle contract, and also the generated release after a build; an unresolved reference or a violated contract exits the run non-zero.
 
-The suite consists of 9 files in `tests/`:
+The suite consists of 8 files in `tests/`:
 
 - `contact-form.test.js` — contact form: required-field and e-mail validation, the accessible error summary linking to invalid fields, the 500-character message limit, the draft stored under `contactFormMessage` (saving, restoring, the notice, discarding, and removal after a successful submission), and behavior when `localStorage` fails.
 - `contact-form-production.test.js` — production form submission with a stubbed `fetch`: a single submission of the encoded fields, clearing the form and draft only after acknowledgement, protection against resubmission while a request is pending, and draft preservation with a native fallback after a network failure or a non-OK response.
 - `lightbox.test.js` — lightbox: opening and initial focus, the focus trap including the dynamically created navigation controls, closing (including from fullscreen and through Escape) with focus return to the triggering element, navigation through `ArrowRight` / `ArrowLeft`, buttons, and swipe gestures, and the gallery position indicator.
 - `navigation.test.js` — navigation: collapsed and open mobile states, ARIA/`inert`/class and scroll-lock synchronization, focus transfer and return, closing through Escape, link activation, and an outside pointer interaction, synchronization across breakpoint changes, and marking the current homepage section, including without optional browser APIs.
-- `cookies.test.js` — project-information/cookie modal: stored-consent handling, scroll locking, initial focus and focus trapping, blocked Escape without dismissal, consent persistence in `localStorage` and a cookie, scroll/focus restoration, and behavior when `localStorage` fails.
 - `theme.test.js` — theme: early initialization from `js/theme-init.js` and the theme toggle — preserving a stored choice, following the system theme through both the modern and legacy media-query APIs without persisting a choice, and manual switching with control synchronization and persistence.
 - `storage.test.js` — the `js/utils/storage.js` wrappers: reading returns `null`, and writing and removal do not propagate exceptions when `localStorage` throws.
 - `service-worker-documents.test.js` — document handling in `sw.template.js` (`node` environment): caching HTTP 200 network responses in the revision-specific HTML cache, returning other responses without caching, and the fallback order after a network failure (requested document, `offline.html`, `index.html`).
@@ -472,7 +466,7 @@ Implemented mechanisms:
 
 - skip link to the main content (`#main`) and sections described with `aria-labelledby`,
 - `aria-expanded` and `aria-pressed` synchronization in the mobile navigation and the theme toggle,
-- focus trap and focus return to the triggering element in the lightbox and the cookie modal,
+- focus trap and focus return to the triggering element in the lightbox,
 - `inert` on the hidden back-to-top button,
 - form validation with error messages, an error summary, and a shortcut to the first invalid field,
 - an `aria-live` region in the lightbox,
@@ -485,7 +479,7 @@ The repository contains no audit results confirming conformance with a specific 
 
 - `title`, `meta description`, `canonical`, and `meta robots` on every page; the utility pages `404.html`, `offline.html`, and `success.html` use `noindex, follow`, the remaining pages use `index, follow`.
 - Open Graph and Twitter metadata with images in `assets/img/og/`.
-- JSON-LD structured data embedded inline in the HTML — the only structured-data source in the repository: `HomeAndConstructionBusiness`, `Service`, `FAQPage`, `ImageGallery`, and `WebSite` on the homepage, plus `WebPage` and `BreadcrumbList` on subpages.
+- JSON-LD structured data embedded inline in the HTML — the only structured-data source in the repository: `Person` (the project author), `Service`, `FAQPage`, `ImageGallery`, and `WebSite` on the homepage, plus `WebPage` and `BreadcrumbList` on subpages.
 - `robots.txt` pointing to the sitemap and a `sitemap.xml` with 12 URLs.
 - `<head>` sections maintained through `npm run build:head`.
 
@@ -517,9 +511,7 @@ The project has no backend, no user accounts, and no database. Content is static
 State kept in the browser:
 
 - `localStorage` `theme` — the selected theme,
-- `localStorage` `cookie-consent-v1` — cookie consent with a timestamp,
-- `localStorage` `contactFormMessage` — the draft contact message, removed after a successful submission,
-- the `cookie_consent` cookie — `max-age` 15768000 seconds, `SameSite=Lax`.
+- `localStorage` `contactFormMessage` — the draft contact message, removed after a successful submission.
 
 `localStorage` access is wrapped in `try/catch` (`js/utils/storage.js`), so an unavailable storage does not break the page. Form data is submitted to Netlify Forms.
 

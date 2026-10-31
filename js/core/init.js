@@ -1,4 +1,3 @@
-import { initCookieBanner } from "../components/cookies.js";
 import { initContactSection } from "../sections/contact.js";
 import { initCompactHeader } from "../components/header.js";
 import { initHeroReveal } from "../sections/hero.js";
@@ -18,6 +17,5 @@ export const initApp = () => {
   initContactSection();
   initLightbox();
   initCompactHeader();
-  initCookieBanner();
   registerServiceWorker();
 };

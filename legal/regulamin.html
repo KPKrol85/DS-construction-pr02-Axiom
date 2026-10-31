@@ -289,12 +289,13 @@
             </p>
             <ul>
               <li>Serwis nie reprezentuje rzeczywistego przedsiębiorstwa działającego pod prezentowaną nazwą.</li>
-              <li>Przedstawione osoby, opisy usług, ceny, dane teleadresowe, opinie, harmonogramy oraz certyfikaty mają charakter przykładowy.</li>
+              <li>Przedstawione osoby, opisy usług, ceny, opinie, harmonogramy oraz certyfikaty mają charakter przykładowy.</li>
               <li>Prezentowane procesy służą pokazaniu sposobu działania interfejsu.</li>
               <li>Prezentowane usługi budowlane nie są rzeczywiście świadczone i nie powinny być traktowane jako oferta wykonania prac.</li>
             </ul>
             <p>
-              Elementy Serwisu zawierające prawdziwe dane Operatora nie mają charakteru fikcyjnego i działają zgodnie ze swoim opisanym przeznaczeniem. Dotyczy to w szczególności adresu e-mail
+              Elementy Serwisu zawierające prawdziwe dane Operatora nie mają charakteru fikcyjnego i działają zgodnie ze swoim opisanym przeznaczeniem. Dotyczy to w szczególności danych kontaktowych
+              podanych w stopce w sekcji „Kontakt z autorem”, w tym adresu e-mail
               <a href="mailto:kontakt@kp-code.pl">kontakt@kp-code.pl</a>
               , działającego Formularza oraz odnośników prowadzących do strony i profili
               <a href="https://kp-code.pl" target="_blank" rel="noopener noreferrer"><strong>KP_Code Digital Studio</strong></a>
@@ -328,7 +329,7 @@
               <li>korzystanie z nawigacji, menu mobilnego, okruszków oraz przycisku powrotu na górę strony,</li>
               <li>przełączanie jasnego i ciemnego motywu wraz z zapamiętaniem wyboru w pamięci przeglądarki,</li>
               <li>przeglądanie galerii realizacji oraz powiększanie zdjęć w oknie podglądu, obsługiwanym również z klawiatury,</li>
-              <li>zapoznanie się z informacją o demonstracyjnym charakterze Projektu, wyświetlaną przy pierwszej wizycie,</li>
+              <li>zapoznanie się z informacją o demonstracyjnym charakterze Projektu, zamieszczoną w stopce każdej strony Serwisu,</li>
               <li>przesłanie wiadomości do Operatora za pośrednictwem Formularza,</li>
               <li>korzystanie z ograniczonego zakresu treści bez połączenia z Internetem, dzięki Service Workerowi oraz stronie trybu offline,</li>
               <li>zainstalowanie Serwisu jako aplikacji na urządzeniu Użytkownika, zgodnie z dołączonym manifestem aplikacji internetowej,</li>
@@ -336,10 +337,9 @@
             </ul>
             <p>Wybrane funkcjonalności korzystają z pamięci przeglądarki Użytkownika, w szczególności:</p>
             <ul>
-              <li>localStorage — zapamiętanie wybranego motywu, potwierdzenia informacji o projekcie oraz roboczej treści wiadomości wpisywanej w Formularzu,</li>
+              <li>localStorage — zapamiętanie wybranego motywu oraz roboczej treści wiadomości wpisywanej w Formularzu,</li>
               <li>Cache Storage — przechowywanie kopii stron i zasobów Serwisu na potrzeby szybszego ładowania oraz trybu offline,</li>
-              <li>Service Worker — obsługa wskazanej wyżej pamięci podręcznej i strony wyświetlanej przy braku połączenia,</li>
-              <li>plik cookie zapisujący fakt potwierdzenia informacji o projekcie.</li>
+              <li>Service Worker — obsługa wskazanej wyżej pamięci podręcznej i strony wyświetlanej przy braku połączenia.</li>
             </ul>
             <p>
               Dane zapisywane w wymieniony wyżej sposób pozostają na urządzeniu Użytkownika i nie są przesyłane do Operatora. Jedyną funkcjonalnością Serwisu, która przekazuje dane poza urządzenie
@@ -434,7 +434,7 @@
               dostawcy hostingu, na którym utrzymywany jest Serwis, a następnie udostępniane Operatorowi.
             </p>
             <p>Skorzystanie z Formularza jest dobrowolne.</p>
-            <p>Formularz obejmuje pola wymagane, tj. imię i nazwisko, adres e-mail, temat, rodzaj usługi oraz treść wiadomości, a także pole opcjonalne w postaci numeru telefonu.</p>
+            <p>Formularz obejmuje pola wymagane, tj. imię i nazwisko, adres e-mail, temat, rodzaj zapytania oraz treść wiadomości, a także pole opcjonalne w postaci numeru telefonu.</p>
             <p>Użytkownik powinien podać wyłącznie dane:</p>
             <ul>
               <li>wymagane przez Formularz,</li>
@@ -615,8 +615,7 @@
               <li>komunikację poczty elektronicznej,</li>
               <li>localStorage,</li>
               <li>Cache Storage,</li>
-              <li>Service Workera,</li>
-              <li>plik cookie zapisujący potwierdzenie informacji o projekcie.</li>
+              <li>Service Workera.</li>
             </ul>
             <p>
               Dane zapisywane w pamięci przeglądarki oraz zasoby przechowywane w pamięci podręcznej Serwisu pozostają na urządzeniu Użytkownika i nie są przesyłane do Operatora. Przekazanie danych
@@ -695,7 +694,7 @@
             <div class="legal__meta">
               <small>
                 Data ostatniej aktualizacji:
-                <time datetime="2026-09-05">05.09.2026</time>
+                <time datetime="2026-10-31">31.10.2026</time>
               </small>
             </div>
           </article>
@@ -726,7 +725,10 @@
             <br />
             Budownictwo • Remonty • Wykończenia wnętrz
           </h3>
-          <p>Budowa domów, remonty i wykończenia wnętrz. Solidna realizacja i terminowość na każdym etapie prac.</p>
+          <p class="footer__disclosure">
+            Demonstracyjna koncepcja strony firmy budowlanej — projekt portfolio KP_Code Digital Studio. Axiom Construction to fikcyjna marka, a przedstawione usługi, realizacje i historia
+            działalności mają charakter przykładowy.
+          </p>
         </div>
         <!-- Serwis -->
         <div class="footer__section footer__services" aria-labelledby="footer-services">
@@ -753,8 +755,13 @@
         </div>
         <!-- Kontakt -->
         <div class="footer__section footer__contact" aria-labelledby="footer-contact">
-          <h3 id="footer-contact">Kontakt</h3>
+          <h3 id="footer-contact">Kontakt z autorem</h3>
           <address class="footer__contact-info">
+            <p>
+              <strong>Autor projektu:</strong>
+              <br />
+              KP_Code Digital Studio
+            </p>
             <p>
               <strong>Adres:</strong>
               <br />
@@ -773,13 +780,6 @@
               <strong>Email:</strong>
               <br />
               <a href="mailto:kontakt@kp-code.pl">kontakt@kp-code.pl</a>
-            </p>
-            <p>
-              <strong>Godziny pracy:</strong>
-              <br />
-              Pn-Pt: 8:00 - 18:00
-              <br />
-              Sb: 9:00 - 14:00
             </p>
           </address>
         </div>
@@ -815,28 +815,6 @@
         <p>&copy; 2026 KP_Code Digital Studio | Wszystkie prawa zastrzeżone.</p>
       </div>
     </footer>
-
-    <!-- Informacja o projekcie -->
-    <div id="cookieBanner" class="project-modal" role="dialog" aria-modal="true" aria-labelledby="projectInfoTitle" aria-describedby="projectInfoDesc" hidden>
-      <div class="project-modal__overlay" aria-hidden="true"></div>
-      <div class="project-modal__content" role="document" tabindex="-1">
-        <h2 id="projectInfoTitle" class="project-modal__title">Informacja o projekcie</h2>
-        <p id="projectInfoDesc" class="project-modal__text">
-          Serwis „Axiom Construction” ma charakter demonstracyjny i został przygotowany przez
-          <strong>KP_Code Digital Studio</strong>
-          jako przykładowa strona internetowa dla branży budowlanej. Korzystając z serwisu, akceptujesz
-          <a href="regulamin.html"><strong>Regulamin</strong></a>
-          .
-        </p>
-        <p class="project-modal__links">
-          <a href="polityka-prywatnosci.html">Polityka prywatności</a>
-          <a href="polityka-cookies.html">Cookies</a>
-        </p>
-        <div class="project-modal__actions">
-          <button id="cookieAccept" class="btn btn-primary" type="button">Akceptuję</button>
-        </div>
-      </div>
-    </div>
 
     <!-- Script -->
     <script src="../js/main.js" type="module"></script>

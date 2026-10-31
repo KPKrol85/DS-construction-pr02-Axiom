@@ -168,6 +168,18 @@
   font-size: 1rem;
 }
 
+/* The demonstration note closes the sequence on the list's measure. The muted
+   token leans towards the body text to keep small-text contrast on this
+   surface in both themes. */
+.service-details__note {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  color: color-mix(in srgb, var(--text-muted) 70%, var(--text-body));
+  font-size: var(--fs-9-micro);
+  text-align: left;
+}
+
 /* Closing passage (IMP-DESIGN-05): the same surface and measured,
    left-aligned column as the home contact section — a quiet note, a
    sectional rule, then the two existing actions at their natural width. */
@@ -227,6 +239,9 @@
   }
   .service-details .features__list {
     grid-template-columns: 1fr 1fr;
+    max-width: 900px;
+  }
+  .service-details__note {
     max-width: 900px;
   }
 }

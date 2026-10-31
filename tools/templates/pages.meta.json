@@ -1,18 +1,16 @@
 {
   "index.html": {
     "title": "Axiom Construction — firma budowlano-remontowa",
-    "description": "Kompleksowe remonty, budowa domów i wykończenia wnętrz. Profesjonalna firma budowlana Axiom Construction: terminowo, solidnie, z gwarancją.",
+    "description": "Koncepcja strony firmy budowlano-remontowej Axiom Construction: usługi, realizacje i kontakt. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/",
-    "og_description": "Kompleksowe remonty i wykończenia wnętrz, budowa domów oraz adaptacje poddaszy. Terminowo, solidnie i z gwarancją jakości.",
     "og_image_alt": "Axiom Construction - usługi budowlano-remontowe i realizacje",
-    "twitter_description": "Remonty, budowa domów i wykończenia wnętrz. Sprawdź ofertę, realizacje i skontaktuj się z Axiom Construction.",
     "lastmod": "2025-10-22",
     "changefreq": "weekly",
     "priority": "1.0"
   },
   "success.html": {
     "title": "Dziękujemy za kontakt — Axiom Construction",
-    "description": "Dziękujemy za wiadomość. Skontaktujemy się z Tobą możliwie szybko w sprawie zapytania o usługi budowlane Axiom Construction.",
+    "description": "Potwierdzenie wysłania wiadomości do KP_Code Digital Studio, autora projektu strony Axiom Construction.",
     "canonical": "/success.html",
     "robots": "noindex, follow",
     "og_image_alt": "Axiom Construction - potwierdzenie wysłania formularza"
@@ -47,7 +45,7 @@
   },
   "services/budowa-domow.html": {
     "title": "Budowa domów — Axiom Construction",
-    "description": "Budowa domów jednorodzinnych z Axiom Construction: stan surowy, deweloperski lub pod klucz, harmonogram i gwarancja. Darmowa wycena.",
+    "description": "Budowa domów jednorodzinnych z Axiom Construction: stan surowy, deweloperski lub pod klucz, harmonogram i gwarancja.",
     "canonical": "/services/budowa-domow.html",
     "og_title": "Budowa domów - Axiom Construction",
     "og_image_alt": "Axiom Construction — budowa domów",
@@ -79,7 +77,7 @@
   },
   "services/remonty-mieszkan.html": {
     "title": "Remonty mieszkań — Axiom Construction",
-    "description": "Remonty mieszkań od Axiom Construction: plan prac, wykończenia, instalacje i koordynacja ekip. Terminowo, z gwarancją i wyceną.",
+    "description": "Remonty mieszkań od Axiom Construction: plan prac, wykończenia, instalacje i koordynacja ekip. Terminowo i z gwarancją.",
     "canonical": "/services/remonty-mieszkan.html",
     "og_image_alt": "Axiom Construction - remonty mieszkań",
     "lastmod": "2025-10-22",
@@ -106,7 +104,7 @@
   },
   "legal/kariera.html": {
     "title": "Kariera — Axiom Construction",
-    "description": "Kariera w Axiom Construction: aktualne rekrutacje, wymagania, benefity i ścieżki rozwoju w zespołach budowlanych i technicznych.",
+    "description": "Kariera w Axiom Construction: przykładowe oferty, wymagania i benefity. Demonstracyjny interfejs rekrutacyjny nie przyjmuje prawdziwych zgłoszeń.",
     "canonical": "/legal/kariera.html",
     "og_image_alt": "Axiom Construction — kariera",
     "twitter_title": "Kariera - Axiom Construction",
@@ -116,7 +114,7 @@
   },
   "legal/polityka-cookies.html": {
     "title": "Polityka cookies — Axiom Construction",
-    "description": "Polityka cookies Axiom Construction: informacje o plikach cookies, celach ich użycia oraz sposobach zarządzania ustawieniami przeglądarki.",
+    "description": "Polityka cookies serwisu Axiom Construction: informacje o plikach cookies, celach ich użycia oraz sposobach zarządzania ustawieniami przeglądarki.",
     "canonical": "/legal/polityka-cookies.html",
     "og_image_alt": "Axiom Construction - polityka cookies",
     "twitter_title": "Polityka cookies - Axiom Construction",
@@ -127,7 +125,7 @@
   },
   "legal/polityka-prywatnosci.html": {
     "title": "Polityka prywatności - Axiom Construction",
-    "description": "Polityka prywatności Axiom Construction: zakres i cele przetwarzania danych, prawa użytkowników oraz kontakt w sprawach ochrony danych.",
+    "description": "Polityka prywatności serwisu Axiom Construction: zakres i cele przetwarzania danych, prawa użytkowników oraz kontakt w sprawach ochrony danych.",
     "canonical": "/legal/polityka-prywatnosci.html",
     "og_image_alt": "Axiom Construction - polityka prywatności",
     "lastmod": "2025-10-22",

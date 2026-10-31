@@ -11,7 +11,6 @@ export const SELECTORS = {
   contactErrorSummary: "#errorSummary",
   contactSkipLink: "#skipToError",
   lightbox: "#lightbox",
-  cookieBanner: "#cookieBanner",
 };
 
 export const INTERSECTION = {
@@ -32,10 +31,4 @@ export const CONTACT_FORM = {
   requiredFields: ["name", "email", "subject", "service", "message"],
   maxMessageLength: 500,
   messageStorageKey: "contactFormMessage",
-};
-
-export const COOKIE_BANNER = {
-  storageKey: "cookie-consent-v1",
-  cookieName: "cookie_consent",
-  cookieMaxAge: 15768000,
 };
