@@ -30,7 +30,8 @@
     "robots": "noindex, follow",
     "og_image_alt": "Axiom Construction — tryb offline",
     "twitter_title": "Tryb offline - Axiom Construction",
-    "twitter_image_alt": "Axiom Construction - tryb offline"
+    "twitter_image_alt": "Axiom Construction - tryb offline",
+    "asset_prefix": "/"
   },
   "services/adaptacje-poddaszy.html": {
     "title": "Adaptacje poddaszy — Axiom Construction",

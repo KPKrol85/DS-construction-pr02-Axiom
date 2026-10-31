@@ -56,13 +56,13 @@
 
 ## 5. PWA — Service Worker i Offline
 
-- [ ] Service Worker rejestruje się poprawnie.
-- [ ] Produkcyjne zasoby są prawidłowo obsługiwane przez cache.
-- [ ] Strona działa po przejściu w tryb offline w przewidzianym zakresie.
-- [ ] Strona `offline.html` działa poprawnie.
-- [ ] Aktualizacja aplikacji nie pozostawia nieaktualnych zasobów.
-- [ ] Zweryfikowano zachowanie aplikacji po ponownym połączeniu z internetem.
-- [ ] Nie występują błędy Service Workera w konsoli.
+- [x] Service Worker rejestruje się poprawnie.
+- [x] Produkcyjne zasoby są prawidłowo obsługiwane przez cache.
+- [x] Strona działa po przejściu w tryb offline w przewidzianym zakresie.
+- [x] Strona `offline.html` działa poprawnie.
+- [x] Aktualizacja aplikacji nie pozostawia nieaktualnych zasobów.
+- [x] Zweryfikowano zachowanie aplikacji po ponownym połączeniu z internetem.
+- [x] Nie występują błędy Service Workera w konsoli.
 
 ## 6. Standard KP_Code Digital Studio
 

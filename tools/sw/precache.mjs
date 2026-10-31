@@ -20,6 +20,10 @@ export const BASE_PRECACHE = [
   "/js/offline.js",
   "/js/theme-init.js",
   "/manifest.webmanifest",
+  // Both theme logos offline.html renders. The first page view is not yet
+  // controlled by the worker, so the runtime image cache never stores them.
+  "/assets/img/logo/logo-light.svg",
+  "/assets/img/logo/logo-dark.svg",
 ];
 
 // Local precache base: the URLs served from the repository root by
@@ -36,6 +40,8 @@ export const LOCAL_PRECACHE = [
   "/js/offline.js",
   "/js/theme-init.js",
   "/manifest.webmanifest",
+  "/assets/img/logo/logo-light.svg",
+  "/assets/img/logo/logo-dark.svg",
 ];
 
 // The precache URLs of the icons a parsed web app manifest declares, in

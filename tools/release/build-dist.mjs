@@ -116,15 +116,18 @@ const rewriteHtmlForDist = async (bundles) => {
     const htmlPath = path.join(distDir, relativeFile);
     let html = await fs.readFile(htmlPath, "utf8");
 
-    // Both path forms the maintained pages use: root-level for the pages at the
-    // deployment root, `../`-prefixed for services/ and legal/. The bundles
-    // themselves stay at the deployment root, which is what the @font-face URLs
-    // inlined into the CSS bundle resolve against.
+    // Every path form the maintained pages use: root-level for the pages at the
+    // deployment root, `../`-prefixed for services/ and legal/, and root-absolute
+    // for offline.html, which the service worker serves at any requested URL.
+    // The bundles themselves stay at the deployment root, which is what the
+    // @font-face URLs inlined into the CSS bundle resolve against.
     html = html
       .replaceAll("href=\"css/main.css\"", `href="${bundles.css}"`)
       .replaceAll("href=\"../css/main.css\"", `href="../${bundles.css}"`)
+      .replaceAll("href=\"/css/main.css\"", `href="/${bundles.css}"`)
       .replaceAll("src=\"js/main.js\" type=\"module\"", `src="${bundles.js}"`)
-      .replaceAll("src=\"../js/main.js\" type=\"module\"", `src="../${bundles.js}"`);
+      .replaceAll("src=\"../js/main.js\" type=\"module\"", `src="../${bundles.js}"`)
+      .replaceAll("src=\"/js/main.js\" type=\"module\"", `src="/${bundles.js}"`);
 
     const stale = forbiddenProductionReferences.filter((reference) => html.includes(reference));
 

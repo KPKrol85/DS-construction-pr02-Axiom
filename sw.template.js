@@ -50,7 +50,7 @@ self.addEventListener("fetch", (event) => {
               if (net && net.status === 200) cache.put(req, net.clone());
               return net;
             })
-            .catch(() => cached);
+            .catch(() => cached || Response.error());
           return cached || fetchPromise;
         })
       )
@@ -67,11 +67,11 @@ self.addEventListener("fetch", (event) => {
               if (net && net.status === 200) cache.put(req, net.clone());
               return net;
             })
-            .catch(() => cached);
+            .catch(() => Response.error());
         })
       )
     );
     return;
   }
-  event.respondWith(fetch(req).catch(() => caches.match(req)));
+  event.respondWith(fetch(req).catch(async () => (await caches.match(req)) || Response.error()));
 });

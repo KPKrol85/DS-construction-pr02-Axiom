@@ -29,7 +29,12 @@ if (!pageMeta || typeof pageMeta !== "object" || Array.isArray(pageMeta)) {
 
 const escapeAttr = (value) => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
-const buildAssetPrefix = (filePath) => {
+// A page served at URLs other than its own (offline.html is the service worker's
+// fallback for any unavailable navigation) declares `asset_prefix: "/"`, so its
+// assets resolve from the site root instead of the requested page's directory.
+const buildAssetPrefix = (filePath, meta) => {
+  if (meta.asset_prefix !== undefined) return meta.asset_prefix;
+
   const depth = filePath.split("/").length - 1;
   return depth > 0 ? "../".repeat(depth) : "";
 };
@@ -55,7 +60,7 @@ const renderHead = (filePath, meta) => {
     "{{TWITTER_TITLE}}": twitterTitle,
     "{{TWITTER_DESCRIPTION}}": twitterDescription,
     "{{TWITTER_IMAGE_ALT}}": twitterImageAlt,
-    "{{ASSET_PREFIX}}": buildAssetPrefix(filePath)
+    "{{ASSET_PREFIX}}": buildAssetPrefix(filePath, meta)
   };
 
   return Object.entries(replacements).reduce((output, [token, value]) => {

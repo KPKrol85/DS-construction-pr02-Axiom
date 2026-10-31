@@ -3,12 +3,12 @@
 // Generator: tools/sw/build-sw.mjs (npm run build:sw:local)
 // Profile: local - repository root (npm run serve)
 
-const REVISION = "5aeb3c3b22b4b154";
+const REVISION = "de258ce1d78f411e";
 const CACHE_PREFIX = "axiom-static-";
 const CACHE_NAME = `${CACHE_PREFIX}${REVISION}`;
 const HTML_CACHE_PREFIX = "html-pages-";
 const HTML_CACHE_NAME = `${HTML_CACHE_PREFIX}${REVISION}`;
-const ASSETS = ["/","/offline.html","/css/main.css","/js/main.js","/js/offline.js","/js/theme-init.js","/manifest.webmanifest","/assets/img/favicon/favicon.svg","/assets/img/favicon/favicon-96x96.png","/assets/img/favicon/web-app-manifest-192x192.png","/assets/img/favicon/web-app-manifest-512x512.png","/assets/img/favicon/web-app-manifest-1024x1024.png","/assets/img/favicon/apple-touch-icon.png"];
+const ASSETS = ["/","/offline.html","/css/main.css","/js/main.js","/js/offline.js","/js/theme-init.js","/manifest.webmanifest","/assets/img/logo/logo-light.svg","/assets/img/logo/logo-dark.svg","/assets/img/favicon/favicon.svg","/assets/img/favicon/favicon-96x96.png","/assets/img/favicon/web-app-manifest-192x192.png","/assets/img/favicon/web-app-manifest-512x512.png","/assets/img/favicon/web-app-manifest-1024x1024.png","/assets/img/favicon/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
@@ -55,7 +55,7 @@ self.addEventListener("fetch", (event) => {
               if (net && net.status === 200) cache.put(req, net.clone());
               return net;
             })
-            .catch(() => cached);
+            .catch(() => cached || Response.error());
           return cached || fetchPromise;
         })
       )
@@ -72,11 +72,11 @@ self.addEventListener("fetch", (event) => {
               if (net && net.status === 200) cache.put(req, net.clone());
               return net;
             })
-            .catch(() => cached);
+            .catch(() => Response.error());
         })
       )
     );
     return;
   }
-  event.respondWith(fetch(req).catch(() => caches.match(req)));
+  event.respondWith(fetch(req).catch(async () => (await caches.match(req)) || Response.error()));
 });
