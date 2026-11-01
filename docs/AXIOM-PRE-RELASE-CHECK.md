@@ -66,16 +66,16 @@
 
 ## 6. Standard KP_Code Digital Studio
 
-- [ ] Axiom Construction jest jednoznacznie przedstawiony jako marka fikcyjna.
-- [ ] Autorstwo KP_Code Digital Studio jest prawidłowo oznaczone.
-- [ ] Notka demonstracyjna występuje w stopce wszystkich 15 stron.
-- [ ] Stopki zachowują spójny wygląd i treść.
-- [ ] Dane kontaktowe są prawidłowo przypisane autorowi.
-- [ ] Telefon, e-mail i adres są aktualne.
-- [ ] Odnośniki `tel:` i `mailto:` działają.
-- [ ] Na sześciu podstronach usług znajdują się dyskretne noty demonstracyjne.
-- [ ] Nie występują sprzeczne deklaracje dotyczące fikcyjnej działalności.
-- [ ] Nie występują zbędne bannery, modale ani powtarzające się komunikaty demonstracyjne.
+- [x] Axiom Construction jest jednoznacznie przedstawiony jako marka fikcyjna.
+- [x] Autorstwo KP_Code Digital Studio jest prawidłowo oznaczone.
+- [x] Notka demonstracyjna występuje w stopce wszystkich 15 stron.
+- [x] Stopki zachowują spójny wygląd i treść.
+- [x] Dane kontaktowe są prawidłowo przypisane autorowi.
+- [x] Telefon, e-mail i adres są aktualne.
+- [x] Odnośniki `tel:` i `mailto:` działają.
+- [x] Na sześciu podstronach usług znajdują się dyskretne noty demonstracyjne.
+- [x] Nie występują sprzeczne deklaracje dotyczące fikcyjnej działalności.
+- [x] Nie występują zbędne bannery, modale ani powtarzające się komunikaty demonstracyjne.
 
 ## 7. Formularz kontaktowy
 
