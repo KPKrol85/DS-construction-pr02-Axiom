@@ -31,8 +31,11 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
+  // Cross-origin requests (the Netlify-injected reCAPTCHA scripts) stay with the
+  // browser: a worker fetch() would fall under this script's connect-src 'self'.
+  if (new URL(req.url).origin !== self.location.origin) return;
   const dest = req.destination;
-  if (dest === "document" && req.method === "GET" && new URL(req.url).origin === self.location.origin) {
+  if (dest === "document" && req.method === "GET") {
     event.respondWith(
       fetch(req)
         .then((res) => {

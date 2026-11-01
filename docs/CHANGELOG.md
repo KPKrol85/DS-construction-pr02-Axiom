@@ -70,6 +70,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Removed conflicting HTTP indexing directives while preserving page-level robots metadata.
 - Aligned the Cookies Policy with the removal of the first-visit modal and its browser-storage mechanism.
 - Restored the contact form's accessible error summary and field validation states on real submissions, which native browser validation had preempted.
+- Fixed reCAPTCHA loading under Service Worker control and completed the required Netlify reCAPTCHA form markup.
 
 ### Build and Tooling
 

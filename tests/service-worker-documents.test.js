@@ -18,12 +18,13 @@ const deferred = () => {
   return { promise, resolve };
 };
 
-const createWorker = () => {
+const createWorker = (requestOverrides = {}) => {
   const listeners = new Map();
   const request = {
     url: "https://axiom.example/services/budowa.html",
     method: "GET",
     destination: "document",
+    ...requestOverrides,
   };
   const cachedResponses = new Map();
   const fetch = vi.fn().mockRejectedValue(new Error("Network unavailable"));
@@ -54,7 +55,13 @@ const createWorker = () => {
     return respondWith.mock.calls[0][0];
   };
 
-  return { request, fetch, caches, put, cachedResponses, dispatchDocument };
+  const dispatch = () => {
+    const respondWith = vi.fn();
+    listeners.get("fetch")({ request, respondWith });
+    return respondWith;
+  };
+
+  return { request, fetch, caches, put, cachedResponses, dispatchDocument, dispatch };
 };
 
 describe("service worker document responses", () => {
@@ -119,5 +126,38 @@ describe("service worker document responses", () => {
     expect(worker.caches.match.mock.calls[0][0]).toBe(worker.request);
     expect(worker.caches.open).not.toHaveBeenCalled();
     expect(worker.put).not.toHaveBeenCalled();
+  });
+});
+
+describe("service worker request scope", () => {
+  it.each([
+    { name: "reCAPTCHA loader script", url: "https://www.google.com/recaptcha/api.js", destination: "script" },
+    { name: "reCAPTCHA release script", url: "https://www.gstatic.com/recaptcha/releases/test/recaptcha__pl.js", destination: "script" },
+    { name: "image", url: "https://www.gstatic.com/recaptcha/api2/logo_48.png", destination: "image" },
+    { name: "connection", url: "https://www.google.com/recaptcha/api2/clr", destination: "" },
+  ])("leaves the cross-origin $name to the browser without responding, fetching or caching", ({ url, destination }) => {
+    const worker = createWorker({ url, destination });
+
+    expect(worker.dispatch()).not.toHaveBeenCalled();
+    expect(worker.fetch).not.toHaveBeenCalled();
+    expect(worker.caches.open).not.toHaveBeenCalled();
+    expect(worker.caches.match).not.toHaveBeenCalled();
+  });
+
+  it("still serves a same-origin script from the network and stores HTTP 200 in the static cache", async () => {
+    const worker = createWorker({ url: "https://axiom.example/js/main.js", destination: "script" });
+    const copy = { body: "Cloned script" };
+    const response = { status: 200, clone: vi.fn(() => copy) };
+    const match = vi.fn().mockResolvedValue(undefined);
+    worker.fetch.mockResolvedValueOnce(response);
+    worker.caches.open.mockResolvedValueOnce({ match, put: worker.put });
+
+    const respondWith = worker.dispatch();
+    expect(respondWith).toHaveBeenCalledTimes(1);
+    expect(await respondWith.mock.calls[0][0]).toBe(response);
+    expect(worker.caches.open).toHaveBeenCalledExactlyOnceWith(`axiom-static-${REVISION}`);
+    expect(match).toHaveBeenCalledExactlyOnceWith(worker.request);
+    expect(worker.fetch).toHaveBeenCalledExactlyOnceWith(worker.request);
+    expect(worker.put).toHaveBeenCalledExactlyOnceWith(worker.request, copy);
   });
 });
