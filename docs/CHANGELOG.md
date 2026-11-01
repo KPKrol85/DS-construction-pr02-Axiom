@@ -72,6 +72,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Restored the contact form's accessible error summary and field validation states on real submissions, which native browser validation had preempted.
 - Fixed reCAPTCHA loading under Service Worker control and completed the required Netlify reCAPTCHA form markup.
 - Fixed false contact-form success feedback for missing or rejected reCAPTCHA submissions and corrected the telephone pattern for `v`-flag validation.
+- Fixed CSP restrictions blocking Google reCAPTCHA connection requests in production.
 
 ### Build and Tooling
 

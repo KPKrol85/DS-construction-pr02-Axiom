@@ -6,7 +6,7 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Cross-Origin-Resource-Policy: same-origin
   Cache-Control: no-cache
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-src https://www.google.com/recaptcha/; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://www.google.com/recaptcha/; frame-src https://www.google.com/recaptcha/; base-uri 'self'; form-action 'self'
 
 # Production bundles emitted by `npm run build` at the deployment root. Their
 # filenames carry a SHA-256 digest of their own bytes, so the exact rules are
