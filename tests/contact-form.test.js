@@ -128,6 +128,23 @@ describe("contact form validation", () => {
     expect(document.activeElement).toBe(form.querySelector("#name"));
   });
 
+  it("validates a real submission request itself instead of deferring to interactive browser validation", () => {
+    const form = mountForm();
+    const invalidEvents = [];
+    form.addEventListener("invalid", (event) => invalidEvents.push(event.target.id), true);
+
+    // Unlike a synthetic submit event, requestSubmit() runs interactive
+    // validation first, which would otherwise cancel the submission silently.
+    form.requestSubmit();
+
+    expect(invalidEvents).toEqual([]);
+    expect(form.querySelector("#errorSummary").classList.contains("visually-hidden")).toBe(false);
+    expect(form.querySelector("#name").getAttribute("aria-invalid")).toBe("true");
+    expect(document.activeElement).toBe(form.querySelector("#name"));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(form.noValidate).toBe(true);
+  });
+
   it("rejects a malformed e-mail address and reports it in the status region", () => {
     const form = mountForm();
     fillValidForm(form);

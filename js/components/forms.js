@@ -5,6 +5,9 @@ import { safeGetItem, safeRemoveItem, safeSetItem } from "../utils/storage.js";
 export const initContactForm = () => {
   const form = qs(SELECTORS.contactForm);
   if (!form) return;
+  // Interactive browser validation would cancel the submission before the
+  // handler below runs; without JavaScript the native constraints still apply.
+  form.noValidate = true;
   const IS_LOCAL = /localhost|127\.0\.0\.1/.test(location.hostname);
   const statusBox = form.querySelector(SELECTORS.contactStatus);
   const submitBtn = form.querySelector('button[type="submit"], .btn[type="submit"], .btn-primary[type="submit"]');

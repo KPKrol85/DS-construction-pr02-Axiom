@@ -107,6 +107,8 @@
 
 .contact-form select {
   appearance: none;
+  /* Keeps the selected option clear of the arrow (0.75rem offset + 1rem icon). */
+  padding-right: 2.5rem;
   background-image: url("data:image/svg+xml;utf8,<svg fill='%230f4c81' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;

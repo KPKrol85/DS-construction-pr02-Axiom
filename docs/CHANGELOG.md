@@ -69,6 +69,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Set utility pages and the demonstrational Certificates page to `noindex, follow`.
 - Removed conflicting HTTP indexing directives while preserving page-level robots metadata.
 - Aligned the Cookies Policy with the removal of the first-visit modal and its browser-storage mechanism.
+- Restored the contact form's accessible error summary and field validation states on real submissions, which native browser validation had preempted.
 
 ### Build and Tooling
 

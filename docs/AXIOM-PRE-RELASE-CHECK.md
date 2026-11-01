@@ -79,18 +79,18 @@
 
 ## 7. Formularz kontaktowy
 
-- [ ] Formularz prawidłowo wyświetla się na desktopie.
-- [ ] Formularz prawidłowo wyświetla się na telefonie.
-- [ ] Przycisk „Wyślij wiadomość” jest wycentrowany.
-- [ ] Wszystkie pola mają właściwe etykiety.
-- [ ] Walidacja wymaganych pól działa.
-- [ ] Pole wyboru rodzaju zapytania działa poprawnie.
-- [ ] Zgoda dotycząca polityki prywatności działa.
+- [x] Formularz prawidłowo wyświetla się na desktopie.
+- [x] Formularz prawidłowo wyświetla się na telefonie.
+- [x] Przycisk „Wyślij wiadomość” jest wycentrowany.
+- [x] Wszystkie pola mają właściwe etykiety.
+- [x] Walidacja wymaganych pól działa.
+- [x] Pole wyboru rodzaju zapytania działa poprawnie.
+- [x] Zgoda dotycząca polityki prywatności działa.
 - [ ] Mechanizm antyspamowy działa poprawnie.
 - [ ] reCAPTCHA działa w środowisku produkcyjnym.
 - [ ] Netlify Forms odbiera rzeczywiste zgłoszenie testowe.
 - [ ] Formularz kieruje wiadomości do KP_Code Digital Studio.
-- [ ] Strona `success.html` działa poprawnie.
+- [x] Strona `success.html` działa poprawnie.
 - [ ] Formularz nie wykazuje błędów w konsoli przeglądarki.
 
 ## 8. FAQ i CTA
