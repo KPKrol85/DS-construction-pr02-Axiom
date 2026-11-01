@@ -86,12 +86,12 @@
 - [x] Walidacja wymaganych pól działa.
 - [x] Pole wyboru rodzaju zapytania działa poprawnie.
 - [x] Zgoda dotycząca polityki prywatności działa.
-- [ ] Mechanizm antyspamowy działa poprawnie.
-- [ ] reCAPTCHA działa w środowisku produkcyjnym.
-- [ ] Netlify Forms odbiera rzeczywiste zgłoszenie testowe.
-- [ ] Formularz kieruje wiadomości do KP_Code Digital Studio.
+- [x] Mechanizm antyspamowy działa poprawnie.
+- [x] reCAPTCHA działa w środowisku produkcyjnym.
+- [x] Netlify Forms odbiera rzeczywiste zgłoszenie testowe.
+- [x] Formularz kieruje wiadomości do KP_Code Digital Studio.
 - [x] Strona `success.html` działa poprawnie.
-- [ ] Formularz nie wykazuje błędów w konsoli przeglądarki.
+- [x] Formularz nie wykazuje błędów w konsoli przeglądarki.
 
 ## 8. FAQ i CTA
 
