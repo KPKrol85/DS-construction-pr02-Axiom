@@ -24,7 +24,7 @@ const FORM_FIXTURE = `
     </div>
     <div class="form__group">
       <label for="phone">Telefon (opcjonalnie)</label>
-      <input type="tel" id="phone" name="phone" pattern="^[0-9 +()-]{7,20}$" />
+      <input type="tel" id="phone" name="phone" pattern="^[0-9 +\\(\\)\\-]{7,20}$" />
     </div>
     <div class="form__group">
       <label for="subject">Temat</label>

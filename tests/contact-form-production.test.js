@@ -23,7 +23,7 @@ const FORM_FIXTURE = `
     <label for="email">Adres e-mail</label>
     <input type="email" id="email" name="email" required />
     <label for="phone">Telefon (opcjonalnie)</label>
-    <input type="tel" id="phone" name="phone" pattern="^[0-9 +()-]{7,20}$" />
+    <input type="tel" id="phone" name="phone" pattern="^[0-9 +\\(\\)\\-]{7,20}$" />
     <label for="subject">Temat</label>
     <input id="subject" name="subject" required />
     <label for="service">Rodzaj usługi</label>
@@ -131,6 +131,7 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  window.history.replaceState(null, "", "/");
   document.body.innerHTML = "";
   localStorage.clear();
 });
@@ -416,5 +417,107 @@ describe("production contact submission", () => {
     expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
     expect(requestSubmitMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("production contact submission with Netlify reCAPTCHA", () => {
+  const CAPTCHA_ERROR = "Wiadomość nie została wysłana. Potwierdź weryfikację reCAPTCHA („Nie jestem robotem”) i spróbuj ponownie.";
+  let captcha;
+  let grecaptcha;
+
+  beforeEach(() => {
+    // The response field Google's widget renders inside the Netlify container.
+    captcha = document.createElement("textarea");
+    captcha.id = "g-recaptcha-response";
+    captcha.name = "g-recaptcha-response";
+    form.querySelector('[data-netlify-recaptcha="true"]').append(captcha);
+    grecaptcha = { reset: vi.fn() };
+    vi.stubGlobal("grecaptcha", grecaptcha);
+  });
+
+  const expectEditableFailure = () => {
+    expect(status.textContent).toBe(CAPTCHA_ERROR);
+    expect(status.classList.contains("err")).toBe(true);
+    expect(status.classList.contains("ok")).toBe(false);
+    expect(status.getAttribute("role")).toBe("status");
+    expect(form.hasAttribute("aria-busy")).toBe(false);
+    expect(button.disabled).toBe(false);
+    expect(button.classList.contains("sending")).toBe(false);
+    expect(button.classList.contains("sent")).toBe(false);
+    expect(button.textContent).toBe("Wyślij wiadomość");
+    expectPreservedDraft(form);
+    expect(form.querySelector("#messageDraft").hidden).toBe(false);
+    expect(requestSubmitMock).not.toHaveBeenCalled();
+  };
+
+  it("does not send or confirm a submission without a completed reCAPTCHA", () => {
+    submitForm(form);
+
+    expect(submissionStates).toEqual([true]);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expectEditableFailure();
+    expect(grecaptcha.reset).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["/", "https://axiom.example/"],
+    ["/index.html", "https://axiom.example/index.html"],
+    ["/index.html", "https://axiom.example/"],
+  ])("reports a rejection redirected from %s back to %s and accepts a fresh retry", async (page, finalUrl) => {
+    window.history.replaceState(null, "", page);
+    captcha.value = "used-token";
+    const rejected = deferred();
+    fetchMock.mockReturnValueOnce(rejected.promise);
+
+    submitForm(form);
+    expect(new URLSearchParams(fetchMock.mock.calls[0][1].body).get("g-recaptcha-response")).toBe("used-token");
+    // fetch() follows Netlify's redirect and resolves with the page's own 200.
+    rejected.resolve({ ok: true, status: 200, redirected: true, url: finalUrl });
+    await rejected.promise;
+
+    expectEditableFailure();
+    expect(grecaptcha.reset).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(6001);
+    expect(status.textContent).toBe(CAPTCHA_ERROR);
+    expect(button.textContent).toBe("Wyślij wiadomość");
+
+    captcha.value = "fresh-token";
+    const accepted = deferred();
+    fetchMock.mockReturnValueOnce(accepted.promise);
+    submitForm(form);
+    expect(new URLSearchParams(fetchMock.mock.calls[1][1].body).get("g-recaptcha-response")).toBe("fresh-token");
+    accepted.resolve({ ok: true, status: 200, redirected: true, url: "https://axiom.example/success" });
+    await accepted.promise;
+
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(button.textContent).toBe("Wysłano ✓");
+    expect(form.querySelector("#name").value).toBe("");
+    expect(grecaptcha.reset).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    ["served directly", { ok: true, status: 200, redirected: false, url: "https://axiom.example/" }],
+    ["redirected to the success page", { ok: true, status: 200, redirected: true, url: "https://axiom.example/success" }],
+  ])("confirms an accepted submission %s, then resets the form and the widget", async (_, response) => {
+    captcha.value = "valid-token";
+    const request = deferred();
+    fetchMock.mockReturnValueOnce(request.promise);
+
+    submitForm(form);
+    request.resolve(response);
+    await request.promise;
+
+    expect(status.textContent).toBe("Dziękujemy! Wiadomość została wysłana.");
+    expect(status.classList.contains("ok")).toBe(true);
+    expect(button.classList.contains("sent")).toBe(true);
+    expect(button.textContent).toBe("Wysłano ✓");
+    for (const name of Object.keys(VALUES)) {
+      expect(form.elements.namedItem(name).value).toBe("");
+    }
+    expect(form.querySelector("#consent").checked).toBe(false);
+    expect(localStorage.getItem(CONTACT_FORM.messageStorageKey)).toBeNull();
+    expect(grecaptcha.reset).toHaveBeenCalledTimes(1);
+    expect(requestSubmitMock).not.toHaveBeenCalled();
   });
 });

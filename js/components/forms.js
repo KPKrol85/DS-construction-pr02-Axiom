@@ -9,6 +9,7 @@ export const initContactForm = () => {
   // handler below runs; without JavaScript the native constraints still apply.
   form.noValidate = true;
   const IS_LOCAL = /localhost|127\.0\.0\.1/.test(location.hostname);
+  const SUBMIT_PATH = "/";
   const statusBox = form.querySelector(SELECTORS.contactStatus);
   const submitBtn = form.querySelector('button[type="submit"], .btn[type="submit"], .btn-primary[type="submit"]');
   const supportsNativeValidation = typeof form.reportValidity === "function";
@@ -56,6 +57,27 @@ export const initContactForm = () => {
     statusBox.classList.toggle("ok", !!message && !!ok);
     statusBox.classList.toggle("err", !!message && !ok);
     statusBox.textContent = message;
+  };
+  const captchaErrorMsg = "Wiadomość nie została wysłana. Potwierdź weryfikację reCAPTCHA („Nie jestem robotem”) i spróbuj ponownie.";
+  // Netlify rejects a failed reCAPTCHA challenge by redirecting back to the
+  // submitting page; fetch() follows that redirect to the page's own 200.
+  const isCaptchaRejection = (res) => {
+    if (!res.redirected) return false;
+    const { pathname } = new URL(res.url, location.href);
+    return pathname === location.pathname || pathname === SUBMIT_PATH;
+  };
+  // reCAPTCHA tokens are single-use, so each server response needs a fresh
+  // challenge; without a rendered widget there is nothing to reset.
+  const resetCaptcha = () => {
+    try {
+      window.grecaptcha?.reset();
+    } catch {}
+  };
+  const restoreSubmitButton = () => {
+    if (!submitBtn) return;
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("sending");
+    submitBtn.textContent = originalBtnText;
   };
 
   function updateCounter() {
@@ -189,6 +211,14 @@ export const initContactForm = () => {
       e.preventDefault();
       return;
     }
+    const formData = new FormData(form);
+    // Google's widget renders this field; Netlify rejects an empty token.
+    const captchaToken = formData.get("g-recaptcha-response");
+    if (captchaToken !== null && !String(captchaToken).trim()) {
+      e.preventDefault();
+      showStatus(captchaErrorMsg, false);
+      return;
+    }
 
     e.preventDefault();
     clearTimeout(successEnableTimer);
@@ -201,21 +231,28 @@ export const initContactForm = () => {
       submitBtn.textContent = "Wysyłanie…";
     }
     showStatus("Wysyłanie…", true);
-    const formData = new FormData(form);
     const body = new URLSearchParams(formData).toString();
     try {
       if (!IS_LOCAL) {
-        const res = await fetch("/", {
+        const res = await fetch(SUBMIT_PATH, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body,
         });
         if (!res.ok) throw new Error("Netlify response not OK");
+        if (isCaptchaRejection(res)) {
+          form.removeAttribute("aria-busy");
+          restoreSubmitButton();
+          resetCaptcha();
+          showStatus(captchaErrorMsg, false);
+          return;
+        }
       } else {
         await new Promise((r) => setTimeout(r, 500));
       }
       form.setAttribute("aria-busy", "false");
       form.reset();
+      resetCaptcha();
       safeRemoveItem(CONTACT_FORM.messageStorageKey);
       updateCounter();
       setDraftNotice(false);
@@ -237,11 +274,7 @@ export const initContactForm = () => {
       if (skipLink) skipLink.classList.add("visually-hidden");
     } catch (err) {
       form.setAttribute("aria-busy", "false");
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove("sending");
-        submitBtn.textContent = originalBtnText;
-      }
+      restoreSubmitButton();
       showStatus("Nie udało się wysłać przez ulepszony tryb. Wysyłamy formularz standardowo…", false);
       console.error(err);
       form.removeAttribute("aria-busy");
