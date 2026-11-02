@@ -95,15 +95,15 @@
 
 ## 8. FAQ i CTA
 
-- [ ] Wszystkie cztery pytania FAQ są aktualne.
-- [ ] Odpowiedzi są zgodne ze standardem KP_Code.
-- [ ] FAQ działa przy użyciu klawiatury.
-- [ ] FAQ jest zgodne z danymi strukturalnymi JSON-LD.
-- [ ] Wszystkie przyciski CTA prowadzą do właściwych miejsc.
-- [ ] CTA nie sugerują zamawiania rzeczywistych usług Axiom.
-- [ ] Przyciski końcowych CTA są wycentrowane na sześciu podstronach usług.
-- [ ] Zawijanie przycisków na urządzeniach mobilnych działa poprawnie.
-- [ ] Nie występują uszkodzone odnośniki.
+- [x] Wszystkie cztery pytania FAQ są aktualne.
+- [x] Odpowiedzi są zgodne ze standardem KP_Code.
+- [x] FAQ działa przy użyciu klawiatury.
+- [x] FAQ jest zgodne z danymi strukturalnymi JSON-LD.
+- [x] Wszystkie przyciski CTA prowadzą do właściwych miejsc.
+- [x] CTA nie sugerują zamawiania rzeczywistych usług Axiom.
+- [x] Przyciski końcowych CTA są wycentrowane na sześciu podstronach usług.
+- [x] Zawijanie przycisków na urządzeniach mobilnych działa poprawnie.
+- [x] Nie występują uszkodzone odnośniki.
 
 ## 9. Responsywność i wygląd
 

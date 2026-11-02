@@ -73,6 +73,7 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Fixed reCAPTCHA loading under Service Worker control and completed the required Netlify reCAPTCHA form markup.
 - Fixed false contact-form success feedback for missing or rejected reCAPTCHA submissions and corrected the telephone pattern for `v`-flag validation.
 - Fixed CSP restrictions blocking Google reCAPTCHA connection requests in production.
+- Corrected anchor navigation to the contact, gallery and FAQ sections overshooting its target during smooth scrolling.
 
 ### Build and Tooling
 

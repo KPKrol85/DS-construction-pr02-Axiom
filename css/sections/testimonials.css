@@ -1,9 +1,9 @@
+/* No content-visibility: a placeholder height here would move the anchors
+   below (#galeria, #faq, #kontakt) while a smooth scroll is heading to them. */
 .testimonials {
   text-align: center;
   background: var(--surface-section);
   border-top: 1px solid var(--section-rule);
-  content-visibility: auto;
-  contain-intrinsic-size: 800px;
 }
 
 .testimonials__inner {

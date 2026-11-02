@@ -1,9 +1,9 @@
 
+/* No content-visibility: a placeholder height here would move #kontakt
+   while a smooth scroll is heading to it. */
 .faq {
   background: var(--surface-section);
   border-top: 1px solid var(--section-rule);
-  content-visibility: auto;
-  contain-intrinsic-size: 1000px;
   text-align: center;
 }
 
