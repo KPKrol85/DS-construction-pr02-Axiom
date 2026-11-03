@@ -1,10 +1,9 @@
 {
   "index.html": {
-    "title": "Axiom Construction — firma budowlano-remontowa",
-    "description": "Koncepcja strony firmy budowlano-remontowej Axiom Construction: usługi, realizacje i kontakt. Projekt portfolio KP_Code Digital Studio.",
+    "title": "Axiom Construction — koncepcja strony firmy budowlano-remontowej",
+    "description": "Demonstracyjna strona fikcyjnej firmy budowlano-remontowej Axiom Construction: usługi, realizacje i kontakt. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/",
-    "og_image_alt": "Axiom Construction - usługi budowlano-remontowe i realizacje",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "weekly",
     "priority": "1.0"
   },
@@ -12,87 +11,72 @@
     "title": "Dziękujemy za kontakt — Axiom Construction",
     "description": "Potwierdzenie wysłania wiadomości do KP_Code Digital Studio, autora projektu strony Axiom Construction.",
     "canonical": "/success.html",
-    "robots": "noindex, follow",
-    "og_image_alt": "Axiom Construction - potwierdzenie wysłania formularza"
+    "robots": "noindex, follow"
   },
   "404.html": {
     "title": "Strona nie znaleziona (404) — Axiom Construction",
     "description": "Strona, której szukasz, nie istnieje. Wróć na stronę główną Axiom Construction lub wybierz właściwą usługę z menu i kontynuuj.",
     "canonical": "/404.html",
-    "robots": "noindex, follow",
-    "og_image_alt": "Axiom Construction - strona 404",
-    "twitter_image_alt": "Axiom Construction — strona 404"
+    "robots": "noindex, follow"
   },
   "offline.html": {
     "title": "Tryb offline — Axiom Construction",
     "description": "Jesteś offline. Ta strona pozwala sprawdzić podstawowe informacje i wrócić do serwisu Axiom Construction po odzyskaniu połączenia.",
     "canonical": "/offline.html",
     "robots": "noindex, follow",
-    "og_image_alt": "Axiom Construction — tryb offline",
     "twitter_title": "Tryb offline - Axiom Construction",
-    "twitter_image_alt": "Axiom Construction - tryb offline",
     "asset_prefix": "/"
   },
   "services/adaptacje-poddaszy.html": {
     "title": "Adaptacje poddaszy — Axiom Construction",
-    "description": "Adaptacje poddaszy w Axiom Construction: ocena możliwości, projekt, izolacje i kompleksowe wykończenie funkcjonalnych przestrzeni.",
+    "description": "Adaptacje poddaszy — oferta fikcyjnej marki Axiom Construction: ocena możliwości, izolacje i wykończenie. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/adaptacje-poddaszy.html",
     "og_title": "Adaptacje poddaszy - Axiom Construction",
-    "og_image_alt": "Axiom Construction - adaptacje poddaszy",
     "twitter_title": "Adaptacje poddaszy — Axiom Construction",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
   "services/budowa-domow.html": {
     "title": "Budowa domów — Axiom Construction",
-    "description": "Budowa domów jednorodzinnych z Axiom Construction: stan surowy, deweloperski lub pod klucz, harmonogram i gwarancja.",
+    "description": "Budowa domów jednorodzinnych — oferta fikcyjnej marki Axiom Construction: stan surowy, deweloperski lub pod klucz. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/budowa-domow.html",
     "og_title": "Budowa domów - Axiom Construction",
-    "og_image_alt": "Axiom Construction — budowa domów",
-    "twitter_image_alt": "Axiom Construction - budowa domów",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
   "services/instalacje-elektryczne.html": {
     "title": "Instalacje elektryczne — Axiom Construction",
-    "description": "Instalacje elektryczne: projekt, montaż i modernizacja w domach i firmach. Bezpieczeństwo, pomiary oraz zgodność z normami.",
+    "description": "Instalacje elektryczne — oferta fikcyjnej marki Axiom Construction: montaż, modernizacja i pomiary w domach i firmach. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/instalacje-elektryczne.html",
     "og_title": "Instalacje elektryczne - Axiom Construction",
-    "og_image_alt": "Axiom Construction — instalacje elektryczne",
-    "twitter_image_alt": "Axiom Construction - instalacje elektryczne",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
   "services/instalacje-sanitarne.html": {
     "title": "Instalacje sanitarne — Axiom Construction",
-    "description": "Instalacje sanitarne Axiom Construction: wod.-kan., ogrzewanie i przyłącza. Dobór rozwiązań, montaż, serwis i dokumentacja.",
+    "description": "Instalacje sanitarne — oferta fikcyjnej marki Axiom Construction: wod.-kan., ogrzewanie, przyłącza i serwis. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/instalacje-sanitarne.html",
-    "og_image_alt": "Axiom Construction — instalacje sanitarne",
-    "twitter_image_alt": "Axiom Construction - instalacje sanitarne",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
   "services/remonty-mieszkan.html": {
     "title": "Remonty mieszkań — Axiom Construction",
-    "description": "Remonty mieszkań od Axiom Construction: plan prac, wykończenia, instalacje i koordynacja ekip. Terminowo i z gwarancją.",
+    "description": "Remonty mieszkań — oferta fikcyjnej marki Axiom Construction: plan prac, wykończenia, instalacje i koordynacja ekip. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/remonty-mieszkan.html",
-    "og_image_alt": "Axiom Construction - remonty mieszkań",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
   "services/wykonczenia-wnetrz.html": {
     "title": "Wykończenia wnętrz — Axiom Construction",
-    "description": "Wykończenia wnętrz Axiom Construction: gładzie, malowanie, podłogi, glazura i zabudowy. Spójny efekt, projekt i doradztwo materiałowe.",
+    "description": "Wykończenia wnętrz — oferta fikcyjnej marki Axiom Construction: gładzie, malowanie, podłogi, glazura i zabudowy. Projekt portfolio KP_Code Digital Studio.",
     "canonical": "/services/wykonczenia-wnetrz.html",
     "og_title": "Wykończenia wnętrz - Axiom Construction",
-    "og_image_alt": "Axiom Construction - wykończenia wnętrz",
-    "twitter_image_alt": "Axiom Construction — wykończenia wnętrz",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-11-03",
     "changefreq": "monthly",
     "priority": "0.8"
   },
@@ -100,16 +84,14 @@
     "title": "Certyfikaty i kwalifikacje — demo | Axiom Construction",
     "description": "Demonstracyjna prezentacja certyfikatów, kwalifikacji i szkoleń na stronie fikcyjnej firmy Axiom Construction. Przykłady nie potwierdzają rzeczywistych uprawnień.",
     "canonical": "/legal/certyfikaty.html",
-    "robots": "noindex, follow",
-    "og_image_alt": "Axiom Construction — demonstracyjna prezentacja certyfikatów"
+    "robots": "noindex, follow"
   },
   "legal/kariera.html": {
     "title": "Kariera — Axiom Construction",
     "description": "Kariera w Axiom Construction: przykładowe oferty, wymagania i benefity. Demonstracyjny interfejs rekrutacyjny nie przyjmuje prawdziwych zgłoszeń.",
     "canonical": "/legal/kariera.html",
-    "og_image_alt": "Axiom Construction — kariera",
     "twitter_title": "Kariera - Axiom Construction",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-10-31",
     "changefreq": "yearly",
     "priority": "0.4"
   },
@@ -117,10 +99,8 @@
     "title": "Polityka cookies — Axiom Construction",
     "description": "Polityka cookies serwisu Axiom Construction: informacje o plikach cookies, celach ich użycia oraz sposobach zarządzania ustawieniami przeglądarki.",
     "canonical": "/legal/polityka-cookies.html",
-    "og_image_alt": "Axiom Construction - polityka cookies",
     "twitter_title": "Polityka cookies - Axiom Construction",
-    "twitter_image_alt": "Axiom Construction — polityka cookies",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-10-31",
     "changefreq": "yearly",
     "priority": "0.5"
   },
@@ -128,8 +108,7 @@
     "title": "Polityka prywatności - Axiom Construction",
     "description": "Polityka prywatności serwisu Axiom Construction: zakres i cele przetwarzania danych, prawa użytkowników oraz kontakt w sprawach ochrony danych.",
     "canonical": "/legal/polityka-prywatnosci.html",
-    "og_image_alt": "Axiom Construction - polityka prywatności",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-10-31",
     "changefreq": "yearly",
     "priority": "0.5"
   },
@@ -138,9 +117,7 @@
     "description": "Regulamin serwisu Axiom Construction, w tym zasady korzystania z wersji demo, odpowiedzialność oraz kontakt w sprawach formalnych.",
     "canonical": "/legal/regulamin.html",
     "og_title": "Regulamin serwisu - Axiom Construction",
-    "og_image_alt": "Axiom Construction — regulamin serwisu",
-    "twitter_image_alt": "Axiom Construction - regulamin serwisu",
-    "lastmod": "2025-10-22",
+    "lastmod": "2026-10-31",
     "changefreq": "yearly",
     "priority": "0.5"
   }

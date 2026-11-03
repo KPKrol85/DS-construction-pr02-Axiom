@@ -74,6 +74,9 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Fixed false contact-form success feedback for missing or rejected reCAPTCHA submissions and corrected the telephone pattern for `v`-flag validation.
 - Fixed CSP restrictions blocking Google reCAPTCHA connection requests in production.
 - Corrected anchor navigation to the contact, gallery and FAQ sections overshooting its target during smooth scrolling.
+- Corrected home page structured data by removing an unsupported site search action and aligning the listed services and gallery images with their pages and visible images.
+- Corrected the home page title and service-page search and social descriptions to present Axiom Construction as a fictional brand in a KP_Code Digital Studio portfolio project, removing unsupported warranty and compliance claims.
+- Replaced page-specific social image alternative text with a shared description of the demonstration artwork and corrected sitemap modification dates to reflect actual page changes.
 
 ### Build and Tooling
 

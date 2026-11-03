@@ -12,6 +12,10 @@ const sitemapPath = path.join(projectRoot, "sitemap.xml");
 // Page metadata uses root-relative paths resolved against this public origin.
 const siteOrigin = "https://ds-construction-pr02-axiom.netlify.app";
 const defaultOgImage = "/assets/img/og/og-1200x630.jpg";
+// Describes the shared artwork itself, so it applies only to pages that keep the default image.
+const defaultOgImageAlt =
+  "Logo i nazwa Axiom Construction oraz napis „Koncepcja strony internetowej” na tle nowoczesnego budynku o zmierzchu; " +
+  "u dołu podpis „Projekt demonstracyjny • KP_Code Digital Studio”.";
 const defaultRobots = "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
 
 const args = process.argv.slice(2);
@@ -43,9 +47,10 @@ const renderHead = (filePath, meta) => {
   const ogTitle = meta.og_title ?? meta.title;
   const ogDescription = meta.og_description ?? meta.description;
   const ogImage = meta.og_image ?? defaultOgImage;
+  const ogImageAlt = meta.og_image_alt ?? (meta.og_image === undefined ? defaultOgImageAlt : undefined);
   const twitterTitle = meta.twitter_title ?? ogTitle;
   const twitterDescription = meta.twitter_description ?? ogDescription;
-  const twitterImageAlt = meta.twitter_image_alt ?? meta.og_image_alt;
+  const twitterImageAlt = meta.twitter_image_alt ?? ogImageAlt;
 
   const replacements = {
     "{{TITLE}}": meta.title,
@@ -56,7 +61,7 @@ const renderHead = (filePath, meta) => {
     "{{OG_DESCRIPTION}}": ogDescription,
     "{{OG_URL}}": meta.canonical,
     "{{OG_IMAGE}}": ogImage,
-    "{{OG_IMAGE_ALT}}": meta.og_image_alt,
+    "{{OG_IMAGE_ALT}}": ogImageAlt,
     "{{TWITTER_TITLE}}": twitterTitle,
     "{{TWITTER_DESCRIPTION}}": twitterDescription,
     "{{TWITTER_IMAGE_ALT}}": twitterImageAlt,
