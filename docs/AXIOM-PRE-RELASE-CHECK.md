@@ -150,11 +150,11 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 
 ## 12. Produkcyjny build i QA
 
-- [ ] `npm run lint` — PASS.
-- [ ] `npm test` — PASS.
-- [ ] `npm run qa:references -- --scope=source` — PASS.
-- [ ] `npm run build` — PASS.
-- [ ] `npm run qa:references -- --scope=release` — PASS.
+- [x] `npm run lint` — PASS.
+- [x] `npm test` — PASS.
+- [x] `npm run qa:references -- --scope=source` — PASS.
+- [x] `npm run build` — PASS.
+- [x] `npm run qa:references -- --scope=release` — PASS.
 - [ ] Produkcyjny katalog `dist/` zawiera wymagane pliki.
 - [ ] Zweryfikowano poprawność wygenerowanych ścieżek.
 - [ ] Sprawdzono konsolę przeglądarki pod kątem błędów.
