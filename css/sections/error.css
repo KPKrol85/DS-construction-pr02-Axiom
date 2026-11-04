@@ -24,7 +24,7 @@
 }
 
 .error-page__text {
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--text-muted) 90%, var(--text-body));
   margin-block: var(--space-6);
   font-size: var(--fs-7);
 }

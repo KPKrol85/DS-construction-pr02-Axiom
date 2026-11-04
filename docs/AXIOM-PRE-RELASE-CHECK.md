@@ -138,15 +138,15 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 
 ## 11. Dostępność — Accessibility
 
-- [ ] Nawigacja klawiaturą działa.
-- [ ] Fokus interaktywnych elementów jest widoczny.
-- [ ] Kontrasty tekstów są prawidłowe.
-- [ ] Formularz ma poprawne etykiety i komunikaty.
-- [ ] Obrazy mają odpowiednie teksty alternatywne.
-- [ ] Hierarchia nagłówków jest logiczna.
-- [ ] Elementy interaktywne mają właściwe nazwy dostępności.
-- [ ] Wykonano dostępne testy automatyczne.
-- [ ] Zweryfikowano najważniejsze interakcje ręcznie.
+- [x] Nawigacja klawiaturą działa.
+- [x] Fokus interaktywnych elementów jest widoczny.
+- [x] Kontrasty tekstów są prawidłowe.
+- [x] Formularz ma poprawne etykiety i komunikaty.
+- [x] Obrazy mają odpowiednie teksty alternatywne.
+- [x] Hierarchia nagłówków jest logiczna.
+- [x] Elementy interaktywne mają właściwe nazwy dostępności.
+- [x] Wykonano dostępne testy automatyczne.
+- [x] Zweryfikowano najważniejsze interakcje ręcznie.
 
 ## 12. Produkcyjny build i QA
 

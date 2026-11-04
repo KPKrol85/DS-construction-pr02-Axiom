@@ -49,7 +49,7 @@ a:not([aria-current="page"]):focus-visible {
 
 footer .footer__section a[aria-current="page"],
 footer .footer__section li[aria-current="page"] {
-  color: var(--accent);
+  color: var(--text-link);
   font-weight: 400;
   position: relative;
 }

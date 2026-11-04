@@ -97,7 +97,8 @@
 }
 
 .contact-form :is(input, textarea)::placeholder {
-  opacity: 0.6;
+  color: var(--text-muted);
+  opacity: 1;
 }
 
 .contact-form textarea {

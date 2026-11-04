@@ -195,7 +195,7 @@
 }
 
 .legal__meta small {
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--text-muted) 90%, var(--text-body));
   font-size: var(--fs-8);
 }
 
@@ -256,6 +256,8 @@
 }
 .career__form .checkbox a {
   color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .career__form .checkbox a:hover,

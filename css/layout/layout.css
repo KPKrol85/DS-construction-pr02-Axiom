@@ -613,8 +613,9 @@ footer a:not(.footer__social-link) {
   --uln-offset: 0.15em;
 }
 
-footer .footer__section a:hover {
-  color: var(--accent);
+footer .footer__section a:hover,
+footer .footer__section a:focus-visible {
+  color: var(--text-link);
 }
 
 footer a:not(.footer__social-link)::after {
