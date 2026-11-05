@@ -156,7 +156,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 - [x] `npm run build` — PASS.
 - [x] `npm run qa:references -- --scope=release` — PASS.
 - [x] Produkcyjny katalog `dist/` zawiera wymagane pliki.
-- [ ] Zweryfikowano poprawność wygenerowanych ścieżek.
+- [x] Zweryfikowano poprawność wygenerowanych ścieżek.
 - [ ] Sprawdzono konsolę przeglądarki pod kątem błędów.
 - [x] Wykonano końcowy pomiar Lighthouse.
 - [x] Sprawdzono podstawowe wskaźniki wydajności.
