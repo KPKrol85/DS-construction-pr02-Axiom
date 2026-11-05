@@ -342,8 +342,8 @@
               <li>Service Worker — obsługa wskazanej wyżej pamięci podręcznej i strony wyświetlanej przy braku połączenia.</li>
             </ul>
             <p>
-              Dane zapisywane w wymieniony wyżej sposób pozostają na urządzeniu Użytkownika i nie są przesyłane do Operatora. Jedyną funkcjonalnością Serwisu, która przekazuje dane poza urządzenie
-              Użytkownika, jest Formularz opisany w punkcie 9.
+              Dane zapisywane w wymieniony wyżej sposób pozostają na urządzeniu Użytkownika. Podczas wysyłania Formularza wprowadzone dane są przekazywane do Netlify Forms (zob. punkt 9).
+              Przeglądarka może łączyć się z serwerami Google na potrzeby weryfikacji reCAPTCHA także przed wysłaniem Formularza (zob. punkt 11).
             </p>
             <p>Serwis nie tworzy kont użytkowników, nie prowadzi sprzedaży, nie obsługuje płatności ani rezerwacji, a także nie korzysta z narzędzi analitycznych ani śledzących.</p>
             <!-- 6. Wymagania techniczne -->
@@ -361,7 +361,10 @@
             </ul>
             <p>
               Wyłączenie JavaScriptu, pamięci przeglądarki, Service Workera lub plików cookies może ograniczyć działanie niektórych funkcjonalności, w tym zapamiętywania motywu, podglądu zdjęć w
-              galerii oraz trybu offline. Podstawowe treści Serwisu pozostają wówczas dostępne, a Formularz można wysłać w trybie standardowego przesłania formularza, bez obsługi skryptów.
+              galerii oraz trybu offline. Podstawowe treści Serwisu pozostają wówczas dostępne. Weryfikacja reCAPTCHA, używana przez Netlify Forms do ochrony Formularza przed spamem, wymaga JavaScriptu.
+              Jeśli JavaScript jest wyłączony, z Operatorem można skontaktować się pod adresem
+              <a href="mailto:kontakt@kp-code.pl">kontakt@kp-code.pl</a>
+              .
             </p>
             <p>Korzystanie z Internetu wiąże się z typowymi zagrożeniami technicznymi, w szczególności możliwością:</p>
             <ul>
@@ -434,7 +437,10 @@
               dostawcy hostingu, na którym utrzymywany jest Serwis, a następnie udostępniane Operatorowi.
             </p>
             <p>Skorzystanie z Formularza jest dobrowolne.</p>
-            <p>Formularz obejmuje pola wymagane, tj. imię i nazwisko, adres e-mail, temat, rodzaj zapytania oraz treść wiadomości, a także pole opcjonalne w postaci numeru telefonu.</p>
+            <p>
+              Formularz wymaga podania imienia i nazwiska, adresu e-mail, tematu, rodzaju zapytania oraz treści wiadomości. Numer telefonu jest opcjonalny. Aby wysłać Formularz, należy również
+              zaznaczyć pole potwierdzające zapoznanie się z Polityką prywatności.
+            </p>
             <p>Użytkownik powinien podać wyłącznie dane:</p>
             <ul>
               <li>wymagane przez Formularz,</li>
@@ -459,8 +465,8 @@
             </p>
             <p>Usługa przesłania Formularza zostaje zakończona po przekazaniu danych do systemu obsługującego wiadomość i wyświetleniu potwierdzenia jej wysłania.</p>
             <p>
-              Treść wiadomości wpisywana w Formularzu jest zapisywana roboczo w pamięci przeglądarki Użytkownika, aby nie została utracona przed wysłaniem. Zapis ten pozostaje na urządzeniu Użytkownika
-              i jest usuwany po skutecznym wysłaniu wiadomości.
+              Treść wiadomości wpisywana w Formularzu jest zapisywana roboczo w pamięci przeglądarki Użytkownika, aby nie została utracona przed wysłaniem. Szkic pozostaje na urządzeniu Użytkownika.
+              Jest automatycznie usuwany po potwierdzeniu wysłania wiadomości w trybie obsługiwanym przez JavaScript.
             </p>
             <p>
               Udostępniony w Serwisie interfejs rekrutacyjny na podstronie
