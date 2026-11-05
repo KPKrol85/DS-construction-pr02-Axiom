@@ -160,7 +160,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 - [x] Sprawdzono konsolę przeglądarki pod kątem błędów.
 - [x] Wykonano końcowy pomiar Lighthouse.
 - [x] Sprawdzono podstawowe wskaźniki wydajności.
-- [ ] Nie wykryto krytycznych regresji.
+- [x] Nie wykryto krytycznych regresji.
 
 ## 13. Dokumenty i strony pomocnicze
 
