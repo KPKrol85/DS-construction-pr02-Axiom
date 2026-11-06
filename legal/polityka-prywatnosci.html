@@ -258,8 +258,8 @@
               <li>inne informacje dobrowolnie zawarte przez Użytkownika w treści wiadomości.</li>
             </ul>
             <p>
-              Formularz zawiera ponadto ukryte pole techniczne identyfikujące formularz oraz ukryte pole-pułapkę (honeypot), które nie służy zbieraniu danych Użytkownika i pozostaje puste przy
-              prawidłowym korzystaniu z Serwisu.
+              Formularz zawiera ponadto ukryte pole techniczne identyfikujące formularz oraz ukryte pole-pułapkę (honeypot)
+              <code>trap</code>. Pole-pułapka powinno pozostać puste. Netlify Forms sprawdza jego wartość przy wysyłce i odrzuca zgłoszenie, jeśli pole zostało wypełnione.
             </p>
             <p>Do informacji generowanych automatycznie należą:</p>
             <ul>
@@ -268,11 +268,12 @@
                 żądanego zasobu oraz informacje o przeglądarce i systemie przekazywane przez przeglądarkę Użytkownika,
               </li>
               <li>
-                informacje wykorzystywane przez mechanizm weryfikacji reCAPTCHA do oceny, czy Formularz wysyła człowiek, wraz z plikiem cookie
+                informacje techniczne przekazywane Google na potrzeby reCAPTCHA. Przeglądarka może połączyć się z serwerami Google jeszcze przed wysłaniem Formularza. Mechanizm ustawia plik cookie
                 <code>_GRECAPTCHA</code>
-                ustawianym przez dostawcę tego mechanizmu.
+                i generuje token weryfikacyjny, który przy wysyłce jest przekazywany do Netlify Forms wraz z danymi Formularza.
               </li>
             </ul>
+            <p>Weryfikacja reCAPTCHA wymaga JavaScriptu. Przy wyłączonym JavaScripcie z Administratorem można skontaktować się pod adresem e-mail wskazanym w punkcie 14.</p>
             <p>
               Administrator nie prowadzi we własnym zakresie narzędzi analitycznych, nie stosuje technologii śledzących i nie tworzy własnych logów serwera. Wskazane wyżej dane techniczne są
               przetwarzane w infrastrukturze dostawców wymienionych w punkcie 6. Bezpośrednio dostępna Administratorowi jest treść wiadomości przesłanych przez Formularz wraz z podanymi w nim danymi
@@ -294,9 +295,10 @@
               ani z lokalnych baz danych przeglądarki.
             </p>
             <p>
-              Dane zapisane wyłącznie lokalnie na urządzeniu Użytkownika nie są automatycznie przekazywane Administratorowi. Dotyczy to również roboczej treści wiadomości wpisywanej w Formularzu:
-              pozostaje ona na urządzeniu Użytkownika, a jej przekazanie następuje dopiero wskutek świadomego wysłania Formularza przez Użytkownika. Po skutecznym wysłaniu wiadomości zapis roboczy jest
-              usuwany.
+              Dane zapisane wyłącznie lokalnie na urządzeniu Użytkownika nie są automatycznie przekazywane Administratorowi. Spośród danych wpisywanych w Formularzu w pamięci
+              <code>localStorage</code>
+              zapisywana jest wyłącznie robocza treść wiadomości. Szkic pozostaje w przeglądarce, a treść wiadomości jest przekazywana do Netlify Forms dopiero podczas wysyłki Formularza. Zasady
+              usuwania szkicu opisano w punkcie 8.
             </p>
             <p>
               Szczegółowe informacje dotyczące plików cookies i podobnych technologii znajdują się w dokumencie
@@ -427,23 +429,23 @@
                   <tr>
                     <th scope="row">Netlify, Inc.</th>
                     <td>Hosting Serwisu oraz mechanizm obsługi formularzy (Netlify Forms), z którego korzysta Formularz</td>
-                    <td>Dane podane w Formularzu wraz z treścią wiadomości oraz dane techniczne niezbędne do obsłużenia żądań kierowanych do Serwisu</td>
+                    <td>Dane przekazane przy wysyłce Formularza, w tym treść wiadomości i token reCAPTCHA, oraz dane techniczne niezbędne do obsłużenia żądań kierowanych do Serwisu</td>
                     <td>Dostawca infrastruktury, w której utrzymywany jest Serwis i obsługiwany jest Formularz; szczegółową kwalifikację jego roli określają dokumenty publikowane przez dostawcę</td>
                   </tr>
                   <tr>
                     <th scope="row">Google</th>
                     <td>Mechanizm weryfikacji reCAPTCHA, uruchamiany w przeglądarce Użytkownika w obrębie Formularza</td>
                     <td>
-                      Informacje techniczne wykorzystywane do oceny, czy Formularz wysyła człowiek, oraz plik cookie
+                      Informacje techniczne wykorzystywane do weryfikacji reCAPTCHA, które przeglądarka może przekazywać już przed wysłaniem Formularza, oraz plik cookie
                       <code>_GRECAPTCHA</code>
                     </td>
                     <td>Dostawca mechanizmu weryfikacji ładowanego z serwerów Google; szczegółową kwalifikację jego roli określają dokumenty publikowane przez dostawcę</td>
                   </tr>
                   <tr>
                     <th scope="row">Automattic (usługa Akismet)</th>
-                    <td>Filtrowanie spamu stosowane przez mechanizm obsługi formularzy wobec otrzymanych zgłoszeń</td>
-                    <td>Dane przesłane w Formularzu, przekazywane w celu oceny, czy zgłoszenie stanowi spam</td>
-                    <td>Usługa uruchamiana przez dostawcę mechanizmu obsługi formularzy, a nie osadzona bezpośrednio w Serwisie</td>
+                    <td>Filtrowanie otrzymanych zgłoszeń pod kątem spamu</td>
+                    <td>Dane ze zgłoszenia wykorzystywane do oceny, czy stanowi ono spam</td>
+                    <td>Usługa wykorzystywana przez Netlify Forms po stronie serwera</td>
                   </tr>
                   <tr>
                     <th scope="row">Simply.com A/S</th>
@@ -531,8 +533,7 @@
             <ul>
               <li>dane związane z pojedynczym zapytaniem są przechowywane do zakończenia korespondencji, a następnie przez okres niezbędny do zabezpieczenia lub dochodzenia roszczeń,</li>
               <li>
-                wiadomości przesłane przez Formularz pozostają dostępne w panelu mechanizmu obsługi formularzy do czasu ich usunięcia przez Administratora; dostawca tej usługi nie wyznacza dla nich z
-                góry określonego okresu retencji i zaleca bieżące usuwanie zgromadzonych zgłoszeń,
+                zgłoszenia zapisane w Netlify Forms są dostępne w panelu usługi, w którym można je usuwać. Netlify zaleca regularne usuwanie zgłoszeń zawierających dane osobowe,
               </li>
               <li>
                 dane techniczne przetwarzane w infrastrukturze dostawców są przechowywane zgodnie z okresami retencji stosowanymi przez tych dostawców; Administrator nie prowadzi własnych logów serwera
@@ -542,7 +543,10 @@
             </ul>
             <p>Dane zapisane wyłącznie lokalnie w przeglądarce pozostają na urządzeniu Użytkownika, a ich cykl życia wynika z działania poszczególnych mechanizmów:</p>
             <ul>
-              <li>robocza treść wiadomości wpisywanej w Formularzu jest usuwana po skutecznym wysłaniu wiadomości,</li>
+              <li>
+                skrypt Formularza próbuje automatycznie usunąć szkic po otrzymaniu odpowiedzi serwera, którą uzna za pomyślną. Taka odpowiedź nie potwierdza doręczenia wiadomości Administratorowi.
+                Awaryjna wysyłka natywnym żądaniem POST nie uruchamia usuwania szkicu. Po przywróceniu szkicu Użytkownik może go usunąć przyciskiem „Odrzuć szkic”,
+              </li>
               <li>
                 zapisany wybór motywu pozostaje w pamięci
                 <code>localStorage</code>
@@ -603,9 +607,9 @@
             </p>
             <p>Administrator nie stosuje profilowania wobec Użytkowników Serwisu.</p>
             <p>
-              Powyższego nie zmienia działanie mechanizmów antyspamowych opisanych w punktach 6 i 12. Dokonują one automatycznej oceny samego zgłoszenia przesłanego przez Formularz, aby odróżnić je od
-              spamu, co może skutkować jego odrzuceniem albo oznaczeniem. Ocena ta nie służy budowaniu profilu Użytkownika ani podejmowaniu wobec niego decyzji wywołujących skutki prawne lub w podobny
-              sposób istotnie na niego wpływających. Jeżeli wiadomość nie dotrze do Administratora, Użytkownik może skorzystać z bezpośredniego kontaktu e-mail wskazanego w punkcie 14.
+              Netlify Forms może odrzucić zgłoszenie w razie nieudanej weryfikacji reCAPTCHA lub wypełnienia pola-pułapki. Akismet ocenia otrzymane zgłoszenia i może oznaczyć je jako spam.
+              Mechanizmy te służą ochronie Formularza przed nadużyciami. Jeżeli wiadomość nie dotrze do Administratora, Użytkownik może skorzystać z bezpośredniego kontaktu e-mail wskazanego
+              w punkcie 14.
             </p>
             <!-- 11. Pliki cookies i podobne technologie -->
             <h2 id="privacy-11">
