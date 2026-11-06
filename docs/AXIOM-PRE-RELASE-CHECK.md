@@ -181,7 +181,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 
 **Etap pierwszy: analiza bez modyfikowania plików.**
 
-- [ ] KODEK wykonał audyt wszystkich wymienionych obszarów.
+- [ ] Wykonano audyt wszystkich wymienionych obszarów.
 - [ ] Przygotowano listę wyników PASS.
 - [ ] Przygotowano listę problemów FIX.
 - [ ] Wskazano kwestie wymagające decyzji właściciela — REVIEW.
