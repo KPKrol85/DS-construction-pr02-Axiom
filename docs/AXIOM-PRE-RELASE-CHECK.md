@@ -167,7 +167,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 - [x] Regulamin odpowiada demonstracyjnemu charakterowi projektu.
 - [x] Polityka prywatności opisuje rzeczywiste działanie formularza.
 - [x] Polityka cookies jest aktualna.
-- [ ] Strona certyfikatów zawiera poprawne informacje.
+- [x] Strona certyfikatów zawiera poprawne informacje.
 - [ ] Strona kariery nie sugeruje aktywnej, rzeczywistej rekrutacji.
 - [ ] Strona `404.html` działa poprawnie.
 - [ ] Strona `offline.html` działa poprawnie.
