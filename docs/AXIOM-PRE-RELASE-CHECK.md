@@ -165,7 +165,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 ## 13. Dokumenty i strony pomocnicze
 
 - [x] Regulamin odpowiada demonstracyjnemu charakterowi projektu.
-- [ ] Polityka prywatności opisuje rzeczywiste działanie formularza.
+- [x] Polityka prywatności opisuje rzeczywiste działanie formularza.
 - [ ] Polityka cookies jest aktualna.
 - [ ] Strona certyfikatów zawiera poprawne informacje.
 - [ ] Strona kariery nie sugeruje aktywnej, rzeczywistej rekrutacji.
