@@ -271,7 +271,7 @@
                     <td>Operator</td>
                     <td>Funkcjonalna — szkic wiadomości</td>
                     <td>Lokalne zachowanie i przywracanie treści pola wiadomości w Formularzu</td>
-                    <td>Bez terminu wygaśnięcia; do nadpisania, usunięcia danych lub skutecznego zakończenia wysyłki obsługiwanej przez JavaScript</td>
+                    <td>Bez zaprogramowanego terminu wygaśnięcia. Sposoby usunięcia wpisu opisano poniżej</td>
                   </tr>
                   <tr>
                     <th scope="row"><code>axiom-static-</code> i <code>html-pages-</code> z oznaczeniem rewizji</th>
@@ -309,8 +309,9 @@
             <h3>Lokalne dane i pamięć podręczna</h3>
             <p>
               Wpisy <code>localStorage</code> pozostają w przeglądarce i kod Serwisu nie przesyła ich automatycznie Operatorowi.
-              Motyw jest zapisywany po użyciu przełącznika. Szkic wiadomości jest zapisywany podczas wpisywania, a jego treść trafia do obsługi Formularza dopiero po wysłaniu go przez Użytkownika.
-              Kod usuwa szkic po skutecznej wysyłce w trybie JavaScript; nie przewiduje odrębnego usuwania szkicu po przejściu na standardowe przesłanie Formularza.
+              Motyw jest zapisywany po użyciu przełącznika. Treść wiadomości jest zapisywana jako szkic w <code>localStorage</code> podczas wpisywania i trafia do obsługi Formularza dopiero przy jego wysyłce.
+              Skrypt Formularza próbuje automatycznie usunąć szkic po otrzymaniu odpowiedzi serwera, którą uzna za pomyślną. Taka odpowiedź nie potwierdza doręczenia wiadomości Operatorowi.
+              Awaryjna wysyłka natywnym żądaniem POST pomija ten krok. Po przywróceniu szkicu Użytkownik może go usunąć przyciskiem „Odrzuć szkic”.
             </p>
             <p>
               Cache Storage służy przechowywaniu odpowiedzi i zasobów aplikacji, a nie śledzeniu Użytkownika. Service Worker nie zapisuje w nim treści wysyłanych Formularzem żądań POST.
@@ -342,16 +343,16 @@
               <li>ustawie z dnia 12 lipca 2024 r. — Prawo komunikacji elektronicznej, w tym art. 399,</li>
               <li>Rozporządzeniu Parlamentu Europejskiego i Rady (UE) 2016/679, zwanemu dalej „RODO” — w zakresie, w jakim wykorzystywanie określonych technologii wiąże się z przetwarzaniem danych osobowych.</li>
             </ul>
-            <p>Zgoda Użytkownika nie jest wymagana w zakresie, w jakim przechowywanie informacji lub uzyskiwanie do niej dostępu jest konieczne do:</p>
+            <p>Art. 399 określa warunki zapisywania informacji na urządzeniu Użytkownika i uzyskiwania dostępu do informacji już na nim zapisanych. Ustawa przewiduje dwa wyjątki od tych warunków.</p>
             <ul>
-              <li>wykonania transmisji komunikatu elektronicznego za pośrednictwem publicznej sieci telekomunikacyjnej,</li>
-              <li>dostarczenia usługi świadczonej drogą elektroniczną, wyraźnie żądanej przez Użytkownika.</li>
+              <li>Zapis lub odczyt jest konieczny do transmisji komunikatu elektronicznego za pośrednictwem publicznej sieci telekomunikacyjnej.</li>
+              <li>Zapis lub odczyt jest konieczny do dostarczenia żądanej przez Użytkownika usługi telekomunikacyjnej albo usługi świadczonej drogą elektroniczną.</li>
             </ul>
-            <p>Dla technologii, które nie spełniają warunków tego wyjątku, wymagane są:</p>
+            <p>Poza tymi wyjątkami ustawa wymaga spełnienia następujących warunków.</p>
             <ol>
-              <li>przekazanie Użytkownikowi jasnej i zrozumiałej informacji o ich celu,</li>
-              <li>umożliwienie Użytkownikowi dokonania wyboru,</li>
-              <li>uzyskanie uprzedniej zgody Użytkownika.</li>
+              <li>Użytkownik otrzymuje z wyprzedzeniem jasną informację o celu zapisu lub odczytu oraz o możliwości określenia jego warunków w ustawieniach oprogramowania lub konfiguracji usługi.</li>
+              <li>Użytkownik wyraża zgodę po otrzymaniu tej informacji, przed zapisem lub odczytem.</li>
+              <li>Zapis lub odczyt odbywa się bez zmian konfiguracji urządzenia i jego oprogramowania.</li>
             </ol>
             <p>
               Wybór motywu jest opcjonalną preferencją Użytkownika. Zapis szkicu towarzyszy wpisywaniu wiadomości, a rejestracja Service Workera następuje po załadowaniu strony.
@@ -362,10 +363,9 @@
               W obecnej wersji Serwis nie udostępnia odrębnego mechanizmu uzyskiwania zgody na uruchomienie reCAPTCHA.
             </p>
             <p>
-              Jeżeli technologie wymagające zgody wiążą się z przetwarzaniem danych osobowych, podstawą takiego przetwarzania jest zgoda Użytkownika, o której mowa w art. 6 ust. 1 lit. a RODO.
+              Jeżeli stosowanie danej technologii wiąże się z przetwarzaniem danych osobowych, podstawę tego przetwarzania ustala się odrębnie dla danego celu zgodnie z art. 6 ust. 1 RODO.
               Podstawy przetwarzania danych związanych z rzeczywistą obsługą Formularza i jego bezpieczeństwem opisano w
               <a href="polityka-prywatnosci.html#privacy-4">Polityce prywatności</a>.
-              Podstawa przetwarzania danych osobowych nie zastępuje oceny wymogów dotyczących zapisu i odczytu informacji na urządzeniu.
             </p>
             <p>
               Jeżeli Użytkownik udzielił zgody, może w dowolnym momencie ją wycofać. Cofnięcie zgody nie wpływa na zgodność z prawem działań wykonanych przed jej wycofaniem.
@@ -418,12 +418,13 @@
               Serwis nie określa ich zestawu ani okresów przechowywania.
             </p>
             <p>
-              Aktywna integracja może przekazywać Google informacje techniczne związane z przeglądarką i weryfikacją antyspamową.
+              Przeglądarka może połączyć się z serwerami Google i przekazać informacje techniczne na potrzeby weryfikacji antyspamowej jeszcze przed wysłaniem Formularza.
+              Wymagane przy wysyłce pole służy wyłącznie do potwierdzenia zapoznania się z Polityką prywatności. reCAPTCHA może uruchomić się niezależnie od tego potwierdzenia.
               Szczegółowe zasady określają także
               <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Polityka prywatności Google</a> oraz
               <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Warunki korzystania z usług Google</a>.
-              Informacje o dostawcach i przekazywaniu danych poza Europejski Obszar Gospodarczy opisano w
-              <a href="polityka-prywatnosci.html#privacy-6">Polityce prywatności</a>.
+              Polityka prywatności zawiera osobne sekcje o <a href="polityka-prywatnosci.html#privacy-6">odbiorcach danych</a> i
+              <a href="polityka-prywatnosci.html#privacy-7">przekazywaniu danych poza Europejski Obszar Gospodarczy</a>.
             </p>
             <p>
               Netlify zapewnia hosting i obsługę wysłanych Formularzy. Samo korzystanie z tych usług nie stanowi podstawy do przypisania Serwisowi dodatkowych cookies Netlify;
@@ -464,7 +465,7 @@
             <div class="legal__meta">
               <small>
                 Data ostatniej aktualizacji:
-                <time datetime="2026-10-31">31.10.2026</time>
+                <time datetime="2026-11-06">06.11.2026</time>
               </small>
             </div>
           </div>
