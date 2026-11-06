@@ -25,9 +25,9 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 
 ### Added
 
-- Added the Axiom Construction website with a home page, six service pages, five legal pages, a contact success page, an offline page and a custom 404 page.
-- Added responsive mobile navigation, a compact scrolling header and accessible back-to-top navigation.
-- Added responsive service galleries with accessible lightboxes, keyboard controls and focus management.
+- Added the Axiom Construction website with a home page, six service pages, three legal documents, demonstration pages for careers and certificates, a contact success page, an offline page and a custom 404 page.
+- Added responsive mobile navigation, current-section highlighting on the home page, a compact scrolling header and accessible back-to-top navigation.
+- Added responsive service galleries with accessible lightboxes, keyboard controls, focus management and a visible image position indicator.
 - Added light, dark and system themes with persistent preferences and pre-paint initialization.
 - Added a Netlify contact form with validation, an accessible error summary, a character counter, spam protection and a dedicated success page.
 - Added a demonstrational careers form with recruitment submission and processing disabled.
@@ -40,12 +40,13 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 
 ### Changed
 
-- Introduced the Construction Dossier visual direction across the home page, service pages, galleries, contact section and footer.
+- Introduced the Construction Dossier visual direction across the home page, service pages, galleries, contact section, legal pages and footer.
 - Rebuilt the hero and About section with a readable text overlay, ruled typography and responsive editorial composition.
 - Replaced elevated service cards with flat, ruled catalogue entries and restrained interactive states.
 - Standardized all six service pages with editorial photography, scope checklists, numbered work sequences and project-oriented CTAs.
 - Reworked galleries into responsive photographic layouts with visible descriptions, accessible focus indicators and preserved lightbox interactions.
 - Redesigned the contact section with a ruled form layout, improved field states and clearer validation feedback.
+- Improved contact form feedback with a notice and discard control for restored message drafts and a success confirmation that stays visible until editing resumes.
 - Refined the shared footer and closing service-page CTAs to match the Construction Dossier layout.
 - Centered the home contact-form submit button and closing CTA groups across the six service pages.
 - Applied the KP_Code Digital Studio demonstration standard to public content, contact information, metadata and legal documents.
@@ -63,17 +64,20 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Standardized the production origin as `https://ds-construction-pr02-axiom.netlify.app` across metadata, structured data, sitemap, robots directives, legal links and documentation.
 - Corrected gallery-lightbox focus trapping, initial focus, fullscreen exit and caption readability across viewport orientations.
 - Preserved scroll-reveal content accessibility when JavaScript is unavailable.
-- Restored reliable offline retry handling and connection-status updates.
+- Improved offline recovery by checking server reachability before automatic reloads, retaining manual retry and status announcements, and removing the Escape reload shortcut that conflicted with mobile navigation.
+- Fixed asset and navigation links on the offline and 404 pages at nested URLs.
 - Corrected dark-theme interactive states and active navigation colors to follow the selected theme.
-- Removed inactive mobile-theme handling and unsupported analytics calls.
+- Removed unused mobile-theme handling and inactive analytics calls.
 - Set utility pages and the demonstrational Certificates page to `noindex, follow`.
 - Removed conflicting HTTP indexing directives while preserving page-level robots metadata.
 - Aligned the Cookies Policy with the removal of the first-visit modal and its browser-storage mechanism.
-- Restored the contact form's accessible error summary and field validation states on real submissions, which native browser validation had preempted.
+- Restored accessible contact form validation on submission and linked the error summary directly to each invalid field.
 - Fixed reCAPTCHA loading under Service Worker control and completed the required Netlify reCAPTCHA form markup.
 - Fixed false contact-form success feedback for missing or rejected reCAPTCHA submissions and corrected the telephone pattern for `v`-flag validation.
 - Fixed CSP restrictions blocking Google reCAPTCHA connection requests in production.
 - Corrected anchor navigation to the contact, gallery and FAQ sections overshooting its target during smooth scrolling.
+- Unified keyboard focus indicators, improved text contrast across themes and corrected the home page hero image's alternative text.
+- Corrected Polish character coverage in the self-hosted Lato and Montserrat fonts.
 - Corrected home page structured data by removing an unsupported site search action and aligning the listed services and gallery images with their pages and visible images.
 - Corrected the home page title and service-page search and social descriptions to present Axiom Construction as a fictional brand in a KP_Code Digital Studio portfolio project, removing unsupported warranty and compliance claims.
 - Replaced page-specific social image alternative text with a shared description of the demonstration artwork and corrected sitemap modification dates to reflect actual page changes.
@@ -85,14 +89,15 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 - Limited production output to required application bundles, standalone scripts and referenced assets.
 - Added separate development and production service-worker precache profiles generated from `sw.template.js`.
 - Consolidated service-worker precache definitions and included the pre-paint theme initializer in offline caching.
-- Added responsive WebP and AVIF generation with Sharp and removed unused image variants.
-- Centralized HTML head generation, canonical page metadata and structured metadata defaults.
-- Added idempotent metadata generation and reference-integrity checks.
+- Included CSS and JavaScript dependencies in the local Service Worker precache and cache revision using the same import parsing as the production bundlers.
+- Added responsive WebP and AVIF generation with Sharp, enabled per-image regeneration and removed unused variants.
+- Centralized HTML head and sitemap generation around canonical page metadata and shared defaults.
+- Added a read-only preview for idempotent HTML metadata and sitemap generation.
 - Added ESLint flat configuration for application code, build tools and tests.
 - Added local development and production preview servers.
 - Aligned HTTP caching rules with generated assets, fonts, images and standalone scripts.
 - Removed unused configuration, inactive modules, redundant structured-data sources and unused Poppins assets.
-- Added a reproducible dependency lockfile and Git ignore rules for generated output and reports.
+- Added a lockfile for reproducible installs, declared Node.js `^22.22.2` for local tooling and ignored generated output and reports.
 - Added GitHub Actions CI on Node.js 22 for linting, automated tests, source and release reference checks, and production builds.
 - Kept Netlify deployment manual and separate from CI validation.
 
@@ -100,15 +105,14 @@ When an implementation task is defined, apply this policy and state `Changelog: 
 
 - Added Vitest and jsdom coverage for the contact form, gallery lightbox and mobile navigation.
 - Extended regression tests for keyboard interactions, focus management, ARIA synchronization and form validation.
-- Added Lighthouse and pa11y runners for representative marketing, service and legal pages.
-- Added `npm run qa:references` to validate local links, assets, metadata references and production-build contracts.
+- Added regression coverage for contact form submission and markup, Service Worker document handling, offline recovery, HTML accessibility references, theme behavior and browser storage failures.
+- Added Lighthouse and Pa11y runners for representative marketing, service and legal pages, with saved Pa11y reports that flag verified hero contrast false positives.
+- Added `npm run qa:references` to validate local links, assets and metadata references, with a release mode that requires generated output and checks production build contracts.
 - Automated QA server startup, readiness checks and cleanup.
 
 ### Security
 
 - Added hosting security headers, including Content Security Policy, HSTS, framing restrictions, content-type protection, referrer rules and permissions restrictions.
-- Applied cache-control policies appropriate to fingerprinted assets and unversioned resources.
-- Removed unsupported tracking integrations without introducing additional analytics scripts or CSP permissions.
 
 ### Documentation
 
