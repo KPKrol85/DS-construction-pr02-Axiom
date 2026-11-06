@@ -4,14 +4,14 @@ import { readFile, writeFile, mkdir, unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { getCssImportPath } from "../source-imports.mjs";
+
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const mainFile = path.join(rootDir, "css", "main.css");
 const distDir = path.join(rootDir, "dist");
 const tempFile = path.join(distDir, "style.css");
 const outputFile = path.join(distDir, "style.min.css");
 const cssnanoBin = path.join(rootDir, "node_modules", ".bin", process.platform === "win32" ? "cssnano.cmd" : "cssnano");
-
-const importRegex = /^\s*@import\s+(?:url\()?['"]([^'"]+)['"]\)?\s*;/;
 
 async function inlineImports(filePath, seen = new Set()) {
   if (seen.has(filePath)) {
@@ -22,9 +22,8 @@ async function inlineImports(filePath, seen = new Set()) {
   const lines = content.split(/\r?\n/);
   const output = [];
   for (const line of lines) {
-    const match = line.match(importRegex);
-    if (match) {
-      const importPath = match[1];
+    const importPath = getCssImportPath(line);
+    if (importPath) {
       const resolved = path.resolve(path.dirname(filePath), importPath);
       const inlined = await inlineImports(resolved, seen);
       output.push(inlined);

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 import { BUNDLES, readBundleManifest } from "../release/bundle-names.mjs";
-import { BASE_PRECACHE, LOCAL_PRECACHE, manifestIconUrls } from "./precache.mjs";
+import { BASE_PRECACHE, getLocalPrecache, manifestIconUrls } from "./precache.mjs";
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, "dist");
@@ -43,21 +43,14 @@ const getRequestedProfileNames = () => {
 // a generated service worker - its own output least of all - as an input.
 const createProfile = async (profileName) => {
   if (profileName === "local") {
+    const precache = await getLocalPrecache(ROOT);
     return {
       name: "local",
       description: "local - repository root (npm run serve)",
       npmScript: "build:sw:local",
       outputPath: path.join(ROOT, "sw.js"),
-      precache: LOCAL_PRECACHE,
-      // The development assets this profile precaches, so its revision tracks
-      // exactly what the local service worker caches.
-      revisionInputs: [
-        path.join(ROOT, "css/main.css"),
-        path.join(ROOT, "js/main.js"),
-        path.join(ROOT, "js/offline.js"),
-        path.join(ROOT, "js/theme-init.js"),
-        WEB_MANIFEST_PATH,
-      ],
+      precache,
+      revisionInputs: precache.map((url) => path.join(ROOT, url.slice(1) || "index.html")),
     };
   }
 

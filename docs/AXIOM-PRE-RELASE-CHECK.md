@@ -169,8 +169,8 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 - [x] Polityka cookies jest aktualna.
 - [x] Strona certyfikatów zawiera poprawne informacje.
 - [x] Strona kariery nie sugeruje aktywnej, rzeczywistej rekrutacji.
-- [ ] Strona `404.html` działa poprawnie.
-- [ ] Strona `offline.html` działa poprawnie.
+- [x] Strona `404.html` działa poprawnie.
+- [x] Strona `offline.html` działa poprawnie.
 - [ ] README odpowiada aktualnemu projektowi.
 - [ ] CHANGELOG zawiera wymagane wpisy.
 - [ ] Dokumentacja nie zawiera nieaktualnych instrukcji.

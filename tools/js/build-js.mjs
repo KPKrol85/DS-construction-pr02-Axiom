@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { minify } from "terser";
 
+import { parseJsImports, resolveJsImport } from "../source-imports.mjs";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "../..");
@@ -13,25 +15,6 @@ const moduleCache = new Map();
 
 const normalizeId = (absolutePath) => path.relative(projectRoot, absolutePath).replace(/\\/g, "/");
 
-const resolveImport = (importPath, importerPath) => {
-  const baseDir = path.dirname(importerPath);
-  let resolved = path.resolve(baseDir, importPath);
-  if (!path.extname(resolved)) {
-    resolved += ".js";
-  }
-  return resolved;
-};
-
-const parseImports = (source) => {
-  const imports = [];
-  const importRegex = /import\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];?/g;
-  let match;
-  while ((match = importRegex.exec(source)) !== null) {
-    imports.push({ names: match[1].trim(), path: match[2] });
-  }
-  return imports;
-};
-
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const transformModule = async (filePath) => {
@@ -40,11 +23,11 @@ const transformModule = async (filePath) => {
     return moduleCache.get(resolvedPath);
   }
   const source = await fs.readFile(resolvedPath, "utf8");
-  const imports = parseImports(source);
+  const imports = parseJsImports(source);
   let transformed = source;
 
   imports.forEach((imp) => {
-    const depPath = resolveImport(imp.path, resolvedPath);
+    const depPath = resolveJsImport(imp.path, resolvedPath);
     const depId = normalizeId(depPath);
     const importRegex = new RegExp(
       `import\\s+\\{\\s*${escapeRegExp(imp.names)}\\s*\\}\\s+from\\s+["']${escapeRegExp(imp.path)}["']\\s*;?`,
@@ -81,7 +64,7 @@ const transformModule = async (filePath) => {
   const module = { id, filePath: resolvedPath, code: transformed, imports };
   moduleCache.set(resolvedPath, module);
 
-  await Promise.all(imports.map((imp) => transformModule(resolveImport(imp.path, resolvedPath))));
+  await Promise.all(imports.map((imp) => transformModule(resolveJsImport(imp.path, resolvedPath))));
 
   return module;
 };

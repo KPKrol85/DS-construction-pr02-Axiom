@@ -8,6 +8,11 @@
 //
 // Side-effect free: importing this module reads nothing and writes nothing.
 
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
+import { getCssImportPath, parseJsImports, resolveJsImport } from "../source-imports.mjs";
+
 // Production precache base: the fixed URLs served from the deployment root that
 // build:dist assembles.
 //
@@ -26,23 +31,31 @@ export const BASE_PRECACHE = [
   "/assets/img/logo/logo-dark.svg",
 ];
 
-// Local precache base: the URLs served from the repository root by
-// `npm run serve`. The production bundles do not exist there; all 15
-// maintained HTML pages load css/main.css, js/main.js, and js/theme-init.js
-// directly, while offline.html additionally loads js/offline.js for recovery.
-// Those are the files a locally installed service worker can precache. The
-// remaining entries are shared with the production profile.
-export const LOCAL_PRECACHE = [
-  "/",
-  "/offline.html",
-  "/css/main.css",
-  "/js/main.js",
-  "/js/offline.js",
-  "/js/theme-init.js",
-  "/manifest.webmanifest",
-  "/assets/img/logo/logo-light.svg",
-  "/assets/img/logo/logo-dark.svg",
-];
+// Local pages load the source graph directly. Follow the same imports as the
+// production bundlers so a first visit caches every required stylesheet and module.
+export const getLocalPrecache = async (root) => {
+  const files = new Set();
+  const visit = async (filePath, resolveImports) => {
+    if (files.has(filePath)) return;
+    files.add(filePath);
+
+    const source = await readFile(filePath, "utf8");
+    for (const dependency of resolveImports(source, filePath)) {
+      await visit(dependency, resolveImports);
+    }
+  };
+
+  await visit(path.join(root, "css/main.css"), (source, filePath) =>
+    source.split(/\r?\n/).map(getCssImportPath).filter(Boolean)
+      .map((importPath) => path.resolve(path.dirname(filePath), importPath)),
+  );
+  await visit(path.join(root, "js/main.js"), (source, filePath) =>
+    parseJsImports(source).map(({ path: importPath }) => resolveJsImport(importPath, filePath)),
+  );
+
+  const sourceUrls = Array.from(files, (filePath) => `/${path.relative(root, filePath).split(path.sep).join("/")}`);
+  return [...BASE_PRECACHE, ...sourceUrls];
+};
 
 // The precache URLs of the icons a parsed web app manifest declares, in
 // declaration order: every non-empty string `src`, rooted at the serving root.
