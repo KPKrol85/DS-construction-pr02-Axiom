@@ -5,7 +5,7 @@
 **Owner:** KP_Code Digital Studio
 **Verification date:** 2026-11-07
 **Production URL:** https://ds-construction-pr02-axiom.netlify.app/
-**Status:** IN PROGRESS
+**Status:** RELEASED
 
 **Verification rule:** Confirm each item using current project evidence and final checks. Mark non-applicable items as `N/A` with a brief reason. Unresolved release-blocking issues prevent release approval.
 
@@ -110,14 +110,14 @@
 
 ## Final Release Status
 
-**Result:** PENDING
+**Result:** RELEASED
 **Version:** 1.0.0
-**Release commit:** [COMMIT_SHA]
-**Git tag:** [TAG]
+**Release commit:** d24890c07b18e40e692753fbe80882f0b0af2669
+**Git tag:** v1.0.0
 **Production URL:** https://ds-construction-pr02-axiom.netlify.app/
-**Release date:** [YYYY-MM-DD]
+**Release date:** 2026-11-07
 
-**Notes / exceptions:**
+**Notes / exceptions:** None.
 
 ---
 
