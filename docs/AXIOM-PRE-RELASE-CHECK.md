@@ -1,263 +1,124 @@
 # AXIOM — PRE-RELEASE CHECK
 
-**Projekt:** DS-construction-pr02-Axiom
-**Marka demonstracyjna:** Axiom Construction
-**Autor:** KP_Code Digital Studio
-**Data rozpoczęcia:** 31.10.2026
-**Status:** IN PROGRESS
-**Cel:** Końcowa weryfikacja projektu przed wydaniem i utworzeniem taga Git.
-
----
-
-## 1. GitHub Actions — CI
-
-- [x] Workflow CI jest poprawnie wykrywany przez GitHub.
-- [x] Automatyczne uruchamianie po `push` do `main` działa.
-- [x] `npm ci` przechodzi na GitHub Actions.
-- [x] ESLint kończy się sukcesem.
-- [x] Wszystkie testy Vitest przechodzą.
-- [x] Kontrola referencji źródłowych przechodzi.
-- [x] Produkcyjny build kończy się sukcesem.
-- [x] Kontrola referencji produkcyjnych przechodzi.
-- [x] Cały workflow ma status **SUCCESS**.
-
-## 2. PWA — Manifest
-
-- [x] Zweryfikowano poprawność manifestu.
-- [x] `name` i `short_name` są poprawne.
-- [x] `start_url` prowadzi do właściwej strony.
-- [x] `scope` odpowiada strukturze aplikacji.
-- [x] `display` jest właściwie skonfigurowane.
-- [x] `theme_color` i `background_color` są odpowiednie.
-- [x] Wszystkie ikony istnieją i poprawnie się wyświetlają.
-- [x] Instalacja PWA działa na urządzeniu mobilnym.
-- [x] Uruchomienie zainstalowanej aplikacji działa poprawnie.
-
-## 3. PWA — Shortcuts
-
-- [x] Sprawdzono wszystkie istniejące skróty w manifeście.
-- [x] Nazwy skrótów są czytelne i aktualne.
-- [x] Każdy skrót prowadzi do właściwego miejsca.
-- [x] Nie występują nieaktualne adresy ani odnośniki.
-- [x] Ikony skrótów istnieją i mają odpowiednie parametry.
-- [x] Skróty działają po uruchomieniu z zainstalowanej PWA.
-
-## 4. PWA — Screenshots
-
-- [x] Sprawdzono, czy manifest zawiera sekcję `screenshots`.
-- [x] Zweryfikowano wszystkie istniejące zrzuty ekranu.
-- [x] Screenshoty przedstawiają aktualny wygląd Axiom.
-- [x] Zweryfikowano proporcje, rozdzielczość i format plików.
-- [x] Sprawdzono poprawność ścieżek do obrazów.
-- [x] W razie potrzeby przygotowano nowe screenshoty mobilne.
-- [x] W razie potrzeby przygotowano nowe screenshoty desktopowe.
-- [x] Po ewentualnej wymianie zweryfikowano manifest ponownie.
-- [ ] Sprawdzono aktualność osobnych screenshotów portfolio, jeśli istnieją.
-
-## 5. PWA — Service Worker i Offline
-
-- [x] Service Worker rejestruje się poprawnie.
-- [x] Produkcyjne zasoby są prawidłowo obsługiwane przez cache.
-- [x] Strona działa po przejściu w tryb offline w przewidzianym zakresie.
-- [x] Strona `offline.html` działa poprawnie.
-- [x] Aktualizacja aplikacji nie pozostawia nieaktualnych zasobów.
-- [x] Zweryfikowano zachowanie aplikacji po ponownym połączeniu z internetem.
-- [x] Nie występują błędy Service Workera w konsoli.
-
-## 6. Standard KP_Code Digital Studio
-
-- [x] Axiom Construction jest jednoznacznie przedstawiony jako marka fikcyjna.
-- [x] Autorstwo KP_Code Digital Studio jest prawidłowo oznaczone.
-- [x] Notka demonstracyjna występuje w stopce wszystkich 15 stron.
-- [x] Stopki zachowują spójny wygląd i treść.
-- [x] Dane kontaktowe są prawidłowo przypisane autorowi.
-- [x] Telefon, e-mail i adres są aktualne.
-- [x] Odnośniki `tel:` i `mailto:` działają.
-- [x] Na sześciu podstronach usług znajdują się dyskretne noty demonstracyjne.
-- [x] Nie występują sprzeczne deklaracje dotyczące fikcyjnej działalności.
-- [x] Nie występują zbędne bannery, modale ani powtarzające się komunikaty demonstracyjne.
-
-## 7. Formularz kontaktowy
-
-- [x] Formularz prawidłowo wyświetla się na desktopie.
-- [x] Formularz prawidłowo wyświetla się na telefonie.
-- [x] Przycisk „Wyślij wiadomość” jest wycentrowany.
-- [x] Wszystkie pola mają właściwe etykiety.
-- [x] Walidacja wymaganych pól działa.
-- [x] Pole wyboru rodzaju zapytania działa poprawnie.
-- [x] Zgoda dotycząca polityki prywatności działa.
-- [x] Mechanizm antyspamowy działa poprawnie.
-- [x] reCAPTCHA działa w środowisku produkcyjnym.
-- [x] Netlify Forms odbiera rzeczywiste zgłoszenie testowe.
-- [x] Formularz kieruje wiadomości do KP_Code Digital Studio.
-- [x] Strona `success.html` działa poprawnie.
-- [x] Formularz nie wykazuje błędów w konsoli przeglądarki.
-
-## 8. FAQ i CTA
-
-- [x] Wszystkie cztery pytania FAQ są aktualne.
-- [x] Odpowiedzi są zgodne ze standardem KP_Code.
-- [x] FAQ działa przy użyciu klawiatury.
-- [x] FAQ jest zgodne z danymi strukturalnymi JSON-LD.
-- [x] Wszystkie przyciski CTA prowadzą do właściwych miejsc.
-- [x] CTA nie sugerują zamawiania rzeczywistych usług Axiom.
-- [x] Przyciski końcowych CTA są wycentrowane na sześciu podstronach usług.
-- [x] Zawijanie przycisków na urządzeniach mobilnych działa poprawnie.
-- [x] Nie występują uszkodzone odnośniki.
-
-## 9. Responsywność i wygląd
-
-Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 px oraz dodatkowo 320 px dla wąskich ekranów.
-
-- [X] Strona główna wygląda poprawnie.
-- [X] Wszystkie sześć podstron usług wygląda poprawnie.
-- [X] Formularz kontaktowy wygląda poprawnie.
-- [X] FAQ wygląda poprawnie.
-- [X] Galeria działa poprawnie.
-- [X] Nawigacja mobilna działa poprawnie.
-- [X] Stopki są responsywne.
-- [X] Motyw jasny działa poprawnie.
-- [X] Motyw ciemny działa poprawnie.
-- [X] Motyw systemowy działa poprawnie.
-- [X] Nie występuje niepożądane poziome przewijanie.
-- [X] Obrazy zachowują prawidłowe proporcje.
-- [X] Nie występują regresje wizualne.
-
-## 10. SEO i metadane
-
-- [x] Każda strona ma poprawny `title`.
-- [x] Opisy `meta description` są aktualne.
-- [x] Adresy canonical są prawidłowe.
-- [x] Metadane Open Graph są zgodne z charakterem projektu.
-- [x] Metadane Twitter/X są aktualne.
-- [x] Dane strukturalne JSON-LD są poprawne.
-- [x] Fikcyjna działalność nie jest przedstawiana jako rzeczywista firma.
-- [x] `sitemap.xml` zawiera właściwe adresy.
-- [x] `robots.txt` jest poprawny.
-- [x] Nie występują nieaktualne adresy URL.
-
-## 11. Dostępność — Accessibility
-
-- [x] Nawigacja klawiaturą działa.
-- [x] Fokus interaktywnych elementów jest widoczny.
-- [x] Kontrasty tekstów są prawidłowe.
-- [x] Formularz ma poprawne etykiety i komunikaty.
-- [x] Obrazy mają odpowiednie teksty alternatywne.
-- [x] Hierarchia nagłówków jest logiczna.
-- [x] Elementy interaktywne mają właściwe nazwy dostępności.
-- [x] Wykonano dostępne testy automatyczne.
-- [x] Zweryfikowano najważniejsze interakcje ręcznie.
-
-## 12. Produkcyjny build i QA
-
-- [x] `npm run lint` — PASS.
-- [x] `npm test` — PASS.
-- [x] `npm run qa:references -- --scope=source` — PASS.
-- [x] `npm run build` — PASS.
-- [x] `npm run qa:references -- --scope=release` — PASS.
-- [x] Produkcyjny katalog `dist/` zawiera wymagane pliki.
-- [x] Zweryfikowano poprawność wygenerowanych ścieżek.
-- [x] Sprawdzono konsolę przeglądarki pod kątem błędów.
-- [x] Wykonano końcowy pomiar Lighthouse.
-- [x] Sprawdzono podstawowe wskaźniki wydajności.
-- [x] Nie wykryto krytycznych regresji.
-
-## 13. Dokumenty i strony pomocnicze
-
-- [x] Regulamin odpowiada demonstracyjnemu charakterowi projektu.
-- [x] Polityka prywatności opisuje rzeczywiste działanie formularza.
-- [x] Polityka cookies jest aktualna.
-- [x] Strona certyfikatów zawiera poprawne informacje.
-- [x] Strona kariery nie sugeruje aktywnej, rzeczywistej rekrutacji.
-- [x] Strona `404.html` działa poprawnie.
-- [x] Strona `offline.html` działa poprawnie.
-- [x] README odpowiada aktualnemu projektowi.
-- [x] CHANGELOG zawiera wymagane wpisy.
-- [x] Dokumentacja nie zawiera nieaktualnych instrukcji.
-
----
-
-## 14. Raport audytu
-
-**Etap pierwszy: analiza bez modyfikowania plików.**
-
-- [ ] Wykonano audyt wszystkich wymienionych obszarów.
-- [ ] Przygotowano listę wyników PASS.
-- [ ] Przygotowano listę problemów FIX.
-- [ ] Wskazano kwestie wymagające decyzji właściciela — REVIEW.
-- [ ] Każdy problem ma przypisany plik, lokalizację lub sposób odtworzenia.
-- [ ] Zweryfikowano, czy proponowane poprawki mieszczą się w zakresie zadania.
-- [ ] Właściciel projektu zatwierdził zakres poprawek.
-
-### Wyniki audytu
-
-**PASS:**
-Do uzupełnienia.
-
-**FIX:**
-Do uzupełnienia.
-
-**REVIEW:**
-Do uzupełnienia.
-
----
-
-## 15. Poprawki po audycie
-
-**Ten etap realizujemy wyłącznie wtedy, gdy audyt wykaże rzeczywiste problemy.**
-
-- [ ] Przygotowano minimalny plan zmian.
-- [ ] Właściciel zatwierdził plan.
-- [ ] Wprowadzono wyłącznie zatwierdzone poprawki.
-- [ ] Nie zmieniono niepowiązanych komponentów.
-- [ ] Nie naruszono standardu KP_Code Digital Studio.
-- [ ] Ponownie przeprowadzono wymagane testy.
-- [ ] Zweryfikowano poprawione elementy w przeglądarce.
-- [ ] Zmiany zostały przejrzane i zaakceptowane.
-
----
-
-## 16. Final Release Gate
-
-**Warunki wymagane przed utworzeniem taga Git.**
-
-- [ ] Wszystkie problemy krytyczne zostały rozwiązane.
-- [ ] Nie pozostały niezaakceptowane problemy blokujące wydanie.
-- [ ] Finalny build produkcyjny przechodzi.
-- [ ] GitHub Actions ma status SUCCESS dla finalnego commita.
-- [ ] Produkcyjna wersja na Netlify została zweryfikowana po ręcznym wdrożeniu.
-- [ ] Formularz produkcyjny został przetestowany.
-- [ ] PWA działa prawidłowo.
-- [ ] Shortcuts i screenshots są aktualne.
-- [ ] Standard KP_Code Digital Studio jest zachowany.
-- [ ] Dokumentacja jest aktualna.
-- [ ] Wszystkie zatwierdzone zmiany zostały zacommitowane.
-- [ ] Drzewo robocze Git jest czyste.
-- [ ] Właściciel projektu zatwierdził wydanie.
-
-### Git Tag
-
-- [ ] Ustalono numer wersji.
-- [ ] Utworzono tag Git.
-- [ ] Wypchnięto tag do GitHub.
-- [ ] Zweryfikowano tag w repozytorium.
-
----
-
-## Final Status
-
-**Audit:** PENDING
-**Critical Issues:** UNKNOWN
-**GitHub Actions:** PENDING FINAL VERIFICATION
-**Production Verification:** PENDING
-**Release Approval:** PENDING
-**Git Tag:** NOT CREATED
-
 **Project:** DS-construction-pr02-Axiom
+**Version:** 1.0.0
 **Owner:** KP_Code Digital Studio
+**Verification date:** 2026-11-07
+**Production URL:** https://ds-construction-pr02-axiom.netlify.app/
+**Status:** IN PROGRESS
+
+**Verification rule:** Confirm each item using current project evidence and final checks. Mark non-applicable items as `N/A` with a brief reason. Unresolved release-blocking issues prevent release approval.
 
 ---
 
-*KP_Code Digital Studio — Professional presentation. Clear ownership. Minimal disclosure.*
+## 1. Project Scope & Completeness
 
-*Release principle: verify first, fix only what is necessary, approve before tagging.*
+- [x] All required pages, sections, and planned features are implemented.
+- [x] The project structure and delivered functionality match the approved scope.
+- [x] No unfinished components, placeholder content, test data, or unintended dummy interactions remain.
+- [x] Shared components, including navigation, headers, footers, and common UI elements, are consistent across relevant pages.
+- [x] Required supporting pages and states, including 404, success, empty, and offline states, are available where applicable.
+- [x] No essential feature or project requirement has been accidentally omitted.
+
+## 2. Frontend, UX & Responsiveness
+
+- [x] The homepage, key subpages, navigation, and internal links function correctly.
+- [x] Calls to action, galleries, menus, dialogs, FAQ sections, and other implemented interactions behave as intended.
+- [x] Layouts display correctly on mobile, tablet, and desktop viewports.
+- [x] Images, icons, fonts, and other visual assets load and display correctly.
+- [x] Supported light, dark, and system themes function consistently, where applicable.
+- [x] No significant layout defects, unwanted horizontal scrolling, or visual regressions remain.
+- [x] No critical JavaScript errors appear in the browser console.
+
+## 3. Accessibility & Performance
+
+- [x] Keyboard navigation and visible focus indicators function correctly.
+- [x] Interactive elements have accessible names, labels, and appropriate states.
+- [x] Headings, landmarks, image alternatives, and form feedback are accessible.
+- [x] Text contrast and reduced-motion behavior meet the project's accessibility requirements.
+- [x] Available accessibility checks pass without unresolved critical findings.
+- [x] Performance results and Core Web Vitals meet the project's accepted release criteria.
+
+## 4. Content & KP_Code Standards
+
+- [x] Public content, branding, authorship, and contact information are accurate and current.
+- [x] The **KP_Code Digital Studio — Demonstration Content & Contact Standard** is implemented where required.
+- [x] Fictional brands are clearly identified, with appropriate authorship and demonstration disclosures.
+- [x] Contact destinations, calls to action, FAQ content, and user-facing messages reflect the project's actual purpose.
+- [x] No unsupported claims, fictional qualifications presented as real, or misleading service descriptions remain.
+- [x] Shared disclosures and project-specific content are consistent across all relevant pages.
+
+## 5. Forms & Integrations
+
+- [x] Implemented forms contain the required fields, labels, and validation rules.
+- [x] Form submission, error handling, and success feedback behave correctly.
+- [x] Required privacy acknowledgements, spam protection, and anti-bot mechanisms are configured correctly.
+- [x] Forms direct submissions to the intended recipient or service.
+- [x] Required external integrations, APIs, and third-party services are configured and functional.
+- [x] No unintended data collection, inactive integration references, or misleading submission behavior remains.
+
+## 6. SEO & Discoverability
+
+- [x] Page titles, meta descriptions, canonical URLs, and social-sharing metadata are accurate.
+- [x] Indexing directives, `robots.txt`, and `sitemap.xml` reflect the intended published pages.
+- [x] Structured data is valid and consistent with visible content, where implemented.
+- [x] Public URLs, internal references, and social-preview assets are valid and current.
+- [x] Utility and demonstration-only pages use appropriate indexing policies.
+
+## 7. PWA & Offline Support
+
+- [x] The PWA manifest, application icons, shortcuts, and screenshots are valid and current, where applicable.
+- [x] PWA installation and launch behavior work correctly on supported devices.
+- [x] Service Worker registration, caching, and application updates work as intended.
+- [x] Offline fallback and connection recovery function within the supported scope.
+- [x] No unresolved Service Worker or cache-related errors remain.
+
+## 8. Security, Privacy & Legal
+
+- [x] Required HTTPS, security headers, and Content Security Policy rules are configured correctly.
+- [x] Redirects, error handling, and hosting configuration match the deployment requirements.
+- [x] No secrets, credentials, sensitive test data, or unintended development artifacts are exposed.
+- [x] Privacy Policy, Cookies Policy, Terms of Service, and other required legal content reflect actual project behavior.
+- [x] Project licensing, third-party notices, and asset attributions are complete and accurate.
+
+## 9. Build, Testing & Documentation
+
+- [x] Dependency installation completes successfully.
+- [x] Linting and automated tests pass.
+- [x] The production build completes without errors.
+- [x] Production artifacts contain the required files, and available source and release integrity checks pass.
+- [x] Required functional, accessibility, and performance verification results are acceptable.
+- [x] Generated assets and build outputs are consistent with their canonical sources.
+- [x] README, CHANGELOG, and essential technical instructions are accurate and current.
+
+## 10. Deployment & Release
+
+- [ ] All approved release changes have been committed, and the Git working tree is clean.
+- [ ] The intended release commit and version have been confirmed.
+- [ ] GitHub Actions or the configured CI pipeline reports SUCCESS for the intended release commit.
+- [ ] The approved production build has been deployed from the correct source revision.
+- [ ] The production website is accessible over HTTPS and loads essential resources correctly.
+- [ ] A production smoke test confirms the functionality of critical pages and interactions.
+- [x] Production-dependent functionality, including form delivery and spam protection, has been verified where applicable.
+- [ ] Hosting configuration, redirects, and security headers have been verified in production.
+- [ ] No unresolved release-blocking issues remain.
+- [ ] The project owner has approved the release.
+- [ ] The Git tag has been created for the approved version and correct commit.
+- [ ] The tag has been pushed and verified in the remote repository.
+
+---
+
+## Final Release Status
+
+**Result:** PENDING
+**Version:** 1.0.0
+**Release commit:** [COMMIT_SHA]
+**Git tag:** [TAG]
+**Production URL:** https://ds-construction-pr02-axiom.netlify.app/
+**Release date:** [YYYY-MM-DD]
+
+**Notes / exceptions:**
+
+---
+
+*KP_Code Digital System — Quality. Consistency. Release Readiness.*
