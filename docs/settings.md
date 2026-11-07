@@ -80,7 +80,7 @@ Jedyny szczegółowy opis skryptów npm projektu: polecenia, wymagania wstępne 
 
 ### qa:lighthouse
 - **Command:** `node tools/qa/run-lighthouse.mjs`
-- **What it does:** Uruchamia Lighthouse CI collect dla `http://localhost:8080/`, `/services/budowa-domow.html` i `/legal/regulamin.html` oraz zapisuje raporty do `reports/lighthouse`.
+- **What it does:** Uruchamia Lighthouse CI collect dla `http://localhost:8080/`, `/services/budowa-domow.html` i `/legal/regulamin.html`; Lighthouse CI zapisuje raporty JSON i HTML w `.lighthouseci/`. Runner tworzy również katalog `reports/lighthouse/`, ale nie zapisuje ani nie przenosi do niego raportów.
 - **When to use:** Audyt jakości (performance/SEO/a11y/best practices) przed release.
 - **Local server:** Skrypt sam startuje i po zakończeniu zatrzymuje własny `http-server` dla katalogu roboczego (źródeł, nie `dist/`) na porcie 8080, więc nie wymaga osobno uruchomionego `npm run serve`. Gdy port 8080 jest zajęty, przebieg kończy się czytelnym błędem bez ponownego użycia ani zatrzymania cudzego procesu. Niepowodzenie audytu lub serwera kończy polecenie kodem `1`.
 

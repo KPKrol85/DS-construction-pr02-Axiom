@@ -242,7 +242,7 @@ Testy automatyczne obejmują fallback dokumentów i odzyskiwanie połączenia z 
 - Własne zasoby, w tym fonty, są hostowane lokalnie. Produkcyjna reCAPTCHA korzysta z zasobów zewnętrznych.
 - Nagłówki cache dla zasobów statycznych i precache w Service Workerze.
 
-Wykonanie pomiaru Lighthouse odnotowano na checkliście przed wydaniem. Raporty pomiarowe w `reports/` są lokalnymi plikami ignorowanymi przez Git.
+Wykonanie pomiaru Lighthouse odnotowano na checkliście przed wydaniem. Raporty Lighthouse CI są zapisywane w `.lighthouseci/`, a pozostałe raporty QA, np. wyniki Pa11y, w `reports/`. Te lokalne artefakty raportów są ignorowane przez Git.
 
 ### Dane i trwałość stanu
 
@@ -518,7 +518,7 @@ Automated tests cover the document fallback and connection recovery using networ
 - First-party assets, including fonts, are hosted locally. Production reCAPTCHA loads third-party resources.
 - Cache headers for static assets and service worker precache.
 
-The pre-release checklist records that a Lighthouse measurement was performed. Measurement reports in `reports/` are local files ignored by Git.
+The pre-release checklist records that a Lighthouse measurement was performed. Lighthouse CI reports are stored in `.lighthouseci/`, while other QA reports, such as Pa11y results, are stored under `reports/`. These local report artifacts are ignored by Git.
 
 ### Data and State Persistence
 

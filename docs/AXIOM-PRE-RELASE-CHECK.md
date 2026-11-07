@@ -173,7 +173,7 @@ Sprawdzić najważniejsze widoki na szerokościach około 375 px, 768 px i 1280 
 - [x] Strona `offline.html` działa poprawnie.
 - [x] README odpowiada aktualnemu projektowi.
 - [x] CHANGELOG zawiera wymagane wpisy.
-- [ ] Dokumentacja nie zawiera nieaktualnych instrukcji.
+- [x] Dokumentacja nie zawiera nieaktualnych instrukcji.
 
 ---
 
