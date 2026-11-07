@@ -94,6 +94,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 ├── package.json
 ├── vitest.config.mjs           # konfiguracja Vitest (środowisko jsdom)
 ├── docs/
+│   ├── AXIOM-PRE-RELEASE-CHECK.md  # zatwierdzona checklista wydania v1.0.0
 │   ├── CHANGELOG.md
 │   ├── settings.md             # szczegółowy opis skryptów npm
 │   └── archive/
@@ -231,7 +232,7 @@ Repozytorium nie zawiera wyników audytu potwierdzających zgodność z konkretn
 - Profil produkcyjny (krok `build:sw:production` w `npm run build`) zapisuje `dist/sw.js` i dodaje do precache dokładne nazwy bundli ze skrótem treści odczytane z `dist/build-manifest.json`.
 - Po zdarzeniu `online` skrypt `js/offline.js` wykonuje do trzech prób `HEAD` dla bieżącego adresu z pominięciem cache. Odpowiedź HTTP `2xx` lub `404` powoduje jednokrotne odświeżenie. Przycisk „Spróbuj ponownie” pozwala odświeżyć stronę ręcznie.
 
-Testy automatyczne obejmują fallback dokumentów i odzyskiwanie połączenia z atrapami sieci. Próby instalacji mobilnej, działania offline i powrotu połączenia odnotowano osobno na [checkliście przed wydaniem](docs/AXIOM-PRE-RELASE-CHECK.md).
+Testy automatyczne obejmują fallback dokumentów i odzyskiwanie połączenia z atrapami sieci. Próby instalacji mobilnej, działania offline i powrotu połączenia odnotowano osobno na [checkliście przed wydaniem](docs/AXIOM-PRE-RELEASE-CHECK.md).
 
 ### Wydajność
 
@@ -370,6 +371,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 ├── package.json
 ├── vitest.config.mjs           # Vitest configuration (jsdom environment)
 ├── docs/
+│   ├── AXIOM-PRE-RELEASE-CHECK.md  # approved v1.0.0 release checklist
 │   ├── CHANGELOG.md
 │   ├── settings.md             # detailed npm script reference
 │   └── archive/
@@ -507,7 +509,7 @@ The repository contains no audit results confirming conformance with a specific 
 - The production profile (the `build:sw:production` step of `npm run build`) writes `dist/sw.js` and adds the exact content-hashed bundle names from `dist/build-manifest.json` to the precache.
 - After an `online` event, `js/offline.js` makes up to three cache-bypassing `HEAD` checks against the current URL. An HTTP `2xx` or `404` response triggers a single reload. The retry button lets users reload the page manually.
 
-Automated tests cover the document fallback and connection recovery using network mocks. Checks for mobile installation, offline behavior, and recovery after reconnecting are recorded separately in the [pre-release checklist](docs/AXIOM-PRE-RELASE-CHECK.md).
+Automated tests cover the document fallback and connection recovery using network mocks. Checks for mobile installation, offline behavior, and recovery after reconnecting are recorded separately in the [pre-release checklist](docs/AXIOM-PRE-RELEASE-CHECK.md).
 
 ### Performance
 
