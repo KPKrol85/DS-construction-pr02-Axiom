@@ -25,7 +25,7 @@ const filesToCopy = [
   "robots.txt",
   "sitemap.xml",
   "_headers",
-  "LICENSE",
+  "LICENSE.md",
   // Loaded synchronously by every maintained page before the application
   // bundle, so the stored theme is applied before the first paint.
   path.join("js", "theme-init.js"),

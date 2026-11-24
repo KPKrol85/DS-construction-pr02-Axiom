@@ -4,7 +4,7 @@
   "private": true,
   "description": "A responsive construction company demonstration website built with vanilla HTML, CSS, and JavaScript, featuring PWA, SEO, and accessibility.",
   "author": "Kamil Król — KP_Code Digital Studio",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KPKrol85/DS-construction-pr02-Axiom.git"
