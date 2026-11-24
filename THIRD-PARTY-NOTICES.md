@@ -5,17 +5,17 @@ third-party materials redistributed in this repository, their upstream sources, 
 licenses they are covered by.
 
 These materials are **not** covered by the proprietary KP_Code project license in
-[LICENSE](LICENSE). Rights to them remain with their respective authors, and they remain
-subject to their own upstream license terms, as stated in section 8 of [LICENSE](LICENSE).
+[LICENSE.md](LICENSE.md). Rights to them remain with their respective authors, and they remain
+subject to their own upstream license terms, as stated in section 8 of [LICENSE.md](LICENSE.md).
 This file records attribution only; it does not replace, restrict, or extend the upstream
 license terms. The binding text for each item is the license file linked in its entry.
 
 Licenses of the development dependencies are listed separately in section 8 of
-[LICENSE](LICENSE).
+[LICENSE.md](LICENSE.md).
 
 **Zakres (PL):** niniejszy plik jest indeksem atrybucji materiałów podmiotów trzecich
 w projekcie Axiom. Wymienione poniżej materiały nie są objęte własnościową licencją
-KP_Code z pliku [LICENSE](LICENSE) i pozostają objęte własnymi licencjami swoich autorów.
+KP_Code z pliku [LICENSE.md](LICENSE.md) i pozostają objęte własnymi licencjami swoich autorów.
 Plik ten nie zastępuje tych licencji — wiążąca jest treść wskazanych plików licencyjnych.
 
 ## Fonts

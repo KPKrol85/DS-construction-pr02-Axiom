@@ -102,7 +102,7 @@ Warstwa buildowa to własne skrypty Node uruchamiane przez npm scripts (minifika
 │       │   └── daily-AUDIT-2026-09-02.md
 │       └── plans/
 │           └── PLAN-2026-09-02.md
-├── LICENSE
+├── LICENSE.md
 └── README.md
 ```
 
@@ -270,11 +270,11 @@ Dostęp do `localStorage` jest opakowany w `try/catch` (`js/utils/storage.js`), 
 
 ### Licencja
 
-Projekt jest objęty własnościową licencją KP_Code (Własnościowa Licencja Projektu KP_CODE, wersja 1.0) — pełna treść w pliku [LICENSE](LICENSE). Nie jest to licencja open source. Materiały podmiotów trzecich pozostają objęte własnymi licencjami.
+Projekt jest objęty własnościową licencją KP_Code (Własnościowa Licencja Projektu KP_CODE, wersja 1.0) — pełna treść w pliku [LICENSE.md](LICENSE.md). Nie jest to licencja open source. Materiały podmiotów trzecich pozostają objęte własnymi licencjami.
 
 ### Atrybucje
 
-- Sekcja 8 pliku [LICENSE](LICENSE) wymienia licencje wybranych zależności deweloperskich.
+- Sekcja 8 pliku [LICENSE.md](LICENSE.md) wymienia licencje wybranych zależności deweloperskich.
 - Fonty Lato i Montserrat są hostowane lokalnie w `assets/fonts/` na licencji SIL Open Font License 1.1; atrybucje oraz ścieżki do przechowywanych tekstów licencji zbiera plik [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ## EN
@@ -379,7 +379,7 @@ The build layer consists of custom Node scripts executed through npm scripts (CS
 │       │   └── daily-AUDIT-2026-09-02.md
 │       └── plans/
 │           └── PLAN-2026-09-02.md
-├── LICENSE
+├── LICENSE.md
 └── README.md
 ```
 
@@ -547,9 +547,9 @@ State kept in the browser:
 
 ### License
 
-The project is covered by the KP_Code proprietary project license (KP_CODE Proprietary Project License, version 1.0) — full text in [LICENSE](LICENSE). It is not an open-source license. Third-party materials remain subject to their own licenses.
+The project is covered by the KP_Code proprietary project license (KP_CODE Proprietary Project License, version 1.0) — full text in [LICENSE.md](LICENSE.md). It is not an open-source license. Third-party materials remain subject to their own licenses.
 
 ### Attributions
 
-- Section 8 of [LICENSE](LICENSE) lists licenses for selected development dependencies.
+- Section 8 of [LICENSE.md](LICENSE.md) lists licenses for selected development dependencies.
 - The Lato and Montserrat fonts are self-hosted in `assets/fonts/` under the SIL Open Font License 1.1; the attributions and the paths to the stored license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

@@ -14,7 +14,7 @@
 *.svg text eol=lf
 .gitattributes text eol=lf
 .gitignore text eol=lf
-LICENSE text eol=lf
+LICENSE.md text eol=lf
 _headers text eol=lf
 
 # Binary assets must not undergo line-ending conversion.
